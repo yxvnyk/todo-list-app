@@ -1,93 +1,74 @@
-# todo-list-app-sa
+# To-do List Application
+
+In this project, you must design and develop a web application according to the requirements that are specified in the task description.
+  * The application you have to develop must contain two web components - a web and a web API applications.
+  * The web application is a [ASP.NET Core MVC application](https://learn.microsoft.com/en-us/aspnet/core/mvc/overview).
+  * The web API application is a [controller-based ASP.NET Core Web API application](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/apis).
+  * The data store must be a relational database management system such as SQL Server Express.
+  * To access application data the application must use [Entity Framework Core](https://learn.microsoft.com/en-us/ef/core/).
+  * The application must use the [ASP.NET Core Identity API](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/identity) to manage users, passwords and profile data.
 
 
+## Backlog
 
-## Getting started
+The application functional requirements are described in the [Functional Requirements](functional-requirements.md) document.
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+The [backlog with the user stories](https://en.wikipedia.org/wiki/Product_backlog) you need to implement is given in the table below. The full list of user stories with descriptions is in the [User Stories](user-stories.md) document.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+Here are some hints for you:
+* Follow the priority order. Start working on user stories in the order listed in the "Priority" column.
+* Mark stories as completed in the [README.md](README.md) file. Once you've finished developing a user story, mark it as completed in the "Is completed?" column (use the "+" or any other text). This mark will help the mentor who will review your project understand which functionality is implemented and which is not.
+* Focus on quality. Implement as many user stories as possible, but if you see that you do not have enough time to complete lower-priority user stories, polish the user stories you have already completed.
 
-## Add your files
+| Epic | User Story | Description                                                                     | Priority | Is completed? |
+|------|------------|---------------------------------------------------------------------------------|----------|---------------|
+| EP01 | US01       | View the list of my to-do lists.                                                | 1        |               |
+| EP01 | US02       | Add a new to-do list.                                                           | 1        |               |
+| EP01 | US03       | Delete a to-do list.                                                            | 1        |               |
+| EP01 | US04       | Edit a to-do list.                                                              | 1        |               |
+| EP02 | US05       | View the list of tasks in a to-do list.                                         | 1        |               |
+| EP02 | US06       | View the task details page.                                                     | 1        |               |
+| EP02 | US07       | Add a new to-do task.                                                           | 1        |               |
+| EP02 | US08       | Delete a to-do task.                                                            | 1        |               |
+| EP02 | US09       | Edit a to-do task.                                                              | 1        |               |
+| EP02 | US10       | Highlight tasks that are overdue.                                               | 1        |               |
+| EP03 | US11       | View a list of tasks assigned to me.                                            | 2        |               |
+| EP03 | US12       | Filter tasks in my assigned task list.                                          | 2        |               |
+| EP03 | US13       | Sort tasks in my assigned task list.                                            | 2        |               |
+| EP03 | US14       | Change the status of a task from the list of assigned tasks.                    | 2        |               |
+| EP04 | US15       | Search for tasks with specified text in the task title.                         | 3        |               |
+| EP04 | US16       | Highlight tasks that are overdue on the search result page.                     | 3        |               |
+| EP05 | US17       | View a list of tags on the task details page.                                   | 5        |               |
+| EP05 | US18       | View a list of all tags.                                                        | 5        |               |
+| EP05 | US19       | View a list of tasks tagged by a specific tag.                                  | 5        |               |
+| EP05 | US20       | Add a tag to a task.                                                            | 5        |               |
+| EP05 | US21       | Remove a tag that is added to a task.                                           | 5        |               |
+| EP06 | US22       | View the comments on the task details page.                                     | 6        |               |
+| EP06 | US23       | Add a new comment to the task.                                                  | 6        |               |
+| EP06 | US24       | Delete a comment that is added to a task.                                       | 6        |               |
+| EP06 | US25       | Edit a new comment                                                              | 6        |               |
+| EP07 | US26       | Sign up                                                                         | 7        |               |
+| EP07 | US27       | Sign in                                                                         | 7        |               |
+| EP07 | US28       | Sign out                                                                        | 7        |               |
+| EP07 | US29       | Restore password                                                                | 8        |               |
+| EP08 | US30       | Application menu                                                                | 4        |               |
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
 
-```
-cd existing_repo
-git remote add origin https://gitlab.com/epam-autocode-tasks/asp.net/todo-list-app-sa.git
-git branch -M main
-git push -uf origin main
-```
+## Software Architecture
 
-## Integrate with your tools
+The architecture of the application is described in the [Software Architecture](software-architecture.md) document.
 
-- [ ] [Set up project integrations](https://gitlab.com/epam-autocode-tasks/asp.net/todo-list-app-sa/-/settings/integrations)
 
-## Collaborate with your team
+## Solution Requirements
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
+The requirements for the application are described in the [Solution Requirements](solution-requirements.md) document.
 
-## Test and Deploy
 
-Use the built-in continuous integration in GitLab.
+## Delivery Plan
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+The [delivery plan](delivery-plan.md) contains the list of technical tasks distributed over the weeks these tasks must be delivered.
 
-***
 
-# Editing this README
+## Project Evaluation
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
-
-## Suggestions for a good README
-
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
-
-## Name
-Choose a self-explaining name for your project.
-
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
-
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
-
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
-
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
-
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
-
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
-
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+The project is evaluated using both technical evaluation criteria and an assessment of the scope and quality of the implementation of user stories. Both technical evaluation criteria and criteria for user stories are described in [Project Evaluation](project-evaluation.md) document.
