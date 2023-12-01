@@ -31,10 +31,6 @@ The solution must contain two ASP.NET Core applications (*TodoListApp.WebApp* an
 |------------------------------------------------------------------------------------------------------|----------------------------------------------|----------------------------------------------------------------------------------------------------|
 | [TodoListApp.WebApp](TodoListApp.WebApp/TodoListApp.WebApp.csproj)                                   | ASP.NET Core Web App (Model-View-Controller) | A web application to provide the end-users with the browser UI.                                    |
 | [TodoListApp.WebApi](TodoListApp.WebApi/TodoListApp.WebApi.csproj)                                   | ASP.NET Core Web API                         | A web API application that provides a RESTful API to manage the to-do lists and user's data.       |
-| [TodoListApp.WebApi.Models](TodoListApp.WebApi.Models/TodoListApp.WebApi.Models.csproj)              | Class Library                                | A class library for API model classes to share them between the web and web API applications.      |
-| [TodoListApp.Services](TodoListApp.Services/TodoListApp.Services.csproj)                             | Class Library                                | A class library for data classes and service interfaces you have to implement.                     |
-| [TodoListApp.Services.WebApi](TodoListApp.Services.WebApi/TodoListApp.Services.WebApi.csproj)        | Class Library                                | A class library for service that work with the RESTful API as a data source.                       |
-| [TodoListApp.Services.Database](TodoListApp.Services.Database/TodoListApp.Services.Database.csproj)  | Class Library                                | A class library for services that work with the relational database as a data source.              |
 
 The diagram belows shows the dependencies of C# projects in the expected solution.
 
