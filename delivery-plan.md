@@ -16,25 +16,26 @@ Development tasks are tasks with a technical description of what needs to be don
     * Add a new service class named `TodoListDatabaseService` to the *TodoListApp.WebApi* project to manage to-do lists in the database; configure the service as a dependency in the *TodoListApp.WebApi* app.
     * Add a new controller class named `TodoListController` to the *TodoListApp.WebApi* project; resolve service dependencies using constructor injection.
     * US01: Add new methods to the `TodoListDatabaseService` to get the list of to-do lists from the database; make all necessary changes in other classes and methods.
-    * US01: Add a new model class named *TodoListModel* to the *TodoListApp.WebApi* project.
-    * US01: Implement the REST endpoint in the *TodoListApp.WebApi* project to get the list of to-do lists; the list must be in JSON format. Use the *TodoListModel* class as the model in the controller methods.
+    * US01: Add a new model class named `TodoListModel` to the *TodoListApp.WebApi* project.
+    * US01: Implement the REST endpoint in the *TodoListApp.WebApi* project to get the list of to-do lists; the list must be in JSON format. Use the `TodoListModel` class as the model in the controller methods.
     * US02: Add new methods to the `TodoListDatabaseService` to add a new to-do list; make all necessary changes in other classes and methods.
-    * US02: Implement the REST endpoint in the *TodoListApp.WebApi* project to add a new to-do list; the input data must be in JSON format; and the endpoint must return meaningful status codes in case of errors. Place the model classes for this endpoint in the *TodoListApp.WebApi* project.
+    * US02: Implement the REST endpoint in the *TodoListApp.WebApi* project to add a new to-do list; the input data must be in JSON format; and the endpoint must return meaningful status codes in case of errors.
     * US03: Add new methods to the `TodoListDatabaseService` to delete an existing to-do list; make all necessary changes in other classes and methods.
-    * US03: Implement the REST endpoint in the *TodoListApp.WebApi* project to delete an existing to-do list; the endpoint must return meaningful status codes in case of errors. Place the model classes for this endpoint in the *TodoListApp.WebApi* project.
+    * US03: Implement the REST endpoint in the *TodoListApp.WebApi* project to delete an existing to-do list; the endpoint must return meaningful status codes in case of errors.
     * US04: Add new methods to the `TodoListDatabaseService` to update an existing to-do list's data; make all necessary changes in other classes and methods.
-    * US04: Implement the REST endpoint in the *TodoListApp.WebApi* project to update an existing to-do list's data; the endpoint must return meaningful status codes in case of errors. Place the model classes for this endpoint in the *TodoListApp.WebApi* project.
+    * US04: Implement the REST endpoint in the *TodoListApp.WebApi* project to update an existing to-do list's data; the endpoint must return meaningful status codes in case of errors.
 * T04: Implement Epic 1 frontend functionality in the *TodoListApp.WebApp* application.
     * Add a new service interface named `ITodoListWebApiService` and a data class named `TodoList` to the *TodoListApp.WebApp* project.
     * Add a new service class named `TodoListWebApiService` to the *TodoListApp.WebApp* project to manage to-do lists in the web API app using REST API; configure the service as a dependency in the *TodoListApp.WebApp* app.
     * Add a new controller class named `TodoListController` to the *TodoList.WebApp* project; resolve service dependencies using constructor injection.
-    * US01: Add a new method to the `TodoListWebApiService` to get the list of to-do lists using the REST API. Use the model classes in the *TodoListApp.WebApp* project.
+    * US01: Add a new class named `TodoListWebApiModel` to the TodoListApp.WebApp project.
+    * US01: Add a new method to the `TodoListWebApiService` to get the list of to-do lists using the REST API. Use the `TodoListWebApiModel` class as the model for REST API endpoints.
     * US01: Add a new view to the *TodoList.WebApp* project and a new method to the `TodoListController` class to show the list of to-do lists to the user using the browser UI.
-    * US02: Add a new method to the `TodoListWebApiService` to add a new to-do list using the REST API. Use the model classes in the *TodoListApp.WebApi.Models* project.
+    * US02: Add a new method to the `TodoListWebApiService` to add a new to-do list using the REST API.
     * US02: Add a new view to the *TodoList.WebApp* project and a new method to the `TodoListController` class to allow a user to add a new to-do list using the browser UI.
-    * US03: Add a new method to the `TodoListWebApiService` to delete an existing to-do list using the REST API. Use the model classes in the *TodoListApp.WebApi.Models* project.
+    * US03: Add a new method to the `TodoListWebApiService` to delete an existing to-do list using the REST API.
     * US03: Add a new view to the *TodoList.WebApp* project and a new method to the `TodoListController` class to allow a user to delete an existing to-do list using the browser UI.
-    * US04: Add a new method to the `TodoListWebApiService` to update an existing to-do list's data using the REST API. Use the model classes in the *TodoListApp.WebApi.Models* project.
+    * US04: Add a new method to the `TodoListWebApiService` to update an existing to-do list's data using the REST API.
     * US04: Add a new view to the *TodoList.WebApp* project and a new method to the `TodoListController` class to allow a user to update an existing to-do list's data using the browser UI.
 * T05: Implement Epic 2 backend functionality in the *TodoListApp.WebApi* application.
 * T06: Implement Epic 2 frontend functionality in the *TodoListApp.WebApp* application.
