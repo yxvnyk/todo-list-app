@@ -16,7 +16,8 @@ Development tasks are tasks with a technical description of what needs to be don
     * Add a new service class named `TodoListDatabaseService` to the *TodoListApp.WebApi* project to manage to-do lists in the database; configure the service as a dependency in the *TodoListApp.WebApi* app.
     * Add a new controller class named `TodoListController` to the *TodoListApp.WebApi* project; resolve service dependencies using constructor injection.
     * US01: Add new methods to the `TodoListDatabaseService` to get the list of to-do lists from the database; make all necessary changes in other classes and methods.
-    * US01: Implement the REST endpoint in the *TodoListApp.WebApi* project to get the list of to-do lists; the list must be in JSON format. Place the model classes for this endpoint in the *TodoListApp.WebApi   * project.
+    * US01: Add a new model class named *TodoListModel* to the *TodoListApp.WebApi* project.
+    * US01: Implement the REST endpoint in the *TodoListApp.WebApi* project to get the list of to-do lists; the list must be in JSON format. Use the *TodoListModel* class as the model in the controller methods.
     * US02: Add new methods to the `TodoListDatabaseService` to add a new to-do list; make all necessary changes in other classes and methods.
     * US02: Implement the REST endpoint in the *TodoListApp.WebApi* project to add a new to-do list; the input data must be in JSON format; and the endpoint must return meaningful status codes in case of errors. Place the model classes for this endpoint in the *TodoListApp.WebApi* project.
     * US03: Add new methods to the `TodoListDatabaseService` to delete an existing to-do list; make all necessary changes in other classes and methods.
