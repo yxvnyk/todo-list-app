@@ -69,5 +69,7 @@ public class TodoListDatabaseService : ITodoListDatabaseService
             _ = await this.context.SaveChangesAsync();
             return true;
         }
+
+        return false;
     }
 }
