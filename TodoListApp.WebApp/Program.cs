@@ -1,10 +1,17 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using TodoListApp.WebApp.Models;
+using TodoListApp.WebApp.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddHttpClient<ITodoListWebApiService, TodoListWebApiService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:TodoListsApi"]);
+});
+builder.Services.TryAddScoped<ITodoListWebApiService, TodoListWebApiService>();
 
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -25,5 +32,21 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "todos",
+    pattern: "{controller=Todos}/{action=Get}/{id?}");
+
+app.MapControllerRoute(
+    name: "todos",
+    pattern: "{controller=Todos}/{action=Post}/{id?}");
+
+app.MapControllerRoute(
+    name: "todos",
+    pattern: "{controller=Todos}/{action=Delete}/{id?}");
+
+app.MapControllerRoute(
+    name: "todos",
+    pattern: "{controller=Todos}/{action=Put}/{id?}");
 
 app.Run();
