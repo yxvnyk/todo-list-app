@@ -1,0 +1,10 @@
+@model IEnumerable<TodoListModel>
+@foreach (var list in Model)
+    {
+        <li>
+            @*<a href="#" class="nav-link text-white">*@
+        <a href="@Url.Action("Index", "Todo")?id=@list.Id" class="nav-link text-white" aria-current="page">
+                @list?.Details
+            </a>
+        </li>
+    }

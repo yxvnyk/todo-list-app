@@ -35,18 +35,22 @@ app.MapControllerRoute(
 
 app.MapControllerRoute(
     name: "todos",
-    pattern: "{controller=Todos}/{action=Get}/{id?}");
+    pattern: "{controller=TodoLists}/{action=Get}/{id?}");
 
 app.MapControllerRoute(
     name: "todos",
-    pattern: "{controller=Todos}/{action=Post}/{id?}");
+    pattern: "{controller=TodoLists}/{action=Post}/{id?}");
 
 app.MapControllerRoute(
     name: "todos",
-    pattern: "{controller=Todos}/{action=Delete}/{id?}");
+    pattern: "{controller=TodoLists}/{action=Delete}/{id?}");
 
 app.MapControllerRoute(
     name: "todos",
-    pattern: "{controller=Todos}/{action=Put}/{id?}");
+    pattern: "{controller=TodoLists}/{action=Put}/{id?}");
+
+app.MapControllerRoute(
+    name: "list",
+    pattern: "{controller=Todo}/{action=Get}");
 
 app.Run();

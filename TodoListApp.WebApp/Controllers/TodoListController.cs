@@ -5,7 +5,7 @@ using TodoListApp.WebApp.Services;
 namespace TodoListApp.WebApp.Controllers
 {
     [Controller]
-    [Route("Todos")]
+    [Route("TodoLists")]
     public class TodoListController: Controller
     {
         private readonly ITodoListWebApiService apiService;
@@ -16,7 +16,7 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> GetAllTodos()
+        public async Task<IActionResult> GetAllLists()
         {
             var list = await this.apiService.GetAllTodoListsAsync();
             if (list == null)
@@ -24,7 +24,8 @@ namespace TodoListApp.WebApp.Controllers
                 return this.NotFound();
             }
 
-            return this.Ok(list);
+            this.Ok(list);
+            return this.View(list);
         }
 
         [HttpPost("Post")]
