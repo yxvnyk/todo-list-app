@@ -6,17 +6,17 @@ namespace TodoListApp.WebApi.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TodoListController : Controller
+    public class CommentController : Controller
     {
-        private readonly ITodoListDatabaseService repository;
+        private readonly ICommentDatabaseService repository;
 
-        public TodoListController(ITodoListDatabaseService todoListDatabaseService)
+        public CommentController(ICommentDatabaseService commentDatabaseService)
         {
-            this.repository = todoListDatabaseService;
+            this.repository = commentDatabaseService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<TodoListModel>> GetAllLists()
+        public async Task<ActionResult<TagModel>> GetAllComments()
         {
             var list = await this.repository.GetAll();
             if (list != null)
@@ -24,11 +24,11 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(list);
             }
 
-            return this.NotFound("No lists found");
+            return this.NotFound("No comment found");
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateList([FromBody] TodoListModel model, int id)
+        public async Task<IActionResult> UpdateComment([FromBody] CommentModel model, int id)
         {
             if (model == null)
             {
@@ -41,21 +41,21 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok();
             }
 
-            return this.NotFound($"TodoList with ID {model.Id} not found.");
+            return this.NotFound($"Comment with ID {model.Id} not found or invalid data");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddList([FromBody] TodoListModel model)
+        public async Task<IActionResult> AddComment([FromBody] CommentModel model)
         {
             if (model == null)
             {
                 return this.BadRequest("Request body cannot be empty.");
             }
 
-            //TODO : role-based verification
-            if (model.UserId == 0)
+            var taskExist = await this.repository.TaskExist(model.TaskId);
+            if (!taskExist)
             {
-                return this.BadRequest("User id cannot be empty");
+                return this.BadRequest("Task with the given ID does not exist.");
             }
 
             await this.repository.Create(model);
@@ -64,7 +64,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteList([FromRoute] int id)
+        public async Task<IActionResult> DeleteComment([FromRoute] int id)
         {
             bool result = await this.repository.DeleteById(id);
             if (result)
@@ -72,7 +72,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.NoContent();
             }
 
-            return this.NotFound($"TodoList with ID {id} not found.");
+            return this.NotFound($"Comment with ID {id} not found.");
         }
     }
 }
