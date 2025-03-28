@@ -17,42 +17,28 @@ public class TodoListDatabaseService : ITodoListDatabaseService
         this.mapper = mapper;
     }
 
-    public async Task<TodoListModel?> GetById(int id)
+    public async Task<TodoListModel?> GetByIdAsync(int id)
     {
         var entity = await this.context.TodoLists!.FirstOrDefaultAsync(x => x.Id == id);
-        return entity == null ? null : this.mapper.Map<TodoListModel>(entity);
-        //return entity == null ? null : new TodoListModel()
-        //{
-        //    Id = entity.Id,
-        //    Description = entity.Description,
-        //};
+        return entity is null ? null : this.mapper.Map<TodoListModel>(entity);
     }
 
-    public async Task<IEnumerable<TodoListModel>> GetAll()
+    public async Task<IEnumerable<TodoListModel>> GetAllAsync()
     {
         var entityList = await this.context.TodoLists.ToListAsync();
-        //var list = entityList.Select(x => new TodoListModel()
-        //{
-        //    Id = x.Id,
-        //    Description = x.Description,
-        //});
         var list = entityList.Select(x => this.mapper.Map<TodoListModel>(x));
         return list;
     }
 
-    public async Task Create(TodoListModel model)
+    public async Task CreateAsync(TodoListModel model)
     {
         ArgumentNullException.ThrowIfNull(model);
-        //var entity = new TodoListEntity()
-        //{
-        //    Description = model.Description,
-        //};
         var entity = this.mapper.Map<TodoListEntity>(model);
         _ = this.context.Add(entity);
         _ = await this.context.SaveChangesAsync();
     }
 
-    public async Task<bool> Update(TodoListModel model, int id)
+    public async Task<bool> UpdateAsync(TodoListModel model, int id)
     {
         var entity = await this.context.TodoLists.FindAsync(id);
         if (entity != null)
@@ -66,7 +52,7 @@ public class TodoListDatabaseService : ITodoListDatabaseService
         return false;
     }
 
-    public async Task<bool> DeleteById(int id)
+    public async Task<bool> DeleteByIdAsync(int id)
     {
         var entity = await this.context.TodoLists.FindAsync(id);
         if (entity != null)

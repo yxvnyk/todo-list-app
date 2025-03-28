@@ -17,21 +17,21 @@ internal class TagDatabaseService : ITagDatabaseService
         this.mapper = mapper;
     }
 
-    public async Task<IEnumerable<TagModel>> GetAll()
+    public async Task<IEnumerable<TagModel>> GetAllAsync()
     {
         var tags = await this.context.Tags.ToListAsync();
         return tags.Select(x =>
             this.mapper.Map<TagModel>(x));
     }
 
-    public async Task Create(TagModel model)
+    public async Task CreateAsync(TagModel model)
     {
         var entity = this.mapper.Map<TagEntity>(model);
         _ = await this.context.Tags.AddAsync(entity);
         _ = await this.context.SaveChangesAsync();
     }
 
-    public async Task<bool> Update(TagModel model, int id)
+    public async Task<bool> UpdateAsync(TagModel model, int id)
     {
         var exist = await this.context.Tags.FindAsync(id);
         if (exist != null)
@@ -44,13 +44,13 @@ internal class TagDatabaseService : ITagDatabaseService
         return false;
     }
 
-    public async Task<TagModel?> GetById(int id)
+    public async Task<TagModel?> GetByIdAsync(int id)
     {
         var exist = await this.context.Tags.FindAsync(id);
         return exist != null ? this.mapper.Map<TagModel>(exist) : null;
     }
 
-    public async Task<bool> DeleteById(int id)
+    public async Task<bool> DeleteByIdAsync(int id)
     {
         var exist = await this.context.Tags.FindAsync(id);
         if (exist != null)

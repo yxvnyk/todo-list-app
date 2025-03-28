@@ -35,5 +35,24 @@ public class TodoListDbContext : DbContext
         _ = modelBuilder.Entity<TagEntity>()
             .Property(e => e.Id)
             .ValueGeneratedOnAdd();
+
+        // cascade deleting
+        _ = modelBuilder.Entity<TodoListEntity>()
+            .HasMany(tl => tl.Tasks)
+            .WithOne(t => t.TodoList)
+            .HasForeignKey(t => t.TodoListId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        _ = modelBuilder.Entity<TaskEntity>()
+         .HasMany(t => t.Comments)
+         .WithOne(c => c.Task)
+         .HasForeignKey(c => c.TaskId)
+         .OnDelete(DeleteBehavior.Cascade);
+
+        _ = modelBuilder.Entity<TaskEntity>()
+         .HasMany(t => t.Tags)
+         .WithOne(c => c.Task)
+         .HasForeignKey(c => c.TaskId)
+         .OnDelete(DeleteBehavior.Cascade);
     }
 }

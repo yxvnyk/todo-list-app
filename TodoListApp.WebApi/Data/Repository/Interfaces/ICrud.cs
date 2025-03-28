@@ -2,13 +2,13 @@ namespace TodoListApp.WebApi.Data.Repository.Interfaces;
 
 public interface ICrud<T>
 {
-    Task<IEnumerable<T>> GetAll();
+    Task<IEnumerable<T>> GetAllAsync();
 
-    Task Create(T model);
+    Task CreateAsync(T model);
 
-    Task<bool> Update(T model, int id);
+    Task<bool> UpdateAsync(T model, int id);
 
-    Task<T?> GetById(int id);
+    Task<T?> GetByIdAsync(int id);
 
-    Task<bool> DeleteById(int id);
+    Task<bool> DeleteByIdAsync(int id);
 }

@@ -5,7 +5,7 @@ using TodoListApp.WebApi.Models;
 namespace TodoListApp.WebApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api[controller]")]
     public class TodoListController : Controller
     {
         private readonly ITodoListDatabaseService repository;
@@ -18,7 +18,7 @@ namespace TodoListApp.WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<TodoListModel>> GetAllLists()
         {
-            var list = await this.repository.GetAll();
+            var list = await this.repository.GetAllAsync();
             if (list != null)
             {
                 return this.Ok(list);
@@ -27,7 +27,7 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("No lists found");
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateList([FromBody] TodoListModel model, int id)
         {
             if (model == null)
@@ -35,7 +35,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.BadRequest("Request body cannot be empty.");
             }
 
-            bool result = await this.repository.Update(model, id);
+            bool result = await this.repository.UpdateAsync(model, id);
             if (result)
             {
                 return this.Ok();
@@ -53,20 +53,20 @@ namespace TodoListApp.WebApi.Controllers
             }
 
             //TODO : role-based verification
-            if (model.UserId == 0)
+            if (string.IsNullOrEmpty(model.UserId))
             {
                 return this.BadRequest("User id cannot be empty");
             }
 
-            await this.repository.Create(model);
+            await this.repository.CreateAsync(model);
 
             return this.Ok();
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteList([FromRoute] int id)
         {
-            bool result = await this.repository.DeleteById(id);
+            bool result = await this.repository.DeleteByIdAsync(id);
             if (result)
             {
                 return this.NoContent();

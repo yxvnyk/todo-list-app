@@ -17,14 +17,14 @@ public class CommentDatabaseService : ICommentDatabaseService
         this.mapper = mapper;
     }
 
-    public async Task Create(CommentModel model)
+    public async Task CreateAsync(CommentModel model)
     {
         var entity = this.mapper.Map<CommentEntity>(model);
         _ = await this.context.Comments.AddAsync(entity);
         _ = await this.context.SaveChangesAsync();
     }
 
-    public async Task<bool> DeleteById(int id)
+    public async Task<bool> DeleteByIdAsync(int id)
     {
         var exist = await this.context.Comments.FindAsync(id);
         if (exist != null)
@@ -37,20 +37,20 @@ public class CommentDatabaseService : ICommentDatabaseService
         return false;
     }
 
-    public async Task<IEnumerable<CommentModel>> GetAll()
+    public async Task<IEnumerable<CommentModel>> GetAllAsync()
     {
         var tags = await this.context.Comments.ToListAsync();
         return tags.Select(x =>
             this.mapper.Map<CommentModel>(x));
     }
 
-    public async Task<CommentModel?> GetById(int id)
+    public async Task<CommentModel?> GetByIdAsync(int id)
     {
         var exist = await this.context.Comments.FindAsync(id);
         return exist != null ? this.mapper.Map<CommentModel>(exist) : null;
     }
 
-    public async Task<bool> Update(CommentModel model, int id)
+    public async Task<bool> UpdateAsync(CommentModel model, int id)
     {
         ArgumentNullException.ThrowIfNull(model);
         var exist = await this.context.Comments.FindAsync(id);

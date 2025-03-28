@@ -2,10 +2,11 @@ using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data;
 using TodoListApp.WebApi.Data.Repository;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
-using TodoListApp.WebApi.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

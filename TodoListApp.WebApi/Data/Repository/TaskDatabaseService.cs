@@ -17,14 +17,15 @@ internal class TaskDatabaseService : ITaskDatabaseService
         this.mapper = mapper;
     }
 
-    public async Task Create(TaskModel model)
+    public async Task CreateAsync(TaskModel model)
     {
         var entity = this.mapper.Map<TaskEntity>(model);
+        entity.DateCreated = DateTime.Now;
         _ = await this.context.Tasks.AddAsync(entity);
         _ = await this.context.SaveChangesAsync();
     }
 
-    public async Task<bool> DeleteById(int id)
+    public async Task<bool> DeleteByIdAsync(int id)
     {
         var exist = await this.context.Tasks.FindAsync(id);
         if (exist != null)
@@ -37,26 +38,28 @@ internal class TaskDatabaseService : ITaskDatabaseService
         return false;
     }
 
-    public async Task<IEnumerable<TaskModel>> GetAll()
+    public async Task<IEnumerable<TaskModel>> GetAllAsync()
     {
         var tasks = await this.context.Tasks.ToListAsync();
         return tasks.Select(x => this.mapper.Map<TaskModel>(x));
     }
 
-    public async Task<TaskModel?> GetById(int id)
+    public async Task<TaskModel?> GetByIdAsync(int id)
     {
         var task = await this.context.Tasks.FindAsync(id);
-        return this.mapper.Map<TaskModel>(task);
+        return task is not null ? this.mapper.Map<TaskModel>(task) : null;
     }
 
-    public async Task<bool> Update(TaskModel model, int id)
+    public async Task<bool> UpdateAsync(TaskModel model, int id)
     {
         var exist = await this.context.Tasks.FindAsync(id);
         if (exist != null)
         {
             exist.Title = model.Title;
+            exist.Description = model.Description;
             exist.DueDate = model.DueDate;
-            exist.IsCompleted = model.IsCompleted;
+            exist.Status = model.Status;
+            exist.AssigneeId = model.AssigneeId;
             _ = await this.context.SaveChangesAsync();
             return true;
         }

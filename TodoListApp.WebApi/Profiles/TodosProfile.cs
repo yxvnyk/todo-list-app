@@ -4,9 +4,9 @@ using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Profiles;
 
-public class TodoListProfile : Profile
+public class TodosProfile : Profile
 {
-    public TodoListProfile()
+    public TodosProfile()
     {
         _ = this.CreateMap<TodoListModel, TodoListEntity>()
             .ForMember(dest => dest.Id, model => model.Ignore());

@@ -5,7 +5,7 @@ using TodoListApp.WebApi.Models;
 namespace TodoListApp.WebApi.Controllers;
 
 [ApiController]
-[Route("api/tag")]
+[Route("api/[controller]")]
 public class TagController : Controller
 {
     private readonly ITagDatabaseService repository;
@@ -18,7 +18,7 @@ public class TagController : Controller
     [HttpGet]
     public async Task<ActionResult<TagModel>> GetAllTags()
     {
-        var list = await this.repository.GetAll();
+        var list = await this.repository.GetAllAsync();
         if (list != null)
         {
             return this.Ok(list);
@@ -27,7 +27,7 @@ public class TagController : Controller
         return this.NotFound("No tags found");
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateTag([FromBody] TagModel model, int id)
     {
         if (model == null)
@@ -35,7 +35,7 @@ public class TagController : Controller
             return this.BadRequest("Request body cannot be empty.");
         }
 
-        bool result = await this.repository.Update(model, id);
+        bool result = await this.repository.UpdateAsync(model, id);
         if (result)
         {
             return this.Ok();
@@ -58,15 +58,15 @@ public class TagController : Controller
             return this.BadRequest("Task with the given ID does not exist.");
         }
 
-        await this.repository.Create(model);
+        await this.repository.CreateAsync(model);
 
         return this.Ok();
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteTag([FromRoute] int id)
     {
-        bool result = await this.repository.DeleteById(id);
+        bool result = await this.repository.DeleteByIdAsync(id);
         if (result)
         {
             return this.NoContent();

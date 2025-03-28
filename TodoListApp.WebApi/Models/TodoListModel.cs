@@ -14,6 +14,6 @@ public class TodoListModel
     public string? Description { get; set; }
 
     [Required]
-    public int UserId { get; set; }
-
+    [MaxLength(450)]
+    public string UserId { get; set; } = string.Empty;
 }
