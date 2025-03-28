@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
+using TodoListApp.WebApi.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Data.Repository;
@@ -37,11 +38,16 @@ public class CommentDatabaseService : ICommentDatabaseService
         return false;
     }
 
-    public async Task<IEnumerable<CommentModel>> GetAllAsync()
+    public async Task<IEnumerable<CommentModel>> GetAllAsync(CommentFilter filter)
     {
-        var tags = await this.context.Comments.ToListAsync();
-        return tags.Select(x =>
-            this.mapper.Map<CommentModel>(x));
+        var comments = this.context.Comments.AsQueryable();
+        if (filter?.TaskId > 0)
+        {
+            comments = comments.Where(c => c.TaskId == filter.TaskId);
+        }
+
+        return await comments.Select(x =>
+            this.mapper.Map<CommentModel>(x)).ToListAsync();
     }
 
     public async Task<CommentModel?> GetByIdAsync(int id)

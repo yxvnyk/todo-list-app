@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
+using TodoListApp.WebApi.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Data.Repository;
@@ -17,11 +18,21 @@ internal class TagDatabaseService : ITagDatabaseService
         this.mapper = mapper;
     }
 
-    public async Task<IEnumerable<TagModel>> GetAllAsync()
+    public async Task<IEnumerable<TagModel>> GetAllAsync(TagFilter filter)
     {
-        var tags = await this.context.Tags.ToListAsync();
-        return tags.Select(x =>
-            this.mapper.Map<TagModel>(x));
+        var tags = this.context.Tags.AsQueryable();
+        if (filter.TaskId > 0)
+        {
+            tags = tags.Where(t => t.TaskId == filter.TaskId);
+        }
+
+        if (filter.TodoListId > 0)
+        {
+            tags = tags.Include(t => t.Task).Where(t => t.Task != null && t.Task.TodoListId == filter.TodoListId);
+        }
+
+        return await tags.Select(x =>
+            this.mapper.Map<TagModel>(x)).ToListAsync();
     }
 
     public async Task CreateAsync(TagModel model)

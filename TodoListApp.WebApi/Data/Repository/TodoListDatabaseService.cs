@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
+using TodoListApp.WebApi.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Data.Repository;
@@ -23,11 +24,21 @@ public class TodoListDatabaseService : ITodoListDatabaseService
         return entity is null ? null : this.mapper.Map<TodoListModel>(entity);
     }
 
-    public async Task<IEnumerable<TodoListModel>> GetAllAsync()
+    public async Task<IEnumerable<TodoListModel>> GetAllAsync(TodoListFilter filter)
     {
-        var entityList = await this.context.TodoLists.ToListAsync();
-        var list = entityList.Select(x => this.mapper.Map<TodoListModel>(x));
-        return list;
+        var entityList = this.context.TodoLists.AsQueryable();
+
+        if (!string.IsNullOrEmpty(filter?.Title))
+        {
+            entityList = entityList.Where(t => t.Title == filter.Title);
+        }
+
+        if (filter?.UserId != null)
+        {
+            entityList = entityList.Where(t => t.UserId == filter.UserId);
+        }
+
+        return await entityList.Select(x => this.mapper.Map<TodoListModel>(x)).ToListAsync();
     }
 
     public async Task CreateAsync(TodoListModel model)

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
+using TodoListApp.WebApi.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Controllers
@@ -16,10 +17,10 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<TagModel>> GetAllComments()
+        public async Task<ActionResult<TagModel>> GetAllComments([FromQuery] CommentFilter filter)
         {
-            var list = await this.repository.GetAllAsync();
-            if (list != null)
+            var list = await this.repository.GetAllAsync(filter);
+            if (list.Any())
             {
                 return this.Ok(list);
             }

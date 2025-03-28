@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
+using TodoListApp.WebApi.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Controllers
@@ -16,10 +17,10 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<TaskModel>> GetAllTasks()
+        public async Task<ActionResult<TaskModel>> GetAllTasks([FromQuery] TaskFilter filter)
         {
-            var list = await this.repository.GetAllAsync();
-            if (list != null)
+            var list = await this.repository.GetAllAsync(filter);
+            if (list.Any())
             {
                 return this.Ok(list);
             }
@@ -47,7 +48,12 @@ namespace TodoListApp.WebApi.Controllers
                 return this.BadRequest("Request body cannot be empty.");
             }
 
-            var taskExist = await this.repository.TodoListExist(model.TodoListId);
+            if (!this.ModelState.IsValid)
+            {
+                return this.NotFound(this.ModelState);
+            }
+
+            var taskExist = await this.repository.TodoListExist(model!.TodoListId);
             if (!taskExist)
             {
                 return this.BadRequest("To-do list with the given ID does not exist.");

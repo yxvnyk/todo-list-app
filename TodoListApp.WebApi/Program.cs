@@ -8,7 +8,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -21,12 +20,8 @@ builder.Services.AddScoped<ITaskDatabaseService, TaskDatabaseService>();
 builder.Services.AddScoped<ITagDatabaseService, TagDatabaseService>();
 builder.Services.AddScoped<ICommentDatabaseService, CommentDatabaseService>();
 
- //builder.Services.AddDbContext<TodoListDbContext>(opt =>
- //opt.UseInMemoryDatabase("TodoList")); // for testing api
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     _ = app.UseSwagger();

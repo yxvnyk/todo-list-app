@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
+using TodoListApp.WebApi.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Data.Repository;
@@ -36,6 +37,38 @@ internal class TaskDatabaseService : ITaskDatabaseService
         }
 
         return false;
+    }
+
+    public async Task<IEnumerable<TaskModel>> GetAllAsync(TaskFilter filter)
+    {
+        var tasks = this.context.Tasks.AsQueryable();
+
+        if (!string.IsNullOrEmpty(filter.AssigneeId))
+        {
+            tasks = tasks.Where(t => t.AssigneeId == filter.AssigneeId);
+        }
+
+        if (filter.TodoListId > 0)
+        {
+            tasks = tasks.Where(t => t.TodoListId == filter.TodoListId);
+        }
+
+        if (filter.Status != null)
+        {
+            tasks = tasks.Where(t => t.Status == filter.Status);
+        }
+
+        if (filter.TagName != null)
+        {
+            tasks = tasks.Include(t => t.Tags).Where(t => t.Tags != null && t.Tags.Any(tag => tag.Name == filter.TagName));
+        }
+
+        if (!string.IsNullOrEmpty(filter.TextInTitle))
+        {
+            tasks = tasks.Where(t => t.Title.Contains(filter.TextInTitle));
+        }
+
+        return await tasks.Select(x => this.mapper.Map<TaskModel>(x)).ToListAsync();
     }
 
     public async Task<IEnumerable<TaskModel>> GetAllAsync()
