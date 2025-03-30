@@ -1,6 +1,6 @@
 namespace TodoListApp.WebApi.Filters;
 
-public class TodoListFilter
+public class TodoListFilter : PaginationFilter
 {
     public string? Title { get; set; }
 

@@ -31,7 +31,9 @@ internal class TagDatabaseService : ITagDatabaseService
             tags = tags.Include(t => t.Task).Where(t => t.Task != null && t.Task.TodoListId == filter.TodoListId);
         }
 
-        return await tags.Select(x =>
+        var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
+
+        return await tags.Skip(pageNumber).Take(filter.PageSize).Select(x =>
             this.mapper.Map<TagModel>(x)).ToListAsync();
     }
 

@@ -1,6 +1,6 @@
 namespace TodoListApp.WebApi.Filters;
 
-public class TagFilter
+public class TagFilter : PaginationFilter
 {
     public int TaskId { get; set; }
 

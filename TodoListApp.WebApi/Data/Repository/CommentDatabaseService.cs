@@ -40,13 +40,17 @@ public class CommentDatabaseService : ICommentDatabaseService
 
     public async Task<IEnumerable<CommentModel>> GetAllAsync(CommentFilter filter)
     {
+        ArgumentNullException.ThrowIfNull(filter);
+
         var comments = this.context.Comments.AsQueryable();
-        if (filter?.TaskId > 0)
+        if (filter.TaskId > 0)
         {
             comments = comments.Where(c => c.TaskId == filter.TaskId);
         }
 
-        return await comments.Select(x =>
+        var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
+
+        return await comments.Skip(pageNumber).Take(filter.PageSize).Select(x =>
             this.mapper.Map<CommentModel>(x)).ToListAsync();
     }
 

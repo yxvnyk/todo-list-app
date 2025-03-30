@@ -65,10 +65,12 @@ internal class TaskDatabaseService : ITaskDatabaseService
 
         if (!string.IsNullOrEmpty(filter.TextInTitle))
         {
-            tasks = tasks.Where(t => t.Title.Contains(filter.TextInTitle));
+            tasks = tasks.Where(t => t.Title.Contains(filter.TextInTitle, StringComparison.OrdinalIgnoreCase));
         }
 
-        return await tasks.Select(x => this.mapper.Map<TaskModel>(x)).ToListAsync();
+        var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
+
+        return await tasks.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TaskModel>(x)).ToListAsync();
     }
 
     public async Task<IEnumerable<TaskModel>> GetAllAsync()

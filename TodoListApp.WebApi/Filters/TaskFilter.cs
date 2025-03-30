@@ -3,7 +3,7 @@ using TodoListApp.WebApi.Models.Enums;
 
 namespace TodoListApp.WebApi.Filters;
 
-public class TaskFilter
+public class TaskFilter : PaginationFilter
 {
     public string? TextInTitle { get; set; }
 

@@ -1,6 +1,6 @@
 namespace TodoListApp.WebApi.Filters;
 
-public class CommentFilter
+public class CommentFilter : PaginationFilter
 {
     public int TaskId { get; set; }
 }

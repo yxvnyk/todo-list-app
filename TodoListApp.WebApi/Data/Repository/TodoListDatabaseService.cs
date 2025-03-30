@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
@@ -26,19 +27,23 @@ public class TodoListDatabaseService : ITodoListDatabaseService
 
     public async Task<IEnumerable<TodoListModel>> GetAllAsync(TodoListFilter filter)
     {
+        ArgumentNullException.ThrowIfNull(filter);
+
         var entityList = this.context.TodoLists.AsQueryable();
 
-        if (!string.IsNullOrEmpty(filter?.Title))
+        if (!string.IsNullOrEmpty(filter.Title))
         {
             entityList = entityList.Where(t => t.Title == filter.Title);
         }
 
-        if (filter?.UserId != null)
+        if (filter.UserId != null)
         {
             entityList = entityList.Where(t => t.UserId == filter.UserId);
         }
 
-        return await entityList.Select(x => this.mapper.Map<TodoListModel>(x)).ToListAsync();
+        var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
+
+        return await entityList.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TodoListModel>(x)).ToListAsync();
     }
 
     public async Task CreateAsync(TodoListModel model)
