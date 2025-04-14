@@ -1,6 +1,9 @@
-using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
+using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Data.Repository;
@@ -8,50 +11,56 @@ namespace TodoListApp.WebApi.Data.Repository;
 public class TodoListDatabaseService : ITodoListDatabaseService
 {
     private readonly TodoListDbContext context;
+    private readonly IMapper mapper;
 
-    public TodoListDatabaseService(TodoListDbContext context)
+    public TodoListDatabaseService(TodoListDbContext context, IMapper mapper)
     {
         this.context = context;
+        this.mapper = mapper;
     }
 
-    public async Task AddTodoList(TodoListModel model)
+    public async Task<TodoListModel?> GetByIdAsync(int id)
+    {
+        var entity = await this.context.TodoLists!.FirstOrDefaultAsync(x => x.Id == id);
+        return entity is null ? null : this.mapper.Map<TodoListModel>(entity);
+    }
+
+    public async Task<IEnumerable<TodoListModel>> GetAllAsync(TodoListFilter filter)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+
+        var entityList = this.context.TodoLists.AsQueryable();
+
+        if (!string.IsNullOrEmpty(filter.Title))
+        {
+            entityList = entityList.Where(t => t.Title == filter.Title);
+        }
+
+        if (filter.UserId != null)
+        {
+            entityList = entityList.Where(t => t.UserId == filter.UserId);
+        }
+
+        var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
+
+        return await entityList.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TodoListModel>(x)).ToListAsync();
+    }
+
+    public async Task CreateAsync(TodoListModel model)
     {
         ArgumentNullException.ThrowIfNull(model);
-        var entity = new TodoListEntity()
-        {
-            Details = model.Details,
-        };
+        var entity = this.mapper.Map<TodoListEntity>(model);
         _ = this.context.Add(entity);
         _ = await this.context.SaveChangesAsync();
     }
 
-    public async Task<TodoListModel?> GetById(int id)
-    {
-        var entity = await this.context.TodoLists.FirstOrDefaultAsync(x => x.Id == id);
-        return entity == null ? null : new TodoListModel()
-        {
-            Id = entity.Id,
-            Details = entity.Details,
-        };
-    }
-
-    public async Task<IEnumerable<TodoListModel>> GetAllTodoList()
-    {
-        var entityList = await this.context.TodoLists.ToListAsync();
-        var list = entityList.Select(x => new TodoListModel()
-        {
-            Id = x.Id,
-            Details = x.Details,
-        });
-        return list;
-    }
-
-    public async Task<bool> DeleteByIdTodoList(int id)
+    public async Task<bool> UpdateAsync(TodoListModel model, int id)
     {
         var entity = await this.context.TodoLists.FindAsync(id);
         if (entity != null)
         {
-            _ = this.context.TodoLists.Remove(entity);
+            entity.Description = model?.Description;
+            entity.Title = model!.Title;
             _ = await this.context.SaveChangesAsync();
             return true;
         }
@@ -59,13 +68,12 @@ public class TodoListDatabaseService : ITodoListDatabaseService
         return false;
     }
 
-    public async Task<bool> UpdateTodoList(TodoListModel model)
+    public async Task<bool> DeleteByIdAsync(int id)
     {
-        ArgumentNullException.ThrowIfNull(model);
-        var entity = await this.context.TodoLists.FindAsync(model?.Id);
+        var entity = await this.context.TodoLists.FindAsync(id);
         if (entity != null)
         {
-            entity.Details = model!.Details;
+            _ = this.context.TodoLists.Remove(entity);
             _ = await this.context.SaveChangesAsync();
             return true;
         }

@@ -24,7 +24,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
             return null;
         }
 
-        if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+        if (response.StatusCode == HttpStatusCode.NotFound)
         {
             return null;
         }
