@@ -2,11 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data;
 using TodoListApp.WebApi.Data.Repository;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
+using TodoListApp.WebApi.Helpers.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
+builder.Logging.SetMinimumLevel(LogLevel.Trace);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -20,6 +22,8 @@ builder.Services.AddScoped<ITaskDatabaseService, TaskDatabaseService>();
 builder.Services.AddScoped<ITagDatabaseService, TagDatabaseService>();
 builder.Services.AddScoped<ICommentDatabaseService, CommentDatabaseService>();
 
+builder.Services.AddScoped<ExceptionHandlingMiddleware>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -31,6 +35,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.MapControllers();
 

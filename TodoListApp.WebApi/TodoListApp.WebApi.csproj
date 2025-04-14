@@ -8,6 +8,7 @@
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <AnalysisLevel>latest</AnalysisLevel>
     <CodeAnalysisTreatWarningsAsErrors>false</CodeAnalysisTreatWarningsAsErrors>
+    <EnableLoggerMessageGenerator>true</EnableLoggerMessageGenerator>
   </PropertyGroup>
 
   <ItemGroup>

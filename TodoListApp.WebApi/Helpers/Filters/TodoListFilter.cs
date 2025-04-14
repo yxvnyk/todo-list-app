@@ -1,4 +1,4 @@
-namespace TodoListApp.WebApi.Filters;
+namespace TodoListApp.WebApi.Helpers.Filters;
 
 public class TodoListFilter : PaginationFilter
 {

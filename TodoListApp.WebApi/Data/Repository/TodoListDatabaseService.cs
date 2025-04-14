@@ -3,7 +3,7 @@ using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
-using TodoListApp.WebApi.Filters;
+using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Data.Repository;

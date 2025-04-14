@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace TodoListApp.WebApi.Filters;
+namespace TodoListApp.WebApi.Helpers.Filters;
 
 public class PaginationFilter
 {

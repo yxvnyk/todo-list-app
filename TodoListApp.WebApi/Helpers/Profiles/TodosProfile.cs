@@ -2,7 +2,7 @@ using AutoMapper;
 using TodoListApp.WebApi.Entities;
 using TodoListApp.WebApi.Models;
 
-namespace TodoListApp.WebApi.Profiles;
+namespace TodoListApp.WebApi.Helpers.Profiles;
 
 public class TodosProfile : Profile
 {

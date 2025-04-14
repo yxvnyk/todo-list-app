@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using TodoListApp.WebApi.Models.Enums;
 
-namespace TodoListApp.WebApi.Filters;
+namespace TodoListApp.WebApi.Helpers.Filters;
 
 public class TaskFilter : PaginationFilter
 {
