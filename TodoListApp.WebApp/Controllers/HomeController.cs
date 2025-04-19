@@ -1,31 +1,35 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Models;
+using TodoListApp.WebApp.Models;
 
 namespace WebApplication1.Controllers;
 
+[Route("")]
+[Route("Home")]
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly ILogger<HomeController> logger;
 
     public HomeController(ILogger<HomeController> logger)
     {
-        _logger = logger;
+        this.logger = logger;
     }
 
+    [HttpGet("")]
+    [HttpGet("Index")]
     public IActionResult Index()
     {
-        return View();
+        return this.View();
     }
 
     public IActionResult Privacy()
     {
-        return View();
+        return this.View();
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
     }
 }

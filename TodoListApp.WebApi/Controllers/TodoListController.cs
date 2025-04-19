@@ -2,11 +2,12 @@ using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers
 {
     [ApiController]
-    [Route("api[controller]")]
+    [Route("api/[controller]")]
     public class TodoListController : Controller
     {
         private readonly ITodoListDatabaseService repository;
@@ -19,7 +20,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<TodoListModel>> GetAllLists([FromQuery] TodoListFilter filter)
+        public async Task<ActionResult<TodoListDTO>> GetAllLists([FromQuery] TodoListFilter filter)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllLists));
 
@@ -34,7 +35,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateList([FromBody] TodoListModel model, int id)
+        public async Task<IActionResult> UpdateList([FromBody] TodoListUpdateDTO model, int id)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateList));
 
@@ -51,11 +52,11 @@ namespace TodoListApp.WebApi.Controllers
             }
 
             LoggerExtensions.LogWarning(this.logger, "TodoList with ID {model.Id} not found.");
-            return this.NotFound($"TodoList with ID {model.Id} not found.");
+            return this.NotFound($"TodoList with ID {id} not found.");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddList([FromBody] TodoListModel model)
+        public async Task<IActionResult> AddList([FromBody] TodoListDTO model)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.AddList));
 

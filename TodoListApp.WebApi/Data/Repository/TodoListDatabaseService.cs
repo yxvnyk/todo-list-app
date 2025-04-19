@@ -5,6 +5,7 @@ using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Data.Repository;
 
@@ -19,13 +20,13 @@ public class TodoListDatabaseService : ITodoListDatabaseService
         this.mapper = mapper;
     }
 
-    public async Task<TodoListModel?> GetByIdAsync(int id)
+    public async Task<TodoListDTO?> GetByIdAsync(int id)
     {
         var entity = await this.context.TodoLists!.FirstOrDefaultAsync(x => x.Id == id);
-        return entity is null ? null : this.mapper.Map<TodoListModel>(entity);
+        return entity is null ? null : this.mapper.Map<TodoListDTO>(entity);
     }
 
-    public async Task<IEnumerable<TodoListModel>> GetAllAsync(TodoListFilter filter)
+    public async Task<IEnumerable<TodoListDTO>> GetAllAsync(TodoListFilter filter)
     {
         ArgumentNullException.ThrowIfNull(filter);
 
@@ -43,10 +44,10 @@ public class TodoListDatabaseService : ITodoListDatabaseService
 
         var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
 
-        return await entityList.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TodoListModel>(x)).ToListAsync();
+        return await entityList.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TodoListDTO>(x)).ToListAsync();
     }
 
-    public async Task CreateAsync(TodoListModel model)
+    public async Task CreateAsync(TodoListDTO model)
     {
         ArgumentNullException.ThrowIfNull(model);
         var entity = this.mapper.Map<TodoListEntity>(model);
@@ -54,13 +55,12 @@ public class TodoListDatabaseService : ITodoListDatabaseService
         _ = await this.context.SaveChangesAsync();
     }
 
-    public async Task<bool> UpdateAsync(TodoListModel model, int id)
+    public async Task<bool> UpdateAsync(TodoListUpdateDTO model, int id)
     {
         var entity = await this.context.TodoLists.FindAsync(id);
         if (entity != null)
         {
-            entity.Description = model?.Description;
-            entity.Title = model!.Title;
+            _ = this.mapper.Map(model, entity);
             _ = await this.context.SaveChangesAsync();
             return true;
         }

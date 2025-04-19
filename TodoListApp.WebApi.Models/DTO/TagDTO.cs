@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace TodoListApp.WebApi.Models;
 
-public class TagModel
+public class TagDTO
 {
     public int Id { get; set; }
 

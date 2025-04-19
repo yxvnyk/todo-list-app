@@ -3,6 +3,7 @@ using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Helpers;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers
 {
@@ -21,7 +22,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<TagModel>> GetAllComments([FromQuery] CommentFilter filter)
+        public async Task<ActionResult<TagDTO>> GetAllComments([FromQuery] CommentFilter filter)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllComments));
 
@@ -36,7 +37,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateComment([FromBody] CommentModel model, int id)
+        public async Task<IActionResult> UpdateComment([FromBody] CommentUpdateDTO model, int id)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateComment));
 
@@ -53,11 +54,11 @@ namespace TodoListApp.WebApi.Controllers
             }
 
             LoggerExtensions.LogWarning(this.logger, "Invalid comment id or invalid data");
-            return this.NotFound($"Comment with ID {model.Id} not found or invalid data");
+            return this.NotFound($"Comment with ID {id} not found or invalid data");
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddComment([FromBody] CommentModel model)
+        public async Task<IActionResult> AddComment([FromBody] CommentDTO model)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.AddComment));
 

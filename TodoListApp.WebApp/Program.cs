@@ -1,15 +1,24 @@
+using System.Net.Sockets;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using TodoListApp.WebApp.Models;
 using TodoListApp.WebApp.Services;
+using TodoListApp.WebApp.Services.Interfaces;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient<ITodoListWebApiService, TodoListWebApiService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiSettings:TodoListsApi"]);
+})
+    ;builder.Services.AddHttpClient<ITaskWebApiService, TaskWebApiService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:TodoListsApi"]);
 });
 builder.Services.TryAddScoped<ITodoListWebApiService, TodoListWebApiService>();
+builder.Services.TryAddScoped<ITaskWebApiService, TaskWebApiService>();
 
 builder.Services.AddControllersWithViews();
 
@@ -17,7 +26,31 @@ var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    _ = app.UseExceptionHandler(exceptionHandlerApp =>
+    {
+        exceptionHandlerApp.Run(async context =>
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+            context.Response.ContentType = Text.Plain;
+
+            await context.Response.WriteAsync("An exception was thrown.");
+
+            var exceptionHandlerPathFeature =
+                context.Features.Get<IExceptionHandlerPathFeature>();
+
+            if (exceptionHandlerPathFeature?.Error is SocketException)
+            {
+                await context.Response.WriteAsync("\nNo connection could be made because the target machine actively refused it.");
+            }
+
+            if (exceptionHandlerPathFeature?.Error is HttpRequestException)
+            {
+                await context.Response.WriteAsync("\nNo connection could be made because the target machine actively refused it.");
+            }
+        });
+    });
+    //app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
@@ -29,28 +62,5 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.MapControllerRoute(
-    name: "todos",
-    pattern: "{controller=TodoLists}/{action=Get}/{id?}");
-
-app.MapControllerRoute(
-    name: "todos",
-    pattern: "{controller=TodoLists}/{action=Post}/{id?}");
-
-app.MapControllerRoute(
-    name: "todos",
-    pattern: "{controller=TodoLists}/{action=Delete}/{id?}");
-
-app.MapControllerRoute(
-    name: "todos",
-    pattern: "{controller=TodoLists}/{action=Put}/{id?}");
-
-app.MapControllerRoute(
-    name: "list",
-    pattern: "{controller=Todo}/{action=Get}");
-
+app.MapControllers();
 app.Run();

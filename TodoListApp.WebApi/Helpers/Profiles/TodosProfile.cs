@@ -8,20 +8,20 @@ public class TodosProfile : Profile
 {
     public TodosProfile()
     {
-        _ = this.CreateMap<TodoListModel, TodoListEntity>()
+        _ = this.CreateMap<TodoListDTO, TodoListEntity>()
             .ForMember(dest => dest.Id, model => model.Ignore());
-        _ = this.CreateMap<TodoListEntity, TodoListModel>();
+        _ = this.CreateMap<TodoListEntity, TodoListDTO>();
 
-        _ = this.CreateMap<TaskModel, TaskEntity>()
+        _ = this.CreateMap<TaskDTO, TaskEntity>()
             .ForMember(dest => dest.Id, model => model.Ignore());
-        _ = this.CreateMap<TaskEntity, TaskModel>();
+        _ = this.CreateMap<TaskEntity, TaskDTO>();
 
-        _ = this.CreateMap<CommentModel, CommentEntity>()
+        _ = this.CreateMap<CommentDTO, CommentEntity>()
             .ForMember(dest => dest.Id, model => model.Ignore());
-        _ = this.CreateMap<CommentEntity, CommentModel>();
+        _ = this.CreateMap<CommentEntity, CommentDTO>();
 
-        _ = this.CreateMap<TagModel, TagEntity>()
+        _ = this.CreateMap<TagDTO, TagEntity>()
             .ForMember(dest => dest.Id, model => model.Ignore());
-        _ = this.CreateMap<TagEntity, TagModel>();
+        _ = this.CreateMap<TagEntity, TagDTO>();
     }
 }

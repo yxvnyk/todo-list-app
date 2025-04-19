@@ -1,10 +1,9 @@
-@model IEnumerable<TodoListModel>
+@model IEnumerable<TodoListDTO>
 @foreach (var list in Model)
     {
         <li>
-            @*<a href="#" class="nav-link text-white">*@
-        <a href="@Url.Action("Index", "Todo")?id=@list.Id" class="nav-link text-white" aria-current="page">
-                @list?.Details
+        <a href="@Url.Action(nameof(TaskController.GetAllTasksByListId), nameof(TaskController))?id=@list.Id" class="nav-link text-white" aria-current="page">
+                @list?.Title
             </a>
         </li>
     }

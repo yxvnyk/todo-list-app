@@ -1,8 +1,9 @@
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Data.Repository.Interfaces;
 
-public interface ITodoListDatabaseService : ICrud<TodoListModel, TodoListFilter>
+public interface ITodoListDatabaseService : ICrud<TodoListDTO, TodoListUpdateDTO, TodoListFilter>
 {
 }

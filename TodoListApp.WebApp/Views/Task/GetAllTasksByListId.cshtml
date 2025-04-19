@@ -1,0 +1,52 @@
+@model IEnumerable<TaskDTO>
+
+@if (Model == null)
+{
+    <div class="text-center">
+        <h1 class="display-4">To-do list have no task yet</h1>
+    </div>
+}
+else
+{
+    <div class="container">
+    @foreach (var task in Model)
+        {
+               @* <li class="list-group-item style=" width: 60%;"">
+                    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
+                    <label class="form-check-label" for="firstCheckbox">@task.Title</label>
+                    </li>
+                    *@
+           
+
+            <div class="my-3 p-3 rounded shadow-sm bg-dark bg-opacity-10">
+                <h6 class="border-bottom pb-2 mb-0">@task.Title</h6>
+                    <div class=" row d-flex text-body-secondary pt-3">
+                        <div class="col">
+                        <form id="@task?.Id" asp-controller="Task" asp-action="TaskComplete" asp-antiforgery="true">
+                                <input type="hidden" name="id" value="@task?.Id" />
+                            <input type="hidden" name="status" value="@(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? TodoListApp.WebApi.Models.Enums.Status.InProgress : TodoListApp.WebApi.Models.Enums.Status.Completed)" />
+                                <input type="hidden" name="returnUrl"
+                                       value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                                <input type="checkbox" class="form-check-input me-1" onchange="this.form.submit()" @(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? "checked" : "") />
+                            </form>
+                        </div>
+                        <p class=" col-11 pb-3 mb-0 small lh-sm border-bottom">
+                            <strong class="d-block text-gray-dark">@task.Title</strong>
+                        @*<input type="text" class="bg-dark bg-opacity-10" name="title" value="@task.Title" />
+                        *@
+
+                        <span style="word-wrap: break-word;">
+                            @task.Description
+                        </span>
+
+                    </div>
+                  </div>
+                
+                @*<a href="#" class="nav-link text-white">*@
+                @* <a href="@Url.Action(nameof(TaskController.GetAllTaskByListId), nameof(TaskController))?id=@list.Id" class="nav-link text-white" aria-current="page">
+                    @list?.Title
+                </a>*@
+            
+        }
+    </div>
+}

@@ -4,6 +4,7 @@ using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Data.Repository;
 
@@ -18,7 +19,7 @@ public class CommentDatabaseService : ICommentDatabaseService
         this.mapper = mapper;
     }
 
-    public async Task CreateAsync(CommentModel model)
+    public async Task CreateAsync(CommentDTO model)
     {
         var entity = this.mapper.Map<CommentEntity>(model);
         _ = await this.context.Comments.AddAsync(entity);
@@ -38,7 +39,7 @@ public class CommentDatabaseService : ICommentDatabaseService
         return false;
     }
 
-    public async Task<IEnumerable<CommentModel>> GetAllAsync(CommentFilter filter)
+    public async Task<IEnumerable<CommentDTO>> GetAllAsync(CommentFilter filter)
     {
         ArgumentNullException.ThrowIfNull(filter);
 
@@ -51,22 +52,22 @@ public class CommentDatabaseService : ICommentDatabaseService
         var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
 
         return await comments.Skip(pageNumber).Take(filter.PageSize).Select(x =>
-            this.mapper.Map<CommentModel>(x)).ToListAsync();
+            this.mapper.Map<CommentDTO>(x)).ToListAsync();
     }
 
-    public async Task<CommentModel?> GetByIdAsync(int id)
+    public async Task<CommentDTO?> GetByIdAsync(int id)
     {
         var exist = await this.context.Comments.FindAsync(id);
-        return exist != null ? this.mapper.Map<CommentModel>(exist) : null;
+        return exist != null ? this.mapper.Map<CommentDTO>(exist) : null;
     }
 
-    public async Task<bool> UpdateAsync(CommentModel model, int id)
+    public async Task<bool> UpdateAsync(CommentUpdateDTO model, int id)
     {
         ArgumentNullException.ThrowIfNull(model);
         var exist = await this.context.Comments.FindAsync(id);
         if (exist != null)
         {
-            exist.Comment = model.Comment;
+            _ = this.mapper.Map(model, exist);
             _ = await this.context.SaveChangesAsync();
             return true;
         }

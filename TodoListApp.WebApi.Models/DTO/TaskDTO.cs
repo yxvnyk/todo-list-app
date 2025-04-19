@@ -4,7 +4,7 @@ using TodoListApp.WebApi.Models.Enums;
 
 namespace TodoListApp.WebApi.Models;
 
-public class TaskModel
+public class TaskDTO
 {
     public int Id { get; set; }
 

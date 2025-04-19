@@ -1,4 +1,4 @@
-namespace TodoListApp.WebApi.Models;
+namespace TodoListApp.WebApi.Models.Models;
 
 public class ResponseModel<T>
 {

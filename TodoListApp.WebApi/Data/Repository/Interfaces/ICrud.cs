@@ -1,15 +1,15 @@
-using TodoListApp.WebApi.Filters;
+using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApi.Data.Repository.Interfaces;
 
-public interface ICrud<T, TFilter>
+public interface ICrud<T, TUpdate, TFilter>
 {
     Task<IEnumerable<T>> GetAllAsync(TFilter filter);
 
     Task CreateAsync(T model);
 
-    Task<bool> UpdateAsync(T model, int id);
+    Task<bool> UpdateAsync(TUpdate model, int id);
 
     Task<T?> GetByIdAsync(int id);
 

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers
 {
@@ -19,7 +20,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<TaskModel>> GetAllTasks([FromQuery] TaskFilter filter)
+        public async Task<ActionResult<TaskDTO>> GetAllTasks([FromQuery] TaskFilter filter)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasks));
 
@@ -34,7 +35,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<TaskModel>> GetTask(int id)
+        public async Task<ActionResult<TaskDTO>> GetTask(int id)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.GetTask));
 
@@ -49,7 +50,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddTask([FromBody] TaskModel model)
+        public async Task<IActionResult> AddTask([FromBody] TaskDTO model)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.AddTask));
 
@@ -77,7 +78,7 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateTask([FromBody] TaskModel model, int id)
+        public async Task<IActionResult> UpdateTask([FromBody] TaskUpdateDTO model, int id)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateTask));
 
@@ -94,7 +95,7 @@ namespace TodoListApp.WebApi.Controllers
             }
 
             LoggerExtensions.LogWarning(this.logger, "Task with ID {model.Id} not found.");
-            return this.NotFound($"Task with ID {model.Id} not found.");
+            return this.NotFound($"Task with ID {id} not found.");
         }
 
         [HttpDelete("{id:int}")]

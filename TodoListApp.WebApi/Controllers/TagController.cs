@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers;
 
@@ -19,7 +20,7 @@ public class TagController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult<TagModel>> GetAllTags([FromQuery] TagFilter filter)
+    public async Task<ActionResult<TagDTO>> GetAllTags([FromQuery] TagFilter filter)
     {
         LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTags));
 
@@ -34,7 +35,7 @@ public class TagController : Controller
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateTag([FromBody] TagModel model, int id)
+    public async Task<IActionResult> UpdateTag([FromBody] TagUpdateDTO model, int id)
     {
         LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateTag));
 
@@ -50,12 +51,12 @@ public class TagController : Controller
             return this.Ok();
         }
 
-        LoggerExtensions.LogWarning(this.logger, $"Tag with ID {model.Id} not found.");
-        return this.NotFound($"Tag with ID {model.Id} not found.");
+        LoggerExtensions.LogWarning(this.logger, $"Tag with ID {id} not found.");
+        return this.NotFound($"Tag with ID {id} not found.");
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddTag([FromBody] TagModel model)
+    public async Task<IActionResult> AddTag([FromBody] TagDTO model)
     {
         LoggerExtensions.LogTrace(this.logger, nameof(this.AddTag));
 

@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
-using TodoListApp.WebApp.Services;
+using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
 {
-    [Controller]
     [Route("TodoLists")]
     public class TodoListController: Controller
     {
@@ -16,23 +16,23 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> GetAllLists()
+        public async Task<IActionResult> GetAllLists(int id = 0)
         {
-            var list = await this.apiService.GetAllTodoListsAsync();
+            var list = await this.apiService.GetAllAsync(id);
             if (list == null)
             {
                 return this.NotFound();
             }
 
-            this.Ok(list);
+            _ = this.Ok(list);
             return this.View(list);
         }
 
         [HttpPost("Post")]
-        public async Task<IActionResult> CreateTodos([FromBody] TodoListModel model)
+        public async Task<IActionResult> CreateTodoList([FromBody] TodoListDTO model)
         {
             ArgumentNullException.ThrowIfNull(model);
-            var list = await this.apiService.AddTodoListAsync(model);
+            var list = await this.apiService.AddAsync(model);
             if (list == null)
             {
                 return this.NotFound();
@@ -42,9 +42,9 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteTodos(int id)
+        public async Task<IActionResult> DeleteTodoList(int id)
         {
-            var list = await this.apiService.DeleteTodoListAsync(id);
+            var list = await this.apiService.DeleteAsync(id);
             if (list == null)
             {
                 return this.NotFound();
@@ -54,9 +54,9 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpPut("Put")]
-        public async Task<IActionResult> PutTodos([FromBody] TodoListModel model)
+        public async Task<IActionResult> UpdateTodoList([FromBody] TodoListUpdateDTO model, int id)
         {
-            var list = await this.apiService.UpdateTodoListAsync(model);
+            var list = await this.apiService.UpdateAsync(model, id);
             if (list == null)
             {
                 return this.NotFound();
