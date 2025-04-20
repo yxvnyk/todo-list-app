@@ -21,20 +21,38 @@ else
             <div class="my-3 p-3 rounded shadow-sm bg-dark bg-opacity-10">
                 <h6 class="border-bottom pb-2 mb-0">@task.Title</h6>
                     <div class=" row d-flex text-body-secondary pt-3">
-                        <div class="col">
-                        <form id="@task?.Id" asp-controller="Task" asp-action="TaskComplete" asp-antiforgery="true">
-                                <input type="hidden" name="id" value="@task?.Id" />
-                            <input type="hidden" name="status" value="@(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? TodoListApp.WebApi.Models.Enums.Status.InProgress : TodoListApp.WebApi.Models.Enums.Status.Completed)" />
-                                <input type="hidden" name="returnUrl"
-                                       value="@ViewContext.HttpContext.Request.PathAndQuery()" />
-                                <input type="checkbox" class="form-check-input me-1" onchange="this.form.submit()" @(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? "checked" : "") />
+                        <div class="col-1">
+                            <form id="@task?.Id" asp-controller="Task" asp-action="TaskComplete" method="post" asp-antiforgery="true">
+                                    <input type="hidden" name="id" value="@task?.Id" />
+                                <input type="hidden" name="status" value="@(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? TodoListApp.WebApi.Models.Enums.Status.InProgress : TodoListApp.WebApi.Models.Enums.Status.Completed)" />
+                                    <input type="hidden" name="returnUrl"
+                                           value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                                    <input type="checkbox" class="form-check-input me-1" onchange="this.form.submit()" @(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? "checked" : "") />
                             </form>
                         </div>
-                        <p class=" col-11 pb-3 mb-0 small lh-sm border-bottom">
+                        <div class="col-10">
+                            <p class="pb-3 mb-0 small lh-sm border-bottom">
                             <strong class="d-block text-gray-dark">@task.Title</strong>
+                        </div>
+                        
                         @*<input type="text" class="bg-dark bg-opacity-10" name="title" value="@task.Title" />
                         *@
-
+                        <span class="col-1">
+                            @* <button type="submit" *@
+                            @*         class="btn btn-success btn-sm pull-right" style="float:right"> *@
+                            @*     : *@
+                            @* </button> *@
+                        <form id="@task?.Id" asp-controller="Details" asp-action="TaskDetails" method="post" asp-antiforgery="true">
+                                <input type="hidden" name="id" value="@task.Id" />
+                                <input type="hidden" name="returnUrl"
+                                       value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                                <button type="submit" 
+                                   class="btn btn-success btn-sm pull-right" style="float:right"> 
+                                 : 
+                             </button> 
+                            </form>
+                        </span>
+                        
                         <span style="word-wrap: break-word;">
                             @task.Description
                         </span>

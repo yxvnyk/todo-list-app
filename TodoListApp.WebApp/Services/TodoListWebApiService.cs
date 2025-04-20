@@ -86,4 +86,9 @@ internal class TodoListWebApiService : ITodoListWebApiService
 
         return response.StatusCode;
     }
+
+    public Task<TaskDTO?> GetByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
 }

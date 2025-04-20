@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApi.Models.Enums;
+using TodoListApp.WebApp.Models;
 using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
@@ -22,7 +24,7 @@ namespace TodoListApp.WebApp.Controllers
             return this.View(list);
         }
 
-        [HttpPost]
+        [HttpPost("complete")]
         public IActionResult TaskComplete(int id, Status status, string returnUrl)
         {
             TaskUpdateDTO model = new TaskUpdateDTO()

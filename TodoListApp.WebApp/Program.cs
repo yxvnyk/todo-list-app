@@ -1,8 +1,7 @@
 using System.Net.Sockets;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using TodoListApp.WebApp.Models;
+using TodoListApp.WebApp.Infrastructure;
 using TodoListApp.WebApp.Services;
 using TodoListApp.WebApp.Services.Interfaces;
 using static System.Net.Mime.MediaTypeNames;
@@ -12,13 +11,26 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient<ITodoListWebApiService, TodoListWebApiService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiSettings:TodoListsApi"]);
-})
-    ;builder.Services.AddHttpClient<ITaskWebApiService, TaskWebApiService>(client =>
+});
+
+builder.Services.AddHttpClient<ITaskWebApiService, TaskWebApiService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:TodoListsApi"]);
+});
+builder.Services.AddHttpClient<ITagWebApiService, TagWebApiService>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ApiSettings:TodoListsApi"]);
+});
+
+builder.Services.AddHttpClient<ICommentWebApiService, CommentWebApiService>(client =>
 {
     client.BaseAddress = new Uri(builder.Configuration["ApiSettings:TodoListsApi"]);
 });
 builder.Services.TryAddScoped<ITodoListWebApiService, TodoListWebApiService>();
 builder.Services.TryAddScoped<ITaskWebApiService, TaskWebApiService>();
+builder.Services.TryAddScoped<ITagWebApiService, TagWebApiService>();
+builder.Services.TryAddScoped<ICommentWebApiService, CommentWebApiService>();
+builder.Services.TryAddScoped<TaskAggregatorService>();
 
 builder.Services.AddControllersWithViews();
 

@@ -34,6 +34,21 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("No tasks found");
         }
 
+        [HttpPost("search")]
+        public async Task<ActionResult<TaskDTO>> GetAllTasksByPost([FromBody] TaskFilter filter)
+        {
+            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasks));
+
+            var list = await this.repository.GetAllAsync(filter);
+            if (list.Any())
+            {
+                return this.Ok(list);
+            }
+
+            LoggerExtensions.LogWarning(this.logger, "No tasks found");
+            return this.NotFound("No tasks found");
+        }
+
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TaskDTO>> GetTask(int id)
         {

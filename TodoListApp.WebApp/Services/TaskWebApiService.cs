@@ -1,6 +1,7 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApp.Services.Interfaces;
@@ -19,7 +20,18 @@ public class TaskWebApiService : ITaskWebApiService
 
     public async Task<IEnumerable<TaskDTO>?> GetAllByListAsync(int id)
     {
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task"));
+        TaskFilter filter = new TaskFilter()
+        {
+            TodoListId = id,
+        };
+
+        ArgumentNullException.ThrowIfNull(filter);
+        using var filterJson = new StringContent(
+            JsonSerializer.Serialize(filter),
+            Encoding.UTF8,
+            Application.Json);
+
+        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
         if (response == null)
         {
             return null;
@@ -33,6 +45,25 @@ public class TaskWebApiService : ITaskWebApiService
         string json = await response.Content.ReadAsStringAsync();
         Console.WriteLine(json);
         List<TaskDTO>? model = await response.Content.ReadFromJsonAsync<List<TaskDTO>>();
+        return model;
+    }
+
+    public async Task<TaskDTO?> GetByIdAsync(int id)
+    {
+        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
+        if (response == null)
+        {
+            return null;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        string json = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(json);
+        TaskDTO? model = await response.Content.ReadFromJsonAsync<TaskDTO>();
         return model;
     }
 

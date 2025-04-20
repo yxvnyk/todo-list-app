@@ -16,5 +16,9 @@ public class CommentEntity
     [ForeignKey("Task")]
     public int TaskId { get; set; }
 
+    [Required]
+    [MaxLength(200)]
+    public string AuthorId { get; set; } = string.Empty;
+
     public TaskEntity? Task { get; set; }
 }
