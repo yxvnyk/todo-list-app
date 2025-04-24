@@ -1,0 +1,14 @@
+@model (TaskDTO Task, string ReturnUrl)
+@{
+    Layout = "_TaskLayout";
+}
+<div class="container">
+    <partial name="_TaskEditor.cshtml" model='new TaskEditorViewModel()
+{
+    Task = @Model.Task,
+    CallbackMethodName = "Create",
+    ThemeColor = "warning",
+    Title = "Create",
+    ReturnUrl = @Model.ReturnUrl,
+}' />
+</div>

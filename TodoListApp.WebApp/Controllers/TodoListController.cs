@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApp.Models;
 using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
@@ -41,28 +42,70 @@ namespace TodoListApp.WebApp.Controllers
             return this.Ok(list);
         }
 
-        [HttpDelete("Delete/{id}")]
-        public async Task<IActionResult> DeleteTodoList(int id)
+        [HttpGet]
+        [Route("delete")]
+        public async Task<IActionResult> Delete(int id, string returnUrl)
         {
-            var list = await this.apiService.DeleteAsync(id);
-            if (list == null)
-            {
-                return this.NotFound();
-            }
-
-            return this.Ok(list);
+            _ = await this.apiService.DeleteAsync(id);
+            return this.Redirect(returnUrl);
         }
 
-        [HttpPut("Put")]
-        public async Task<IActionResult> UpdateTodoList([FromBody] TodoListUpdateDTO model, int id)
+        [HttpGet]
+        [Route("create/{id:alpha}")]
+        public async Task<IActionResult> Create(string id, string returnUrl)
         {
-            var list = await this.apiService.UpdateAsync(model, id);
-            if (list == null)
+            TodoListDTO task = new TodoListDTO()
             {
-                return this.NotFound();
+                UserId = id,
+            };
+            return this.View((task, returnUrl));
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> Create(TodoListDTO list, string returnUrl)
+        {
+            if (this.ModelState.IsValid)
+            {
+                _ = await this.apiService.AddAsync(list);
+                return this.View("CompleteEditor", new CompleteEditorViewModel()
+                {
+                    Title = "To-do list",
+                    Method = "create",
+                });
             }
 
-            return this.Ok(list);
+            foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+
+            return this.Redirect(returnUrl);
+        }
+
+        [HttpGet]
+        [Route("edit/{id:int}")]
+        public async Task<IActionResult> Edit(int id, string returnUrl)
+        {
+            var task = await this.apiService.GetByIdAsync(id);
+            return this.View((task, returnUrl));
+        }
+
+        [HttpPost]
+        [Route("edit/{id:int}")]
+        public async Task<IActionResult> Update(TodoListUpdateDTO List, int id, string returnUrl)
+        {
+            if (this.ModelState.IsValid)
+            {
+                _ = await this.apiService.UpdateAsync(List, id);
+                return this.View("CompleteEditor", new CompleteEditorViewModel()
+                {
+                    Title = "To-do list",
+                    Method = "update",
+                });
+            }
+
+            return this.Redirect(returnUrl);
         }
     }
 }

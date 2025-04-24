@@ -34,6 +34,21 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("No lists found");
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<TaskDTO>> GetTodoList(int id)
+        {
+            LoggerExtensions.LogTrace(this.logger, nameof(this.GetTodoList));
+
+            var list = await this.repository.GetByIdAsync(id);
+            if (list != null)
+            {
+                return this.Ok(list);
+            }
+
+            LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+            return this.NotFound($"To-do list with {id} not found");
+        }
+
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateList([FromBody] TodoListUpdateDTO model, int id)
         {

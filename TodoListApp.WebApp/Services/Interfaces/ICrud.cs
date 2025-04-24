@@ -5,7 +5,7 @@ namespace TodoListApp.WebApp.Services.Interfaces;
 
 public interface ICrud<T, TUpdate>
 {
-    Task<TaskDTO?> GetByIdAsync(int id);
+    Task<T?> GetByIdAsync(int id);
 
     Task<IEnumerable<T>?> GetAllAsync(int id);
 

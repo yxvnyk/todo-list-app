@@ -58,7 +58,7 @@ public class TagWebApiService : ITagWebApiService
         throw new NotImplementedException();
     }
 
-    public Task<TaskDTO?> GetByIdAsync(int id)
+    public Task<TagDTO?> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }

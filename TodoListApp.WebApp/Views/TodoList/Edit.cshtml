@@ -1,0 +1,14 @@
+@model (TodoListDTO list, string url)
+@{
+    Layout = "_TodoListLayout";
+}
+<div class="container">
+<partial name ="_TodoListEditor.cshtml" model='new TodoListEditorViewModel()
+{
+    List = @Model.list,
+    CallbackMethodName = "Update",
+    ThemeColor = "warning",
+    Title = "Edit",
+    ReturnUrl = @Model.url,
+}'/>
+</div>

@@ -2,8 +2,10 @@
 <html lang="en">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Todo Application</title>
+    <title>To-do app</title>
     <link href="/lib/bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet" />
+    
+
 
     <style>
         html, body {
@@ -99,7 +101,7 @@
             </div>
             <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
                 <div class="container">
-                    <a class="navbar-brand" asp-area="" asp-page="/Index">RazorPagesPizza</a>
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">To-do list app</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
@@ -126,16 +128,8 @@
                         <span class="fs-5 fw-semibold">List group</span>
                     </a>
                     <div class="sidebar-container list-group list-group-flush border-bottom">
-                        <a href="#" class="list-group-item list-group-item-action active py-1 lh-sm" aria-current="true">
-                            <div class="d-flex w-100 justify-content-between">
-                                <strong class="mb-1">List group item heading</strong>
-                                <small>Wed</small>
-                            </div>
-                            <div class="small">Some placeholder content below the heading and date.</div>
-                        </a>
-                        <ul class="nav nav-pills flex-column mb-auto">
+                        
                             @await Component.InvokeAsync("ListsSideBar")
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -143,10 +137,15 @@
             <!-- MAIN CONTENT -->
             <div class="main-content m-1 p-1">
                 <div class="col-12">
+                    
+                    <div class="text-center">
+                        <h1 class="display-4">To-do list have no task yet</h1>
+                    </div>
                     @RenderBody()
                 </div>
             </div>
         </main>
     </div>
+    <partial name="_ValidationScriptsPartial"/>
 </body>
 </html>

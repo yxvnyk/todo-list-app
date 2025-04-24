@@ -1,0 +1,12 @@
+@model CompleteEditorViewModel
+
+@{
+    Layout = "_TaskLayout";
+}
+    
+<div class="text-center" style="margin-top: 30vh">
+    <h2>Success!</h2>
+    <p>@Model.Title have been successfuly @Model.Method</p>
+    <p>Now you can find it in corresponding To-do List</p>
+    <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Main menu</a>
+</div>

@@ -5,15 +5,33 @@
 <div class="container p-3">
     <h1> <span class="badge text-bg-secondary">Task details</span></h1>
     <div>
-        <a class="btn btn-info btn-sm" asp-controller="Task" asp-action="Details" asp-route-productId="@Model?.Task?.Id">
-            Details
-        </a>
-        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" asp-route-id="@Model?.Task?.Id">
+        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" asp-route-id="@Model?.Task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
             Edit
         </a>
-        <a class="btn btn-danger btn-sm" asp-controller="Admin" asp-action="Delete" asp-route-productId="@Model?.Task?.Id">
+        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal_@Model.Task.Id">
             Delete
-        </a>
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal_@Model.Task.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel_@Model.Task.Id" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalLabel_@Model.Task.Id">Do your really want to delete the task?</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        When you click "Delete" button this task with all details and comments will permanently removed
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a class="btn btn-danger" asp-controller="Task" asp-action="Delete" asp-route-id="@Model.Task.Id" asp-route-returnUrl="@Model.ReturnUrl">
+                            Delete
+                        </a>
+                    </div>
+                </div>""
+            </div>
+        </div>
     <table class="table table-sm table-bordered table-striped">
         <tbody>
             <tr>

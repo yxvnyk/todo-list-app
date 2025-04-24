@@ -47,7 +47,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/todos"), todoItemJson);
+        using var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/TodoList"), todoItemJson);
 
         if (response == null)
         {
@@ -65,7 +65,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpClient.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/todos/{id}"), todoItemJson);
+        using var response = await this.httpClient.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"), todoItemJson);
 
         if (response == null)
         {
@@ -77,7 +77,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
 
     public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        using var response = await this.httpClient.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/todos/{id}"));
+        using var response = await this.httpClient.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"));
 
         if (response == null)
         {
@@ -87,8 +87,22 @@ internal class TodoListWebApiService : ITodoListWebApiService
         return response.StatusCode;
     }
 
-    public Task<TaskDTO?> GetByIdAsync(int id)
+    public async Task<TodoListDTO?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"));
+        if (response == null)
+        {
+            return null;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        string json = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(json);
+        TodoListDTO? model = await response.Content.ReadFromJsonAsync<TodoListDTO>();
+        return model;
     }
 }

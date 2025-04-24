@@ -48,7 +48,7 @@ public class CommentWebApiService : ICommentWebApiService
         return model;
     }
 
-    public Task<TaskDTO?> GetByIdAsync(int id)
+    public Task<CommentDTO?> GetByIdAsync(int id)
     {
         throw new NotImplementedException();
     }
