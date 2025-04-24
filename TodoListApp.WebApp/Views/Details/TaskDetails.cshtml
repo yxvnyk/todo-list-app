@@ -5,6 +5,15 @@
 <div class="container p-3">
     <h1> <span class="badge text-bg-secondary">Task details</span></h1>
     <div>
+        <a class="btn btn-info btn-sm" asp-controller="Task" asp-action="Details" asp-route-productId="@Model?.Task?.Id">
+            Details
+        </a>
+        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" asp-route-id="@Model?.Task?.Id">
+            Edit
+        </a>
+        <a class="btn btn-danger btn-sm" asp-controller="Admin" asp-action="Delete" asp-route-productId="@Model?.Task?.Id">
+            Delete
+        </a>
     <table class="table table-sm table-bordered table-striped">
         <tbody>
             <tr>

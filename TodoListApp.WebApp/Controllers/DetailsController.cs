@@ -14,7 +14,7 @@ public class DetailsController : Controller
         this.service = service;
     }
 
-    [HttpPost("task")]
+    [Route("task")]
     public async Task<IActionResult> TaskDetails(int id, string returnUrl)
     {
         var model = await this.service.AggregateTask(id);

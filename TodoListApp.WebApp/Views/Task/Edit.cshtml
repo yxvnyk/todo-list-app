@@ -1,0 +1,13 @@
+@model TaskDTO
+@{
+    Layout = "_TaskLayout";
+}
+<div class="container">
+<partial name ="_TaskEditor.cshtml" model='new TaskEditorViewModel()
+{
+    Task = Model,
+    CallbackMethodName = "Edit",
+    ThemeColor = "warning",
+    Title = "Edit"
+}'/>
+</div>

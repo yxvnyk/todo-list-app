@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xml:lang="en">
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Todo Application</title>
     <link href="/lib/bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet" />
 
@@ -23,43 +23,87 @@
             overflow: hidden;
         }
 
-        .sidebar {
-            width: 380px;
+        .sidebar-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 112px); /* учитываем высоту header */
         }
-        .sidebar-container{
+
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            width: 380px;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sidebar-container {
+            flex-grow: 1;
             overflow-y: auto;
         }
 
         .main-content {
             flex-grow: 1;
-            overflow-y: auto;
             overflow: auto;
+        }
+
+        /* Toggle sidebar visibility via checkbox */
+        #sidebarToggle:checked ~ .wrapper main .sidebar-wrapper .sidebar {
+            display: none !important;
+        }
+
+        #sidebarToggle:checked ~ .wrapper main .main-content {
+            flex-grow: 1;
+            margin-left: 0;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 768px) {
+            .sidebar
+
+        {
+            width: 250px;
+        }
+
+        }
+
+        @@media (max-width: 576px) {
+            .sidebar
+
+        {
+            display: none;
+        }
+
+        .main-content {
+            margin-left: 0;
+        }
+
         }
     </style>
 </head>
 <body>
-    <div class="wrapper">
+    <input type="checkbox" id="sidebarToggle" hidden />
 
+    <div class="wrapper">
         <!-- HEADER -->
         <header>
-            <div class="cyan bg-primary text-white p-2">
+            <div class="bg-primary text-white p-2">
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col navbar-brand">Todo Application</div>
-                        <div class="col-6 navbar-text text-end">
+                        <div class="col-6 text-end">
                             <vc:cart-summary />
                         </div>
                     </div>
                 </div>
             </div>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
                 <div class="container">
                     <a class="navbar-brand" asp-area="" asp-page="/Index">RazorPagesPizza</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                            aria-expanded="false" aria-label="Toggle navigation">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
                         <ul class="navbar-nav flex-grow-1">
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
@@ -73,36 +117,33 @@
         <!-- MAIN -->
         <main>
             <!-- SIDEBAR -->
-            <div class="sidebar d-flex flex-column align-items-stretch flex-shrink-0 bg-body-tertiary text-bg-dark">
-                <a href="/" class="d-flex align-items-center flex-shrink-0 p-3 link-body-emphasis text-decoration-none border-bottom">
-                    <svg class="bi pe-none me-2" width="30" height="24" aria-hidden="true">
-                        <use xlink:href="#bootstrap" />
-                    </svg>
-                    <span class="fs-5 fw-semibold">List group</span>
-                </a>
-                <div class="sidebar-container list-group list-group-flush border-bottom">
-                    <!-- Список с айтемами -->
-                    <a href="#" class="list-group-item list-group-item-action active py-1 lh-sm" aria-current="true">
-                        <div class="d-flex w-100 align-items-center justify-content-between">
-                            <strong class="mb-1">List group item heading</strong>
-                            <small>Wed</small>
-                        </div>
-                        <div class="col-10 mb-1 small">Some placeholder content in a paragraph below the heading and date.</div>
+            <div class="sidebar-wrapper">
+                <div class="sidebar bg-dark text-white d-flex flex-column align-items-stretch flex-shrink-0">
+                    <a href="/" class="d-flex align-items-center p-3 text-white text-decoration-none border-bottom">
+                        <svg class="bi pe-none me-2" width="30" height="24" aria-hidden="true">
+                            <use xlink:href="#bootstrap" />
+                        </svg>
+                        <span class="fs-5 fw-semibold">List group</span>
                     </a>
-                    <ul class="nav nav-pills flex-column mb-auto">
-                    @await Component.InvokeAsync("ListsSideBar")
-                    </ul>
+                    <div class="sidebar-container list-group list-group-flush border-bottom">
+                        <a href="#" class="list-group-item list-group-item-action active py-1 lh-sm" aria-current="true">
+                            <div class="d-flex w-100 justify-content-between">
+                                <strong class="mb-1">List group item heading</strong>
+                                <small>Wed</small>
+                            </div>
+                            <div class="small">Some placeholder content below the heading and date.</div>
+                        </a>
+                        <ul class="nav nav-pills flex-column mb-auto">
+                            @await Component.InvokeAsync("ListsSideBar")
+                        </ul>
+                    </div>
                 </div>
             </div>
-       
 
             <!-- MAIN CONTENT -->
-            <div class="main-content row m-1 p-1">
-                <div class="col-9">
+            <div class="main-content m-1 p-1">
+                <div class="col-12">
                     @RenderBody()
-                </div>
-                <div id="categories" class="col-3">
-                    <vc:navigation-menu />
                 </div>
             </div>
         </main>
