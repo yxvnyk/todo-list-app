@@ -21,7 +21,7 @@ namespace TodoListApp.WebApp.Controllers
         public async Task<IActionResult> GetAllTasksByListId(int id)
         {
             var list = await this.apiService.GetAllByListAsync(id);
-            return this.View((list, "Todo-list", id));
+            return this.View((list, id));
         }
 
         [HttpGet("GetByTag")]

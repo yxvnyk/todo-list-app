@@ -61,7 +61,7 @@
         </tbody>
     </table>
     </div>
-    <partial name="_TagsPartial.cshtml" model="@(Model.Tags, Model.Task.Id)" /><
+    <partial name="_TagsPartial.cshtml" model="@(Model?.Tags, Model.Task.Id)" />
     <partial name="_CommentsPartial.cshtml" model="@Model" />
     <a class="btn btn-secondary"
        href="@Model?.ReturnUrl">Back</a>

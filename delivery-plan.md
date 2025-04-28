@@ -90,8 +90,8 @@ The developer's checklist for week 1:
 - [+] T01: Built-in .NET code analysis tools are enabled in C# projects; StyleCop NuGet package is added as a dependency to all C# projects and configured properly.
 - [+] T02: The `TodoListDbContext` is added to the *TodoListApp.WebApp* project and configured as a dependency in the application dependency injection container.
 - [+] T03: Implement Epic 1 backend functionality in the *TodoListApp.WebApi* application.
-- [ ] T05: Implement Epic 2 backend functionality in the *TodoListApp.WebApi* application.
-- [ ] T07: Implement Epic 3 backend functionality in the *TodoListApp.WebApi* application.
+- [+] T05: Implement Epic 2 backend functionality in the *TodoListApp.WebApi* application.
+- [+] T07: Implement Epic 3 backend functionality in the *TodoListApp.WebApi* application.
 - [ ] All changes are committed and pushed to the remote repository.
 - [ ] There are no major or critical issues or blockers found during building the solution.
 

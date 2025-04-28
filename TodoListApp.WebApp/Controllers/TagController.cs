@@ -27,8 +27,7 @@ public class TagController : Controller
         }
 
         _ = this.Ok(list);
-        list = list.DistinctBy(x => x.Name);
-        return this.View((list, returnUrl)  );
+        return this.View((list, returnUrl));
     }
 
     [HttpPost]

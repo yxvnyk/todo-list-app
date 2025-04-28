@@ -1,2 +1,2 @@
-@model (IEnumerable<TaskDTO> List, string title, int id)
-<partial name="_TaskList.cshtml" model="(@Model.List, Model.title, Model.id)"/>
+@model (IEnumerable<TaskDTO> List, int id)
+<partial name="_TaskList.cshtml" model='(@Model.List, "To-do list", Model.id)' />

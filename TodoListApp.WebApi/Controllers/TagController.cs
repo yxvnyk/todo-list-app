@@ -27,6 +27,7 @@ public class TagController : Controller
         var list = await this.repository.GetAllAsync(filter);
         if (list.Any())
         {
+            list = list.DistinctBy(x => x.Name); // return without duplication
             return this.Ok(list);
         }
 
