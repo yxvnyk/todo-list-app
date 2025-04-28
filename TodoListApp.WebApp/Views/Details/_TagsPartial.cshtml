@@ -1,0 +1,57 @@
+@model (IEnumerable<TagDTO> tags, int id)
+@{
+    string url = @ViewContext.HttpContext.Request.PathAndQuery();
+}
+<div class="container">
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h6 class="border-bottom pb-2 mb-0">Tags</h6>
+        <form asp-action="Create" asp-controller="Tag" asp-route-returnUrl="@url" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" name="tag.TaskId" value="@Model.id" />
+
+            <div class="form-group">
+                <label for="tag.Name">Add Tag</label>
+                <input name="tag.Name" class="form-control" rows="3" placeholder="Write your tag..."></input>
+            </div>
+
+            <div class="form-group mt-3 text-center">
+                <button type="submit" class="btn btn-primary mt-2">Create</button>
+            </div>
+        </form>
+    @{
+        if (Model.tags != null)
+        {
+            foreach (var tag in Model.tags)
+            {
+                <span class="bg-light rounded-1">#@tag.Name
+                        <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center p-0 ms-2" style="width: 24px; height: 24px;" data-bs-toggle="modal" data-bs-target="#modal_@tag.Id">
+                            ×
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="modal_@tag.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel_@tag.Id" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modalLabel_@tag.Id">Do your really want to delete this tag?</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    When you click "Delete" button this tag will permanently removed
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <a class="btn btn-danger" asp-controller="Tag" asp-action="Delete" asp-route-id="@tag.Id" asp-route-returnUrl="@url">
+                                        Delete
+                                    </a>
+                                </div>
+                            </div>""
+                        </div>
+                    </div>
+                    </span>
+            }
+    ;
+        }
+    }
+    </div>
+</div>

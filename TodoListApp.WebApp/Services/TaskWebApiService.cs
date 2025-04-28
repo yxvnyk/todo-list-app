@@ -48,6 +48,36 @@ public class TaskWebApiService : ITaskWebApiService
         return model;
     }
 
+    public async Task<IEnumerable<TaskDTO>?> GetAllByTagAsync(string tag)
+    {
+        TaskFilter filter = new TaskFilter()
+        {
+            TagName = tag,
+        };
+
+        ArgumentNullException.ThrowIfNull(filter);
+        using var filterJson = new StringContent(
+            JsonSerializer.Serialize(filter),
+            Encoding.UTF8,
+            Application.Json);
+
+        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+        if (response == null)
+        {
+            return null;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        string json = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(json);
+        List<TaskDTO>? model = await response.Content.ReadFromJsonAsync<List<TaskDTO>>();
+        return model;
+    }
+
     public async Task<TaskDTO?> GetByIdAsync(int id)
     {
         var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));

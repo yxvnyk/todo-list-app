@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApi.Models.Enums;
+using TodoListApp.WebApp.Models;
 using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
@@ -20,7 +21,14 @@ namespace TodoListApp.WebApp.Controllers
         public async Task<IActionResult> GetAllTasksByListId(int id)
         {
             var list = await this.apiService.GetAllByListAsync(id);
-            return this.View((list, id));
+            return this.View((list, "Todo-list", id));
+        }
+
+        [HttpGet("GetByTag")]
+        public async Task<IActionResult> GetAllTasksByTag(string tag)
+        {
+            var list = await this.apiService.GetAllByTagAsync(tag);
+            return this.View((list, tag));
         }
 
         [HttpPost("complete")]
@@ -49,7 +57,11 @@ namespace TodoListApp.WebApp.Controllers
             if (this.ModelState.IsValid)
             {
                 _ = await this.apiService.UpdateAsync(Task, id);
-                return this.View("CompleteEditor", "update");
+                return this.View("CompleteEditor", new CompleteEditorViewModel()
+                {
+                    Title = "Task",
+                    Method = "create",
+                });
             }
 
             return this.Redirect(returnUrl);
@@ -81,7 +93,11 @@ namespace TodoListApp.WebApp.Controllers
             if (this.ModelState.IsValid)
             {
                 _ = await this.apiService.AddAsync(task);
-                return this.View("CompleteEditor", "create");
+                return this.View("CompleteEditor", new CompleteEditorViewModel()
+                {
+                    Title = "Task",
+                    Method = "create",
+                });
             }
 
             foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))

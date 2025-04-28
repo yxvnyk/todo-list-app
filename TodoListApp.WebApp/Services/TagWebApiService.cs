@@ -18,19 +18,55 @@ public class TagWebApiService : ITagWebApiService
         this.httpClient = client;
     }
 
-    public Task<HttpStatusCode?> AddAsync(TagDTO model)
+    public async Task<HttpStatusCode?> AddAsync(TagDTO model)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(model);
+        using var todoItemJson = new StringContent(
+            JsonSerializer.Serialize(model),
+            Encoding.UTF8,
+            Application.Json);
+
+        using var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"), todoItemJson);
+
+        if (response == null)
+        {
+            return null;
+        }
+
+        return response.StatusCode;
     }
 
-    public Task<HttpStatusCode?> DeleteAsync(int id)
+    public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        using var response = await this.httpClient.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag/{id}"));
+
+        if (response == null)
+        {
+            return null;
+        }
+
+        return response.StatusCode;
     }
 
-    public Task<IEnumerable<TagDTO>?> GetAllAsync(int id)
+    public async Task<IEnumerable<TagDTO>?> GetAllAsync(int id = 0)
     {
-        throw new NotImplementedException();
+        Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
+        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"));
+        if (response == null)
+        {
+            return null;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
+        string json = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(json);
+        List<TagDTO>? model = await response.Content.ReadFromJsonAsync<List<TagDTO>>();
+        return model;
     }
 
     public async Task<IEnumerable<TagDTO>?> GetAllByTaskAsync(int id)
@@ -52,10 +88,23 @@ public class TagWebApiService : ITagWebApiService
         return model;
     }
 
-
-    public Task<HttpStatusCode?> UpdateAsync(TagUpdateDTO model, int id)
+    public async Task<HttpStatusCode?> UpdateAsync(TagUpdateDTO model, int id)
     {
-        throw new NotImplementedException();
+        ArgumentNullException.ThrowIfNull(model);
+        using var todoItemJson = new StringContent(
+            JsonSerializer.Serialize(model),
+            Encoding.UTF8,
+            Application.Json);
+
+        Console.WriteLine(await todoItemJson.ReadAsStringAsync());
+        using var response = await this.httpClient.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag/{id}"), todoItemJson);
+
+        if (response == null)
+        {
+            return null;
+        }
+
+        return response.StatusCode;
     }
 
     public Task<TagDTO?> GetByIdAsync(int id)

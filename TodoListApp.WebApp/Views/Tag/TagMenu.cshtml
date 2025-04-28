@@ -1,0 +1,27 @@
+@model (IEnumerable<TagDTO> List, string url)
+@{
+    Layout = "_TaskLayout";
+}
+<div class="container">
+    <h3 class="text-black text-center p-1">All tags from to-do lists</h3>
+    @foreach (TagDTO tag in Model.List ?? Enumerable.Empty<TagDTO>())
+    {
+        
+        <div class="my-3 p-3 rounded shadow-sm bg-dark bg-opacity-10">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    @tag.Name
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" asp-action="GetAllTasksByTag" asp-controller="Task" asp-route-tag="@tag.Name">Action</a></li>
+                </ul>
+            </div>
+            
+        </div>
+
+    }
+    <div class="form-group mt-3 text-center">
+
+        <a class="btn btn-primary" type="submit" href="@Model.url">Back</a>
+    </div>
+</div>  

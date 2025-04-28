@@ -1,0 +1,2 @@
+@model  (IEnumerable<TaskDTO> List, string tag)
+<partial name="_TaskList.cshtml" model='(Model.List,$"Task with #{@Model.tag} tag", 0)'/>
