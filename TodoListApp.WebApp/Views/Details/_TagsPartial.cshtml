@@ -1,4 +1,4 @@
-@model (IEnumerable<TagDTO> tags, int id)
+@model (IEnumerable<TagDTO>? tags, int? id)
 @{
     string url = @ViewContext.HttpContext.Request.PathAndQuery();
 }
@@ -21,7 +21,7 @@
     @{
         if (Model.tags != null)
         {
-            foreach (var tag in Model.tags)
+            foreach (var tag in Model.tags ?? Enumerable.Empty<TagDTO>())
             {
                 <span class="bg-light rounded-1">#@tag.Name
                         <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center p-0 ms-2" style="width: 24px; height: 24px;" data-bs-toggle="modal" data-bs-target="#modal_@tag.Id">

@@ -1,0 +1,121 @@
+@model TaskListPageViewModel
+
+<nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
+    <div class="container">
+        <a class="navbar-brand" asp-controller="" asp-action="">@Model.Title</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                @if (Model.TodoListId != 0)
+                {
+                    <li class="nav-item">
+                        <a class="btn btn-light" asp-controller="Task" asp-action="Create" asp-route-listId="@Model.TodoListId" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                            New task
+                        </a>
+                    </li>
+                }
+                @* Filter *@
+                <li class="nav-item dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Filter by
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown">
+                            <a class="dropdown-item dropdown-toggle" href="#">Status</a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" asp-for="@Model.AssigneeId" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.Active" />
+                                        <input type="hidden" name="ListId" value="@Model.TodoListId" />
+                                        <button type="submit" class="dropdown-item">Active</button>
+                                    </form>
+                                </li>
+
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.Overdue" />
+                                        <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="ListId" value="@Model.TodoListId" />
+                                        <button type="submit" class="dropdown-item">Overdue</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.None" />
+                                        <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="ListId" value="@Model.TodoListId" />
+                                        <input type="hidden" name="returnUrl"
+                                               value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                                        <button type="submit" class="dropdown-item">All tasks</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+
+                        @* All tasks (no filter) *@
+                        <li>
+                            <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
+                                <input type="hidden" name="ListId" value="@Model.TodoListId" />
+                                <button type="submit" class="dropdown-item">All tasks</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li
+
+                @* Sorting *@
+                ><li class="nav-item dropdown">
+                    <button class="btn btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Sort
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown">
+                            <a class="dropdown-item dropdown-toggle" href="#">Title</a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" asp-for="@Model.AssigneeId" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="SortBy" value="@("Title")" />
+                                        <button type="submit" class="dropdown-item">By asceding</button>
+                                    </form>
+                                </li>
+
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" asp-for="@Model.AssigneeId" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="SortBy" value="@("Title")" />
+                                        <input type="hidden" name="IsDescending" value="true" />
+                                        <button type="submit" class="dropdown-item">By desceding</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.None" />
+                                        <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="returnUrl"
+                                               value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                                        <button type="submit" class="dropdown-item">Without sorting</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+
+                        @* All tasks (no filter) *@
+                        <li>
+                            <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
+                                <button type="submit" class="dropdown-item">All tasks</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

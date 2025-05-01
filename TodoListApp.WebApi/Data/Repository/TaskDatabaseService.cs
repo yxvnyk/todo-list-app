@@ -4,6 +4,7 @@ using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Entities;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.PagingDTO;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Data.Repository;
@@ -40,7 +41,7 @@ internal class TaskDatabaseService : ITaskDatabaseService
         return false;
     }
 
-    public async Task<IEnumerable<TaskDTO>> GetAllAsync(TaskFilter filter)
+    public async Task<TaskPaging> GetAllAsync(TaskFilter filter)
     {
         var tasks = this.context.Tasks.AsQueryable();
 
@@ -64,14 +65,42 @@ internal class TaskDatabaseService : ITaskDatabaseService
             tasks = tasks.Include(t => t.Tags).Where(t => t.Tags != null && t.Tags.Any(tag => tag.Name == filter.TagName));
         }
 
+        if (filter.Overdue == Models.Enums.Overdue.Active)
+        {
+            tasks = tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value > DateTime.Now);
+        }
+        else if (filter.Overdue == Models.Enums.Overdue.Overdue)
+        {
+            tasks = tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value < DateTime.Now);
+        }
+
         if (!string.IsNullOrEmpty(filter.TextInTitle))
         {
             tasks = tasks.Where(t => t.Title.Contains(filter.TextInTitle, StringComparison.OrdinalIgnoreCase));
         }
 
+        if (!string.IsNullOrEmpty(filter.SortBy))
+        {
+            if (filter.SortBy.Equals("DueDate", StringComparison.OrdinalIgnoreCase))
+            {
+                tasks = filter.IsDescending ? tasks.OrderByDescending(x => x.DueDate) : tasks.OrderBy(x => x.DueDate);
+            }
+            else if (filter.SortBy.Equals("Title", StringComparison.OrdinalIgnoreCase))
+            {
+                tasks = filter.IsDescending ? tasks.OrderByDescending(x => x.Title) : tasks.OrderBy(x => x.Title);
+            }
+        }
+
         var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
 
-        return await tasks.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TaskDTO>(x)).ToListAsync();
+        var count = tasks.Count();
+
+        return new TaskPaging()
+        {
+            Items = await tasks.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TaskDTO>(x)).ToListAsync(),
+            TotalCount = (count + (filter.PageSize - 1)) / 5,
+            CurrentPage = filter.PageNumber,
+        };
     }
 
     public async Task<IEnumerable<TaskDTO>> GetAllAsync()
@@ -103,5 +132,10 @@ internal class TaskDatabaseService : ITaskDatabaseService
     {
         var exist = await this.context.TodoLists.FindAsync(id);
         return exist != null;
+    }
+
+    Task<IEnumerable<TaskDTO>> ICrud<TaskDTO, TaskUpdateDTO, TaskFilter>.GetAllAsync(TaskFilter filter)
+    {
+        throw new NotImplementedException();
     }
 }

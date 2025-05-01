@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.PagingDTO;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApp.Services.Interfaces;
 using static System.Net.Mime.MediaTypeNames;
@@ -18,7 +19,7 @@ public class TaskWebApiService : ITaskWebApiService
         this.httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<TaskDTO>?> GetAllByListAsync(int id)
+    public async Task<TaskPaging?> GetAllByListAsync(int id)
     {
         TaskFilter filter = new TaskFilter()
         {
@@ -44,11 +45,36 @@ public class TaskWebApiService : ITaskWebApiService
 
         string json = await response.Content.ReadAsStringAsync();
         Console.WriteLine(json);
-        List<TaskDTO>? model = await response.Content.ReadFromJsonAsync<List<TaskDTO>>();
+        TaskPaging? model = await response.Content.ReadFromJsonAsync<TaskPaging>();
         return model;
     }
 
-    public async Task<IEnumerable<TaskDTO>?> GetAllByTagAsync(string tag)
+    public async Task<TaskPaging?> GetAllByFilterAsync(TaskFilter filter)
+    {
+        ArgumentNullException.ThrowIfNull(filter);
+        using var filterJson = new StringContent(
+            JsonSerializer.Serialize(filter),
+            Encoding.UTF8,
+            Application.Json);
+
+        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+        if (response == null)
+        {
+            return null;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        string json = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(json);
+        TaskPaging? model = await response.Content.ReadFromJsonAsync<TaskPaging>();
+        return model;
+    }
+
+    public async Task<IEnumerable<TaskPaging>?> GetAllByTagAsync(string tag)
     {
         TaskFilter filter = new TaskFilter()
         {
@@ -74,7 +100,37 @@ public class TaskWebApiService : ITaskWebApiService
 
         string json = await response.Content.ReadAsStringAsync();
         Console.WriteLine(json);
-        List<TaskDTO>? model = await response.Content.ReadFromJsonAsync<List<TaskDTO>>();
+        List<TaskPaging>? model = await response.Content.ReadFromJsonAsync<List<TaskPaging>>();
+        return model;
+    }
+
+    public async Task<IEnumerable<TaskPaging>?> GetAllByAssigneeAsync(string id)
+    {
+        TaskFilter filter = new TaskFilter()
+        {
+            AssigneeId = id,
+        };
+
+        ArgumentNullException.ThrowIfNull(filter);
+        using var filterJson = new StringContent(
+            JsonSerializer.Serialize(filter),
+            Encoding.UTF8,
+            Application.Json);
+
+        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+        if (response == null)
+        {
+            return null;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        string json = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(json);
+        List<TaskPaging>? model = await response.Content.ReadFromJsonAsync<List<TaskPaging>>();
         return model;
     }
 
@@ -165,4 +221,5 @@ public class TaskWebApiService : ITaskWebApiService
 
         return response.StatusCode;
     }
+
 }

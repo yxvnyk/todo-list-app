@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
+using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApi.Models.Enums;
@@ -18,17 +21,60 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> GetAllTasksByListId(int id)
+        public async Task<IActionResult> GetAllTasksByListId(int listId, int page = 1)
         {
-            var list = await this.apiService.GetAllByListAsync(id);
-            return this.View((list, id));
+            TaskFilter filter = new TaskFilter()
+            {
+                TodoListId = listId,
+                PageNumber = page,
+            };
+            var list = await this.apiService.GetAllByFilterAsync(filter);
+            return this.View((list, listId));
         }
 
         [HttpGet("GetByTag")]
-        public async Task<IActionResult> GetAllTasksByTag(string tag)
+        public async Task<IActionResult> GetAllTasksByTag(string tag, int page = 1)
         {
-            var list = await this.apiService.GetAllByTagAsync(tag);
+            TaskFilter filter = new TaskFilter()
+            {
+                TagName = tag,
+                PageNumber = page,
+            };
+            var list = await this.apiService.GetAllByFilterAsync(filter);
             return this.View((list, tag));
+        }
+
+        [HttpGet("GetByAssignee")]
+        public async Task<IActionResult> GetAllTasksByAssigneeId(string assigneeId)
+        {
+            TaskFilter filter = new TaskFilter()
+            {
+                AssigneeId = assigneeId,
+                Overdue = Overdue.Active,
+            };
+            var list = await this.apiService.GetAllByFilterAsync(filter);
+            return this.View((list, assigneeId));
+        }
+
+        [HttpPost("GetByFilter")]
+        public IActionResult GetAllTasksByFilter(TaskFilter filter, string returnUrl = "/")
+        {
+            this.HttpContext.Session.SetString("filter", JsonSerializer.Serialize(filter));
+            return this.RedirectToAction("FilteredResults", new { returnUrl = returnUrl });
+        }
+
+        [HttpGet("FilteredResults")]
+        public async Task<IActionResult> FilteredResults(string returnUrl)
+        {
+            var filterJson = this.HttpContext.Session.GetString("filter");
+            if (!string.IsNullOrEmpty(filterJson))
+            {
+                var filter = JsonSerializer.Deserialize<TaskFilter>(filterJson);
+                var list = await this.apiService.GetAllByFilterAsync(filter!);
+                return this.View("FilteredResults", (list, filter));
+            }
+
+            return this.Redirect(returnUrl);
         }
 
         [HttpPost("complete")]
@@ -69,25 +115,24 @@ namespace TodoListApp.WebApp.Controllers
 
         [HttpGet]
         [Route("delete")]
-        public async Task<IActionResult> Delete(int id, string returnUrl)
+        public async Task<IActionResult> Delete(int listId, string returnUrl)
         {
-            _ = await this.apiService.DeleteAsync(id);
+            _ = await this.apiService.DeleteAsync(listId);
             return this.Redirect(returnUrl);
         }
 
         [HttpGet]
-        [Route("create/{id:int}")]
-        public async Task<IActionResult> Create(int id, string returnUrl)
+        [Route("create/{listId:int}")]
+        public IActionResult Create(int listId, string returnUrl)
         {
             TaskDTO task = new TaskDTO()
             {
-                TodoListId = id,
+                TodoListId = listId,
             };
             return this.View((task, returnUrl));
         }
 
-        [HttpPost]
-        [Route("create")]
+        [HttpPost("create/{returnUrl}")]
         public async Task<IActionResult> Create(TaskDTO task, string returnUrl)
         {
             if (this.ModelState.IsValid)

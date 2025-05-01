@@ -32,6 +32,14 @@ builder.Services.TryAddScoped<ITagWebApiService, TagWebApiService>();
 builder.Services.TryAddScoped<ICommentWebApiService, CommentWebApiService>();
 builder.Services.TryAddScoped<TaskAggregatorService>();
 
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(option =>
+{
+    option.IdleTimeout = TimeSpan.FromMinutes(30);
+    option.Cookie.HttpOnly = true;
+    option.Cookie.IsEssential = true;
+});
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -69,6 +77,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 

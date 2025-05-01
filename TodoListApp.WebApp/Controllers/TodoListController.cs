@@ -17,9 +17,9 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> GetAllLists(int id = 0)
+        public async Task<IActionResult> GetAllLists(int listId = 0)
         {
-            var list = await this.apiService.GetAllAsync(id);
+            var list = await this.apiService.GetAllAsync(listId);
             if (list == null)
             {
                 return this.NotFound();
@@ -44,9 +44,9 @@ namespace TodoListApp.WebApp.Controllers
 
         [HttpGet]
         [Route("delete")]
-        public async Task<IActionResult> Delete(int id, string returnUrl)
+        public async Task<IActionResult> Delete(int listId, string returnUrl)
         {
-            _ = await this.apiService.DeleteAsync(id);
+            _ = await this.apiService.DeleteAsync(listId);
             return this.Redirect(returnUrl);
         }
 
@@ -84,20 +84,20 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet]
-        [Route("edit/{id:int}")]
-        public async Task<IActionResult> Edit(int id, string returnUrl)
+        [Route("edit/{listId:int}")]
+        public async Task<IActionResult> Edit(int listId, string returnUrl)
         {
-            var task = await this.apiService.GetByIdAsync(id);
+            var task = await this.apiService.GetByIdAsync(listId);
             return this.View((task, returnUrl));
         }
 
         [HttpPost]
-        [Route("edit/{id:int}")]
-        public async Task<IActionResult> Update(TodoListUpdateDTO List, int id, string returnUrl)
+        [Route("edit/{listId:int}")]
+        public async Task<IActionResult> Update(TodoListUpdateDTO List, int listId, string returnUrl)
         {
             if (this.ModelState.IsValid)
             {
-                _ = await this.apiService.UpdateAsync(List, id);
+                _ = await this.apiService.UpdateAsync(List, listId);
                 return this.View("CompleteEditor", new CompleteEditorViewModel()
                 {
                     Title = "To-do list",

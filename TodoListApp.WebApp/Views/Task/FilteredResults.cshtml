@@ -1,0 +1,21 @@
+    @model (TaskPaging taskPaging, TaskFilter filter);
+    @{
+        TaskFilter filter = Model.filter;
+        TaskListPageViewModel listModel = new TaskListPageViewModel()
+                {
+                    AssigneeId = "admin",
+                    List = Model.taskPaging.Items,
+                    Title = "Assigned tasks",
+                };
+    }
+    <partial name="_AssigneeNavigation.cshtml" model="@listModel" />
+    <partial name="_TaskList.cshtml" model="@listModel"/>
+    <div page-model-post="@Model.taskPaging" page-classes-enabled="true"
+         class="btn-group pull-right m-1"
+         page-post-TodoListId="@filter.TodoListId" page-post-AssigneeId="@filter.AssigneeId!"
+         page-post-Overdue="@filter.Overdue!" page-post-PageSize="@filter.PageSize"
+         page-post-SortBy="@filter.SortBy!"
+         page-post-IsDescending="@filter.IsDescending" page-post-returnUrl="null!"
+     page-action="GetByFilter"
+     page-controller="Task">
+    </div>  

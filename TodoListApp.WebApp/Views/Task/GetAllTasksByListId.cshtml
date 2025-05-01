@@ -1,2 +1,15 @@
-@model (IEnumerable<TaskDTO> List, int id)
-<partial name="_TaskList.cshtml" model='(@Model.List, "To-do list", Model.id)' />
+@model (TaskPaging taskPaging, int id)
+@{
+    TaskListPageViewModel listModel = new TaskListPageViewModel()
+            {
+                AssigneeId = "admin",
+                TodoListId = Model.id,
+                List = Model.taskPaging.Items,
+                Title = "To-do list",
+            };
+}
+<partial name="_TaskNavigation.cshtml" model="@listModel" />
+<partial name="_TaskList.cshtml" model="@listModel" />
+<div page-model="@Model.taskPaging" page-classes-enabled="true"
+     page-url-listId="@Model.id" class="btn-group pull-right m-1">
+</div>

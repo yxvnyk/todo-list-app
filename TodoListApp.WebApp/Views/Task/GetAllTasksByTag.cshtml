@@ -1,2 +1,14 @@
-@model  (IEnumerable<TaskDTO> List, string tag)
-<partial name="_TaskList.cshtml" model='(Model.List,$"Task with #{@Model.tag} tag", 0)'/>
+@model  (TaskPaging taskPaging, string tag)
+@{
+    TaskListPageViewModel listModel = new TaskListPageViewModel()
+            {
+                AssigneeId = "admin",
+                List = Model.taskPaging.Items,
+                Title = $"Task with #{@Model.tag} tag",
+            };
+}
+<partial name="_TaskNavigation.cshtml" model="@listModel" />
+<partial name="_TaskList.cshtml" model="@listModel"/>
+<div page-model="@Model.taskPaging" page-classes-enabled="true"
+     page-url-tag="@Model.tag" class="btn-group pull-right m-1">
+</div>

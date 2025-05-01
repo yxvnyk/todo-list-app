@@ -3,7 +3,7 @@ using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApp.Services.Interfaces;
 
-public interface ICrud<T, TUpdate>
+public interface ICrud<T, TUpdate, TPagging>
 {
     Task<T?> GetByIdAsync(int id);
 

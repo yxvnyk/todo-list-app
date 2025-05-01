@@ -14,7 +14,7 @@
 @foreach (var list in Model ?? Enumerable.Empty<TodoListDTO>() )
     {
         <li>
-        <a href="@Url.Action(nameof(TaskController.GetAllTasksByListId), "task")?id=@list.Id" class="nav-link text-bg-dark text-white list-group-item list-group-item-action active py-1 lh-sm" aria-current="true">
+        <a asp-controller="Task" asp-action="GetAllTasksByListId" asp-route-listId="@list.Id" class="nav-link text-bg-dark text-white list-group-item list-group-item-action active py-1 lh-sm" aria-current="true">
             <div class="d-flex w-100 align-items-center justify-content-between">
                 <strong class="mb-1">@list?.Title</strong>
                 <small></small>
@@ -22,7 +22,7 @@
             </div>
             <div class="col-10 mb-1 small">@list?.Description</div>
                 <div class=" mb-2 mb-md-0">
-                    <a class="btn btn-warning btn-sm" asp-controller="TodoList" asp-action="Edit" asp-route-id="@list?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                    <a class="btn btn-warning btn-sm" asp-controller="TodoList" asp-action="Edit" asp-route-listId="@list?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                         Edit
                     </a>
                     <!-- Button trigger modal -->
@@ -45,7 +45,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                <a class="btn btn-danger" asp-controller="TodoList" asp-action="Delete" asp-route-id="@list.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                                <a class="btn btn-danger" asp-controller="TodoList" asp-action="Delete" asp-route-listId="@list.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                                     Delete
                                 </a>
                             </div>

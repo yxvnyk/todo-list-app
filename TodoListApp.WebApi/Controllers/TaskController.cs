@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
+using TodoListApp.WebApi.Models.DTO.PagingDTO;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers
@@ -24,10 +25,10 @@ namespace TodoListApp.WebApi.Controllers
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasks));
 
-            var list = await this.repository.GetAllAsync(filter);
-            if (list.Any())
+            var taskPaging = await this.repository.GetAllAsync(filter);
+            if (taskPaging.Items != null)
             {
-                return this.Ok(list);
+                return this.Ok(taskPaging);
             }
 
             LoggerExtensions.LogWarning(this.logger, "No tasks found");
@@ -35,14 +36,14 @@ namespace TodoListApp.WebApi.Controllers
         }
 
         [HttpPost("search")]
-        public async Task<ActionResult<TaskDTO>> GetAllTasksByPost([FromBody] TaskFilter filter)
+        public async Task<ActionResult<TaskPaging>> GetAllTasksByPost([FromBody] TaskFilter filter)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasks));
 
-            var list = await this.repository.GetAllAsync(filter);
-            if (list.Any())
+            var taskPaging = await this.repository.GetAllAsync(filter);
+            if (taskPaging.Items != null)
             {
-                return this.Ok(list);
+                return this.Ok(taskPaging);
             }
 
             LoggerExtensions.LogWarning(this.logger, "No tasks found");

@@ -1,26 +1,23 @@
-@model (IEnumerable<TaskDTO> List,  string title, int id)
+@model TaskListPageViewModel
+<style>
+    /* Hover-based dropdown */
+    .dropdown:hover > .dropdown-menu {
+    display: block;
+    }
 
+    /* Optional: Style for the nested dropdown */
+    .dropdown-menu .dropdown-menu {
+    display: none;
+    margin-left: 100%;
+    top: 0;
+    left: 0;
+    }
 
-<nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
-    <div class="container">
-        <a class="navbar-brand" asp-controller="" asp-action="">@Model.title</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-            <ul class="navbar-nav flex-grow-1">
-                @if (Model.id != 0)
-                {
-                    <li class="nav-item">
-                        <a class="btn btn-light" asp-controller="Task" asp-action="Create" asp-route-id="@Model.id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
-                            New task
-                        </a>
-                    </li>
-                }
-            </ul>
-        </div>
-    </div>
-</nav>
+    .dropdown-menu .dropdown:hover > .dropdown-menu {
+    display: block;
+    }
+</style>
+
 @if (Model.List == null)
 {
     <div class="text-center">
@@ -32,7 +29,7 @@ else
 
     <div class="container">
         <div class="text-center">
-            <h1 class="display-4">@Model.title</h1>
+            <h1 class="display-4">@Model.Title</h1>
         </div>
         @* <div class="bg-primary text-white p-2"> *@
         @*     <div class="container-fluid"> *@
@@ -49,7 +46,7 @@ else
         @*         </div> *@
         @*     </div> *@
         @* </div> *@
-        
+
 
 
         @foreach (var task in @Model.List)
@@ -59,12 +56,12 @@ else
                     <label class="form-check-label" for="firstCheckbox">@task.Title</label>
                     </li>
                     *@
-                string color = "bg-dark";
-                var overdue = DateTime.Compare(task.DueDate.GetValueOrDefault(), DateTime.Now);
-                if (overdue < 0)
-                {
-                    color = "bg-danger";
-                }
+            string color = "bg-dark";
+            var overdue = DateTime.Compare(task.DueDate.GetValueOrDefault(), DateTime.Now);
+            if (overdue < 0)
+            {
+                color = "bg-danger";
+            }
             <div class="my-3 p-3 rounded shadow-sm @color  bg-opacity-10">
                 <h6 class="border-bottom pb-2 mb-0">@task.Title</h6>
                 <div class="d-flex flex-column flex-md-row justify-content-between text-body-secondary pt-3">
@@ -73,9 +70,20 @@ else
                         <form id="@task?.Id" asp-controller="Task" asp-action="TaskComplete" method="post" asp-antiforgery="true">
                             <input type="hidden" name="id" value="@task?.Id" />
                             <input type="hidden" name="status" value="@(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? TodoListApp.WebApi.Models.Enums.Status.InProgress : TodoListApp.WebApi.Models.Enums.Status.Completed)" />
-                            <input type="hidden" name="returnUrl"
-                                   value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+
+                            @if (Model.ReturnUrl == null)
+                            {
+                                <input type="hidden" name="returnUrl"
+                                value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                            }
+                            else
+                            {
+                                <input type="hidden" name="returnUrl"
+                                       value="@Model.ReturnUrl" />
+                            }
                             <input type="checkbox" class="form-check-input me-1" onchange="this.form.submit()" @(task?.Status == TodoListApp.WebApi.Models.Enums.Status.Completed ? "checked" : "") />
+
+                            
                         </form>
 
                         
@@ -84,23 +92,23 @@ else
                         </div>
                     </div>
                     <div class=" mb-2 mb-md-0">
-                        <a class="btn btn-info btn-sm" asp-controller="Details" asp-action="TaskDetails" method="post" asp-route-id="@task.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                        <a class="btn btn-info btn-sm" asp-controller="Details" asp-action="TaskDetails" method="post" asp-route-id="@task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                             Details
                         </a>
-                        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" method="post" asp-route-id="@task.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" method="post" asp-route-id="@task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                             Edit
                         </a>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal_@task.Id">
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal_@task?.Id">
                             Delete
                         </button>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="modal_@task.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel_@task.Id" aria-hidden="true">
+                        <div class="modal fade" id="modal_@task?.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel_@task?.Id" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <h1 class="modal-title fs-5" id="modalLabel_@task.Id">Do your really want to delete the task?</h1>
+                                        <h1 class="modal-title fs-5" id="modalLabel_@task?.Id">Do your really want to delete the task?</h1>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
@@ -108,11 +116,11 @@ else
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <a class="btn btn-danger" asp-controller="Task" asp-action="Delete" asp-route-id="@task.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                                        <a class="btn btn-danger" asp-controller="Task" asp-action="Delete" asp-route-id="@task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                                             Delete
                                         </a>
                                     </div>
-                                </div>""
+                                </div>
                             </div>
                         </div>
                     </div>
