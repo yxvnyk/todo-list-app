@@ -76,7 +76,24 @@ internal class TaskDatabaseService : ITaskDatabaseService
 
         if (!string.IsNullOrEmpty(filter.TextInTitle))
         {
-            tasks = tasks.Where(t => t.Title.Contains(filter.TextInTitle, StringComparison.OrdinalIgnoreCase));
+            var pattern = $"%{filter.TextInTitle}%";
+            tasks = tasks.Where(t => EF.Functions.Like(t.Title, pattern));
+        }
+
+        if (filter.DueDate != null)
+        {
+            var from = filter.DueDate.Value.Date;
+            var to = from.AddDays(1);
+
+            tasks = tasks.Where(t => t.DueDate >= from && t.DueDate < to);
+        }
+
+        if (filter.CreationDate != null)
+        {
+            var from = filter.CreationDate.Value.Date;
+            var to = from.AddDays(1);
+
+            tasks = tasks.Where(t => t.DateCreated >= from && t.DateCreated < to);
         }
 
         if (!string.IsNullOrEmpty(filter.SortBy))

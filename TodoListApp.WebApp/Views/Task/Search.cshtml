@@ -1,0 +1,78 @@
+@model SearchViewModel?
+@{
+    Layout = "_TaskLayout";
+}
+<partial name="_Navbar" />
+
+<div class="container">
+    <h3 class="text-black text-center p-1">All tags from to-do lists</h3>
+
+    @if(Model != null)
+    {
+        <div class="container-fluid">
+            <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search">
+
+                <select class=" btn-secondary form-select me-2" name="searchBy">
+                    <option value="Title" selected="@(Model.SearchBy == "Title")">Title</option>
+                    <option value="CreationDate" selected="@(Model.SearchBy == "CreationDate")">Creation date</option>
+                    <option value="DueDate" selected="@(Model.SearchBy == "DueDate")">Due date</option>
+                </select>
+
+                <input class="form-control me-2" type="search" name="query" value="@Model.Query"  aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+
+        TaskListPageViewModel listModel = new TaskListPageViewModel()
+                {
+                    List = Model?.TaskPagging?.Items,
+                };
+        <partial name="_TaskList.cshtml" model="@listModel" />
+
+        @switch (Model?.SearchBy)
+        {
+            case ("Title"):
+                <div page-model="Model?.TaskPagging" page-classes-enabled="true"
+                page-url-TextInTitle="@Model?.Query!" class="btn-group pull-right m-1">
+                </div>
+                break;
+            case ("CreationDate"):
+                <div page-model="Model?.TaskPagging" page-classes-enabled="true"
+                page-url-CreationDate="@Model?.Query!" class="btn-group pull-right m-1">
+                </div>
+                break;
+            case ("DueDate"):
+                <div page-model="Model?.TaskPagging" page-classes-enabled="true"
+                page-url-DueDate="@Model?.Query!" class="btn-group pull-right m-1">
+                </div>
+                break;
+            default:
+                <div page-model="Model?.TaskPagging" page-classes-enabled="true"
+                class="btn-group pull-right m-1">
+                </div>
+                break;
+        }
+
+    }
+    else
+    {
+        <div class="container-fluid">
+            <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search">
+
+                <select class=" btn-secondary form-select me-2" name="searchBy">
+                    <option value="Title">Title</option>
+                    <option value="CreationDate">Creation date</option>
+                    <option value="DueDate">Due date</option>
+                </select>
+
+                <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+    }
+
+    @* <div class="form-group mt-3 text-center"> *@
+
+    @*     <a class="btn btn-primary" type="submit" href="#">Back</a> *@
+    @* </div> *@
+</div>  

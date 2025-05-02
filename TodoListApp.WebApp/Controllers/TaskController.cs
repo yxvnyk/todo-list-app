@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Helpers.Filters;
@@ -18,6 +19,50 @@ namespace TodoListApp.WebApp.Controllers
         public TaskController(ITaskWebApiService apiService)
         {
             this.apiService = apiService;
+        }
+
+        [HttpGet("Search")]
+        public IActionResult Search()
+        {
+            return this.View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchBy(string query, string searchBy, int page = 1)
+        {
+            TaskFilter filter = new TaskFilter()
+            {
+                PageNumber = page,
+            };
+            DateTime date;
+            switch (searchBy)
+            {
+                case "Title": filter.TextInTitle = query; break;
+                case "DueDate":
+                    if (DateTime.TryParseExact(query, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                    {
+                        filter.DueDate = date;
+                    }
+
+                    break;
+                case "CreationDate":
+                    if (DateTime.TryParseExact(query, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
+                    {
+                        filter.CreationDate = date;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+            var list = await this.apiService.GetAllByFilterAsync(filter);
+            return this.View("Search", new SearchViewModel()
+            {
+                Query = query,
+                SearchBy = searchBy,
+                TaskPagging = list,
+            });
         }
 
         [HttpGet("Get")]

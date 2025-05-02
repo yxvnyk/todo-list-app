@@ -19,4 +19,8 @@ public class TaskFilter : PaginationFilter
     public string? SortBy { get; set; }
 
     public bool IsDescending { get; set; }
+
+    public DateTime? DueDate { get; set; }
+
+    public DateTime? CreationDate { get; set; }
 }

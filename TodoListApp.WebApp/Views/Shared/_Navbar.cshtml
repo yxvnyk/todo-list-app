@@ -1,0 +1,25 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom shadow-sm mb-3">
+    <div class="container">
+        <a class="navbar-brand" asp-action="Index" asp-controller="Home">To-do list app</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-action="Index" asp-controller="Home">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="Task" asp-action="GetAllTasksByAssigneeId" asp-route-assigneeId=@("admin")>Current task</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="Tag" asp-action="TagMenu" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">Tags</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-controller="Task" asp-action="Search">Search</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>

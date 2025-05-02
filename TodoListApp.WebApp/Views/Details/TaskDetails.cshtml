@@ -48,11 +48,11 @@
             </tr>
             <tr>
                 <th>Date created</th>
-                <th>@Model?.Task?.DateCreated</th>
+                <th>@Model?.Task?.DateCreated.ToString("dd/MM/yyyy")</th>
             </tr>
             <tr>
                 <th>Due date</th>
-                <th>@Model?.Task?.DueDate</th>
+                <th>@(Model?.Task.DueDate?.ToString("dd/MM/yyyy"))</th>
             </tr>
             <tr>
                 <th>Assignee</th>
