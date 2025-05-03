@@ -1,5 +1,3 @@
-using TodoListApp.WebApi.Helpers.Filters;
-
 namespace TodoListApp.WebApi.Models.DTO.PagingDTO;
 public class TodoListPaging
 {
@@ -8,5 +6,4 @@ public class TodoListPaging
     public int? CurrentPage { get; set; }
 
     public int TotalCount { get; set; }
-
 }

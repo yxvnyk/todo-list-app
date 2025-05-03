@@ -30,7 +30,7 @@
                                 <li>
                                     <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
                                         <input type="hidden" asp-for="@Model.AssigneeId" name="AssigneeId" value="@Model.AssigneeId" />
-                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.Active" />
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.DataAccess.Filters.Enums.Overdue.Active" />
                                         <input type="hidden" name="ListId" value="@Model.TodoListId" />
                                         <button type="submit" class="dropdown-item">Active</button>
                                     </form>
@@ -38,7 +38,7 @@
 
                                 <li>
                                     <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
-                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.Overdue" />
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.DataAccess.Filters.Enums.Overdue.Overdue" />
                                         <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
                                         <input type="hidden" name="ListId" value="@Model.TodoListId" />
                                         <button type="submit" class="dropdown-item">Overdue</button>
@@ -46,7 +46,7 @@
                                 </li>
                                 <li>
                                     <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
-                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.None" />
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.DataAccess.Filters.Enums.Overdue.None" />
                                         <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
                                         <input type="hidden" name="ListId" value="@Model.TodoListId" />
                                         <input type="hidden" name="returnUrl"
@@ -96,7 +96,7 @@
                                 </li>
                                 <li>
                                     <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
-                                        <input type="hidden" name="Overdue" value="@TodoListApp.WebApi.Models.Enums.Overdue.None" />
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.DataAccess.Filters.Enums.Overdue.None" />
                                         <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
                                         <input type="hidden" name="returnUrl"
                                                value="@ViewContext.HttpContext.Request.PathAndQuery()" />
@@ -110,7 +110,7 @@
                         <li>
                             <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
                                 <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
-                                <button type="submit" class="dropdown-item">All tasks</button>
+                                <button type="submit" class="dropdown-item">Reset</button>
                             </form>
                         </li>
                     </ul>

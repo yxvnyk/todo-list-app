@@ -1,4 +1,4 @@
-namespace TodoListApp.WebApi.Models.Enums;
+namespace TodoListApp.DataAccess.Filters.Enums;
 
 public enum Overdue
 {

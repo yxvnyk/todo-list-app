@@ -1,29 +1,23 @@
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
-using TodoListApp.WebApi.Data.Repository.Interfaces;
+using TodoListApp.DataAccess.Context;
+using TodoListApp.DataAccess.Filters;
+using TodoListApp.DataAccess.Repositories.Interfaces;
 using TodoListApp.WebApi.Entities;
-using TodoListApp.WebApi.Helpers.Filters;
-using TodoListApp.WebApi.Models;
-using TodoListApp.WebApi.Models.DTO.PagingDTO;
-using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
-namespace TodoListApp.WebApi.Data.Repository;
+namespace TodoListApp.DataAccess.Repositories;
 
-internal class TaskDatabaseService : ITaskDatabaseService
+public class TaskRepository : ITaskRepository
 {
     private readonly TodoListDbContext context;
-    private readonly IMapper mapper;
 
-    public TaskDatabaseService(TodoListDbContext context, IMapper mapper)
+    public TaskRepository(TodoListDbContext context)
     {
         this.context = context;
-        this.mapper = mapper;
     }
 
-    public async Task CreateAsync(TaskDTO model)
+    public async Task CreateAsync(TaskEntity entity)
     {
-        var entity = this.mapper.Map<TaskEntity>(model);
-        entity.DateCreated = DateTime.Now;
         _ = await this.context.Tasks.AddAsync(entity);
         _ = await this.context.SaveChangesAsync();
     }
@@ -41,7 +35,7 @@ internal class TaskDatabaseService : ITaskDatabaseService
         return false;
     }
 
-    public async Task<TaskPaging> GetAllAsync(TaskFilter filter)
+    public async Task<(IQueryable<TaskEntity>, int)> GetAllAsync(TaskFilter filter)
     {
         var tasks = this.context.Tasks.AsQueryable();
 
@@ -65,11 +59,11 @@ internal class TaskDatabaseService : ITaskDatabaseService
             tasks = tasks.Include(t => t.Tags).Where(t => t.Tags != null && t.Tags.Any(tag => tag.Name == filter.TagName));
         }
 
-        if (filter.Overdue == Models.Enums.Overdue.Active)
+        if (filter.Overdue == Filters.Enums.Overdue.Active)
         {
             tasks = tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value > DateTime.Now);
         }
-        else if (filter.Overdue == Models.Enums.Overdue.Overdue)
+        else if (filter.Overdue == Filters.Enums.Overdue.Overdue)
         {
             tasks = tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value < DateTime.Now);
         }
@@ -109,49 +103,28 @@ internal class TaskDatabaseService : ITaskDatabaseService
         }
 
         var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
-
-        var count = tasks.Count();
-
-        return new TaskPaging()
-        {
-            Items = await tasks.Skip(pageNumber).Take(filter.PageSize).Select(x => this.mapper.Map<TaskDTO>(x)).ToListAsync(),
-            TotalCount = (count + (filter.PageSize - 1)) / 5,
-            CurrentPage = filter.PageNumber,
-        };
+        var count = await tasks.CountAsync();
+        return (tasks.Skip(pageNumber).Take(filter.PageSize), count);
     }
 
-    public async Task<IEnumerable<TaskDTO>> GetAllAsync()
-    {
-        var tasks = await this.context.Tasks.ToListAsync();
-        return tasks.Select(x => this.mapper.Map<TaskDTO>(x));
-    }
-
-    public async Task<TaskDTO?> GetByIdAsync(int id)
+    public async Task<TaskEntity?> GetByIdAsync(int id)
     {
         var task = await this.context.Tasks.FindAsync(id);
-        return task is not null ? this.mapper.Map<TaskDTO>(task) : null;
+        return task;
     }
 
-    public async Task<bool> UpdateAsync(TaskUpdateDTO model, int id)
+    public async Task SaveChangesAsync()
+    {
+        _ = await this.context.SaveChangesAsync();
+    }
+
+    public async Task<bool> TaskExist(int id)
     {
         var exist = await this.context.Tasks.FindAsync(id);
-        if (exist != null)
-        {
-            _ = this.mapper.Map(model, exist);
-            _ = await this.context.SaveChangesAsync();
-            return true;
-        }
-
-        return false;
-    }
-
-    public async Task<bool> TodoListExist(int id)
-    {
-        var exist = await this.context.TodoLists.FindAsync(id);
         return exist != null;
     }
 
-    Task<IEnumerable<TaskDTO>> ICrud<TaskDTO, TaskUpdateDTO, TaskFilter>.GetAllAsync(TaskFilter filter)
+    IQueryable<TaskEntity> ICrud<TaskEntity, TaskFilter>.GetAllAsync(TaskFilter filter)
     {
         throw new NotImplementedException();
     }

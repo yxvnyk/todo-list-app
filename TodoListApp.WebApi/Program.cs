@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TodoListApp.WebApi.Data;
+using TodoListApp.DataAccess.Context;
+using TodoListApp.DataAccess.Repositories;
+using TodoListApp.DataAccess.Repositories.Interfaces;
 using TodoListApp.WebApi.Data.Repository;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Helpers.Middleware;
@@ -21,6 +23,11 @@ builder.Services.AddScoped<ITodoListDatabaseService, TodoListDatabaseService>();
 builder.Services.AddScoped<ITaskDatabaseService, TaskDatabaseService>();
 builder.Services.AddScoped<ITagDatabaseService, TagDatabaseService>();
 builder.Services.AddScoped<ICommentDatabaseService, CommentDatabaseService>();
+
+builder.Services.AddScoped<ITodoListRepository, TodoListRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 
 builder.Services.AddScoped<ExceptionHandlingMiddleware>();
 

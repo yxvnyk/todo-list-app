@@ -1,5 +1,3 @@
-using TodoListApp.WebApi.Models;
-
 namespace TodoListApp.WebApp.Models;
 
 public class AbstractEditorViewModel

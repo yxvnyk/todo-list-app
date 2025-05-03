@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace TodoListApp.WebApi.Models.CustomValidations;
-public class MinDate : ValidationAttribute
+public sealed class MinDate : ValidationAttribute
 {
     public override bool IsValid(object? value)
     {

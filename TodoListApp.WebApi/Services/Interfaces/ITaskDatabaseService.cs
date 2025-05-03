@@ -1,4 +1,4 @@
-using TodoListApp.WebApi.Helpers.Filters;
+using TodoListApp.DataAccess.Filters;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.PagingDTO;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
@@ -9,5 +9,5 @@ public interface ITaskDatabaseService : ICrud<TaskDTO, TaskUpdateDTO, TaskFilter
 {
     Task<bool> TodoListExist(int id);
 
-    Task<TaskPaging> GetAllAsync(TaskFilter filter);
+    new Task<TaskPaging> GetAllAsync(TaskFilter filter);
 }

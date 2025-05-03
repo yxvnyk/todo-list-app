@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using TodoListApp.WebApi.Models.CustomValidations;
 using TodoListApp.WebApi.Models.Enums;

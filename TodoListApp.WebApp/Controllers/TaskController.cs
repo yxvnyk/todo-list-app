@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using System.Globalization;
 using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
-using TodoListApp.WebApi.Helpers.Filters;
+using TodoListApp.DataAccess.Filters;
+using TodoListApp.DataAccess.Filters.Enums;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApi.Models.Enums;

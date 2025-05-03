@@ -1,7 +1,6 @@
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApp.Services.Interfaces;

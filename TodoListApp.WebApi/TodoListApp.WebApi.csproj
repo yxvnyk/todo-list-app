@@ -40,6 +40,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\TodoListApp.DataAccess\TodoListApp.DataAccess.csproj" />
     <ProjectReference Include="..\TodoListApp.WebApi.Models\TodoListApp.WebApi.Models.csproj" />
   </ItemGroup>
   

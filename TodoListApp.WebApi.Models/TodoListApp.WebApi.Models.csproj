@@ -19,5 +19,8 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TodoListApp.DataAccess\TodoListApp.DataAccess.csproj" />
+  </ItemGroup>
 
 </Project>

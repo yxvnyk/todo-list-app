@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using TodoListApp.DataAccess.Filters;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
-using TodoListApp.WebApi.Helpers.Filters;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.PagingDTO;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;

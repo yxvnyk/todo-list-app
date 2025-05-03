@@ -1,6 +1,5 @@
 using AutoMapper;
 using TodoListApp.WebApi.Entities;
-using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Helpers.Profiles;

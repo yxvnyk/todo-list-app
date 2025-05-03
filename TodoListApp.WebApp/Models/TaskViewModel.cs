@@ -4,7 +4,7 @@ namespace TodoListApp.WebApp.Models;
 
 public class TaskViewModel
 {
-    public TaskDTO? Task { get; set; } = new();
+    public TaskDTO? Task { get; set; } = new TaskDTO();
 
     public IEnumerable<CommentDTO>? Comments { get; set; }
 
