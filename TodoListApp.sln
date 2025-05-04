@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoListApp.WebApi.Models",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoListApp.DataAccess", "TodoListApp.DataAccess\TodoListApp.DataAccess.csproj", "{807DE2DB-796E-4893-89D3-6739EE34E86F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TodoListApp.UserDataAccess", "TodoListApp.UserDataAccess\TodoListApp.UserDataAccess.csproj", "{324DC5E4-3420-4253-82F8-823E4C525F96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,6 +45,10 @@ Global
 		{807DE2DB-796E-4893-89D3-6739EE34E86F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{807DE2DB-796E-4893-89D3-6739EE34E86F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{807DE2DB-796E-4893-89D3-6739EE34E86F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{324DC5E4-3420-4253-82F8-823E4C525F96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{324DC5E4-3420-4253-82F8-823E4C525F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{324DC5E4-3420-4253-82F8-823E4C525F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{324DC5E4-3420-4253-82F8-823E4C525F96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -31,6 +31,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TodoListApp.DataAccess\TodoListApp.DataAccess.csproj" />
+    <ProjectReference Include="..\TodoListApp.UserDataAccess\TodoListApp.UserDataAccess.csproj" />
     <ProjectReference Include="..\TodoListApp.WebApi.Models\TodoListApp.WebApi.Models.csproj" />
   </ItemGroup>
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="https://json.schemastore.org/aws-cdk-appconfig-featureflags-1.0.0.json" /></VisualStudio></ProjectExtensions>
