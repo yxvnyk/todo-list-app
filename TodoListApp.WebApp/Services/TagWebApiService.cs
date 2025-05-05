@@ -1,6 +1,8 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using NuGet.Common;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApp.Services.Interfaces;
@@ -11,10 +13,12 @@ namespace TodoListApp.WebApp.Services;
 public class TagWebApiService : ITagWebApiService
 {
     private readonly HttpClient httpClient;
+    private readonly IHttpService httpService;
 
-    public TagWebApiService(HttpClient client)
+    public TagWebApiService(HttpClient client, IHttpService httpService)
     {
         this.httpClient = client;
+        this.httpService = httpService;
     }
 
     public async Task<HttpStatusCode?> AddAsync(TagDTO model)
@@ -25,7 +29,7 @@ public class TagWebApiService : ITagWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"), todoItemJson);
+        using var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"), todoItemJson);
 
         if (response == null)
         {
@@ -37,7 +41,7 @@ public class TagWebApiService : ITagWebApiService
 
     public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        using var response = await this.httpClient.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag/{id}"));
+        using var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag/{id}"));
 
         if (response == null)
         {
@@ -50,7 +54,8 @@ public class TagWebApiService : ITagWebApiService
     public async Task<IEnumerable<TagDTO>?> GetAllAsync(int id = 0)
     {
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"));
+        //var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"));
         if (response == null)
         {
             return null;
@@ -70,7 +75,8 @@ public class TagWebApiService : ITagWebApiService
 
     public async Task<IEnumerable<TagDTO>?> GetAllByTaskAsync(int id)
     {
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag?TaskId={id}"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag?TaskId={id}"));
+
         if (response == null)
         {
             return null;
@@ -96,7 +102,7 @@ public class TagWebApiService : ITagWebApiService
             Application.Json);
 
         Console.WriteLine(await todoItemJson.ReadAsStringAsync());
-        using var response = await this.httpClient.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag/{id}"), todoItemJson);
+        using var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag/{id}"), todoItemJson);
 
         if (response == null)
         {

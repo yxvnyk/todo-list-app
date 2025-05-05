@@ -1,3 +1,7 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +11,7 @@ using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers;
 
+[AllowAnonymous]
 [Route("Auth")]
 public class AuthController : Controller
 {
@@ -19,6 +24,15 @@ public class AuthController : Controller
         this.userManager = userManager;
         this.signInManager = signInManager;
         this.tokenService = tokenService;
+    }
+
+    [HttpGet("signout")]
+    public async Task<IActionResult> SignOut(string returnUrl = null)
+    {
+        await this.HttpContext.SignOutAsync(
+        IdentityConstants.ApplicationScheme);
+
+        return this.RedirectToAction("login");
     }
 
     [HttpGet("login")]
@@ -35,8 +49,10 @@ public class AuthController : Controller
             return this.View();
         }
 
+        var email = registerDTO.Email.ToLower();
         var user = await this.userManager.Users
-            .FirstOrDefaultAsync(x => EF.Functions.Like(x.Email, registerDTO.Email!));
+            .FirstOrDefaultAsync(x => x.Email.ToLower() == email);
+
         if (user == null)
         {
             return this.Unauthorized();
@@ -49,8 +65,45 @@ public class AuthController : Controller
             return this.Unauthorized();
         }
 
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimTypes.Email, user.Email),
+        };
+        var userRoles = await this.userManager.GetRolesAsync(user);
+        foreach (var role in userRoles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
+        }
+
+        var claimsIdentity = new ClaimsIdentity(
+           claims, IdentityConstants.ApplicationScheme);
+
+        var authProperties = new AuthenticationProperties
+        {
+            //AllowRefresh = <bool>,
+            // Refreshing the authentication session
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(5),
+            IsPersistent = true,
+            //IssuedUtc = <DateTimeOffset>
+            //RedirectUri = <string>
+        };
+
+        await this.HttpContext.SignInAsync(
+            IdentityConstants.ApplicationScheme,
+            new ClaimsPrincipal(claimsIdentity),
+            authProperties);
+
         var token = await this.tokenService.CreateToken(user);
-        return this.Ok(token);
+        this.HttpContext.Session.SetString("JwtToken", token);
+
+        return this.RedirectToAction("LogInComplete");
+    }
+
+    [HttpGet("complete")]
+    public IActionResult LogInComplete()
+    {
+        return this.View("~/Views/Home/Index.cshtml");
     }
 
     [HttpGet("signin")]

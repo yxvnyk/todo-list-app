@@ -1,5 +1,7 @@
+using System;
 using System.Net.Sockets;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
@@ -21,6 +23,7 @@ builder.Services.AddDbContext<UserDbContext>(options =>
 });
 
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IHttpService, HttpService>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
@@ -30,18 +33,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
     options.Password.RequireNonAlphanumeric = false;
 }).AddEntityFrameworkStores<UserDbContext>();
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    options.TokenValidationParameters = new TokenValidationParameters
+builder.Services.ConfigureApplicationCookie(options =>
     {
-        ValidateLifetime = true,
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = builder.Configuration["JWT:Issuer"],
-        ValidAudience = builder.Configuration["JWT:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"])),
-        ClockSkew = TimeSpan.Zero,
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
+        options.SlidingExpiration = true;
+        options.AccessDeniedPath = "/Auth/login";
+        options.LoginPath = "/Auth/login";
     });
 
 builder.Services.AddHttpClient<ITodoListWebApiService, TodoListWebApiService>(client =>
@@ -104,6 +101,17 @@ if (!app.Environment.IsDevelopment())
             {
                 await context.Response.WriteAsync("\nNo connection could be made because the target machine actively refused it.");
             }
+
+            if (exceptionHandlerPathFeature?.Error is UnauthorizedAccessException)
+            {
+                context.Response.Redirect("/Auth/login");
+                return;
+            }
+            else
+            {
+                context.Response.StatusCode = 500;
+                await context.Response.WriteAsync("An error occurred.");
+            }
         });
     });
     //app.UseExceptionHandler("/Home/Error");
@@ -114,13 +122,11 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseRouting();
 
 app.UseSession();
 
-app.UseRouting();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

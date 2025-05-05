@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.DataAccess.Filters;
 using TodoListApp.DataAccess.Filters.Enums;
@@ -12,6 +13,7 @@ using TodoListApp.WebApp.Services.Interfaces;
 namespace TodoListApp.WebApp.Controllers
 {
     [Route("task")]
+    [Authorize]
     public class TaskController : Controller
     {
         private readonly ITaskWebApiService apiService;

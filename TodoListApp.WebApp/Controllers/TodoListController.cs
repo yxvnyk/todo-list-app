@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
@@ -7,6 +8,7 @@ using TodoListApp.WebApp.Services.Interfaces;
 namespace TodoListApp.WebApp.Controllers
 {
     [Route("TodoLists")]
+    [Authorize]
     public class TodoListController: Controller
     {
         private readonly ITodoListWebApiService apiService;

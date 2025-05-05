@@ -14,9 +14,12 @@ public class TaskWebApiService : ITaskWebApiService
 {
     private readonly HttpClient httpClient;
 
-    public TaskWebApiService(HttpClient httpClient)
+    private readonly IHttpService httpService;
+
+    public TaskWebApiService(HttpClient httpClient, IHttpService httpService)
     {
         this.httpClient = httpClient;
+        this.httpService = httpService;
     }
 
     public async Task<TaskPaging?> GetAllByListAsync(int id)
@@ -32,7 +35,7 @@ public class TaskWebApiService : ITaskWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
         if (response == null)
         {
             return null;
@@ -57,7 +60,7 @@ public class TaskWebApiService : ITaskWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
         if (response == null)
         {
             return null;
@@ -87,7 +90,7 @@ public class TaskWebApiService : ITaskWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
         if (response == null)
         {
             return null;
@@ -117,7 +120,7 @@ public class TaskWebApiService : ITaskWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
         if (response == null)
         {
             return null;
@@ -136,7 +139,7 @@ public class TaskWebApiService : ITaskWebApiService
 
     public async Task<TaskDTO?> GetByIdAsync(int id)
     {
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
         if (response == null)
         {
             return null;
@@ -156,7 +159,7 @@ public class TaskWebApiService : ITaskWebApiService
     public async Task<IEnumerable<TaskDTO>?> GetAllAsync(int id)
     {
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task?AssigneeId={id}"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task?AssigneeId={id}"));
         if (response == null)
         {
             return null;
@@ -181,7 +184,7 @@ public class TaskWebApiService : ITaskWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task"), todoItemJson);
+        using var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task"), todoItemJson);
 
         if (response == null)
         {
@@ -200,7 +203,7 @@ public class TaskWebApiService : ITaskWebApiService
             Application.Json);
 
         Console.WriteLine(await todoItemJson.ReadAsStringAsync());
-        using var response = await this.httpClient.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"), todoItemJson);
+        using var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"), todoItemJson);
 
         if (response == null)
         {
@@ -212,7 +215,7 @@ public class TaskWebApiService : ITaskWebApiService
 
     public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        using var response = await this.httpClient.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
+        using var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
 
         if (response == null)
         {

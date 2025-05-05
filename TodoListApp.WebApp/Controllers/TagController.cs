@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
-using TodoListApp.WebApp.Models;
 using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers;

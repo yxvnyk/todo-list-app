@@ -11,10 +11,12 @@ namespace TodoListApp.WebApp.Services;
 public class CommentWebApiService : ICommentWebApiService
 {
     private readonly HttpClient httpClient;
+    private readonly IHttpService httpService;
 
-    public CommentWebApiService(HttpClient httpClient)
+    public CommentWebApiService(HttpClient httpClient, IHttpService httpService)
     {
         this.httpClient = httpClient;
+        this.httpService = httpService;
     }
 
     public async Task<HttpStatusCode?> AddAsync(CommentDTO model)
@@ -25,7 +27,7 @@ public class CommentWebApiService : ICommentWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Comment"), todoItemJson);
+        using var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Comment"), todoItemJson);
 
         if (response == null)
         {
@@ -37,7 +39,7 @@ public class CommentWebApiService : ICommentWebApiService
 
     public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        using var response = await this.httpClient.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"));
+        using var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"));
 
         if (response == null)
         {
@@ -54,7 +56,7 @@ public class CommentWebApiService : ICommentWebApiService
 
     public async Task<IEnumerable<CommentDTO>?> GetAllByTaskAsync(int id)
     {
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment?TaskId={id}"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment?TaskId={id}"));
         if (response == null)
         {
             return null;
@@ -85,7 +87,7 @@ public class CommentWebApiService : ICommentWebApiService
             Application.Json);
 
         Console.WriteLine(await todoItemJson.ReadAsStringAsync());
-        using var response = await this.httpClient.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"), todoItemJson);
+        using var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"), todoItemJson);
 
         if (response == null)
         {

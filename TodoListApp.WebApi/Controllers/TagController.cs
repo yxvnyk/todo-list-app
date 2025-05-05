@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.DataAccess.Filters;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
@@ -7,6 +8,7 @@ using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 namespace TodoListApp.WebApi.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class TagController : Controller
 {
@@ -22,8 +24,6 @@ public class TagController : Controller
     [HttpGet]
     public async Task<ActionResult<TagDTO>> GetAllTags([FromQuery] TagFilter filter)
     {
-        LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTags));
-
         var list = await this.repository.GetAllAsync(filter);
         if (list.Any())
         {

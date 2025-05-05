@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.DataAccess.Filters;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
@@ -8,6 +9,7 @@ using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 namespace TodoListApp.WebApi.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class TaskController : Controller
     {

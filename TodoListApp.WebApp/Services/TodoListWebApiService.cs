@@ -11,24 +11,31 @@ namespace TodoListApp.WebApp.Services;
 internal class TodoListWebApiService : ITodoListWebApiService
 {
     private readonly HttpClient httpClient;
+    private readonly IHttpService httpService;
 
-    public TodoListWebApiService(HttpClient httpClient)
+    public TodoListWebApiService(HttpClient httpClient, IHttpService httpService)
     {
         this.httpClient = httpClient;
+        this.httpService = httpService;
     }
 
     public async Task<IEnumerable<TodoListDTO>?> GetAllAsync(int id)
     {
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/TodoList"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/TodoList"));
         if (response == null)
         {
-            return null;
+            return new List<TodoListDTO>();
         }
 
         if (response.StatusCode == HttpStatusCode.NotFound)
         {
-            return null;
+            return new List<TodoListDTO>();
+        }
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            return new List<TodoListDTO>();
         }
 
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
@@ -46,7 +53,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpClient.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/TodoList"), todoItemJson);
+        using var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/TodoList"), todoItemJson);
 
         if (response == null)
         {
@@ -64,7 +71,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpClient.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"), todoItemJson);
+        using var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"), todoItemJson);
 
         if (response == null)
         {
@@ -76,7 +83,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
 
     public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        using var response = await this.httpClient.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"));
+        using var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"));
 
         if (response == null)
         {
@@ -88,7 +95,7 @@ internal class TodoListWebApiService : ITodoListWebApiService
 
     public async Task<TodoListDTO?> GetByIdAsync(int id)
     {
-        var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"));
         if (response == null)
         {
             return null;
