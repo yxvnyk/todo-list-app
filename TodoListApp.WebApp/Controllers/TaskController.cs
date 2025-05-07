@@ -1,5 +1,7 @@
 using System.Globalization;
+using System.Security.Claims;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.DataAccess.Filters;
@@ -32,9 +34,12 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchBy(string query, string searchBy, int page = 1)
         {
+            var assigneeId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             TaskFilter filter = new TaskFilter()
             {
                 PageNumber = page,
+                AssigneeId = assigneeId,
+                OwnerId = assigneeId,
             };
             DateTime date;
             switch (searchBy)
@@ -92,8 +97,9 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet("GetByAssignee")]
-        public async Task<IActionResult> GetAllTasksByAssigneeId(string assigneeId)
+        public async Task<IActionResult> GetAllTasksByAssigneeId()
         {
+            var assigneeId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             TaskFilter filter = new TaskFilter()
             {
                 AssigneeId = assigneeId,
@@ -137,9 +143,16 @@ namespace TodoListApp.WebApp.Controllers
 
         [HttpGet]
         [Route("edit/{id:int}")]
-        public async Task<IActionResult> Edit(int id, string returnUrl)
+        public async Task<IActionResult> Edit(int taskId, string returnUrl)
         {
-            var task = await this.apiService.GetByIdAsync(id);
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            var ownerId = await this.apiService.GetTaskOwnerId(taskId);
+            if (userId != ownerId)
+            {
+                return this.View("NoPermission", "edit this task");
+            }
+
+            var task = await this.apiService.GetByIdAsync(taskId);
             return this.View((task, returnUrl));
         }
 
@@ -162,9 +175,16 @@ namespace TodoListApp.WebApp.Controllers
 
         [HttpGet]
         [Route("delete")]
-        public async Task<IActionResult> Delete(int listId, string returnUrl)
+        public async Task<IActionResult> Delete(int taskId, string returnUrl)
         {
-            _ = await this.apiService.DeleteAsync(listId);
+            var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+            var ownerId = await this.apiService.GetTaskOwnerId(taskId);
+            if (userId != ownerId)
+            {
+                return this.View("NoPermission", "to delete this task");
+            }
+
+            _ = await this.apiService.DeleteAsync(taskId);
             return this.Redirect(returnUrl);
         }
 
@@ -175,6 +195,7 @@ namespace TodoListApp.WebApp.Controllers
             TaskDTO task = new TaskDTO()
             {
                 TodoListId = listId,
+                AssigneeId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!,
             };
             return this.View((task, returnUrl));
         }

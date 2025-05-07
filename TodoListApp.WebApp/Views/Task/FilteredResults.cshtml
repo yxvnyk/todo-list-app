@@ -3,7 +3,7 @@
         TaskFilter filter = Model.filter;
         TaskListPageViewModel listModel = new TaskListPageViewModel()
                 {
-                    AssigneeId = "admin",
+                    AssigneeId = filter.AssigneeId,
                     List = Model.taskPaging.Items,
                     Title = "Assigned tasks",
                 };

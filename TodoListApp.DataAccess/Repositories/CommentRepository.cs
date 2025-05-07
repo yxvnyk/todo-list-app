@@ -58,10 +58,4 @@ public class CommentRepository : ICommentRepository
     {
         _ = await this.context.SaveChangesAsync();
     }
-
-    public async Task<bool> TaskExist(int id)
-    {
-        var exist = await this.context.Tasks.FindAsync(id);
-        return exist != null;
-    }
 }

@@ -51,17 +51,21 @@ public class TagWebApiService : ITagWebApiService
         return response.StatusCode;
     }
 
-    public async Task<IEnumerable<TagDTO>?> GetAllAsync(int id = 0)
+    public async Task<IEnumerable<TagDTO>?> GetAllAsync(string ownerId, string assigneeId)
     {
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
-        //var response = await this.httpClient.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"));
-        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/Tag"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag?OwnerId={ownerId}&AssigneeId={assigneeId}"));
         if (response == null)
         {
             return null;
         }
 
         if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return null;
+        }
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
         {
             return null;
         }
@@ -113,6 +117,11 @@ public class TagWebApiService : ITagWebApiService
     }
 
     public Task<TagDTO?> GetByIdAsync(int id)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IEnumerable<TagDTO>?> GetAllAsync(string id)
     {
         throw new NotImplementedException();
     }

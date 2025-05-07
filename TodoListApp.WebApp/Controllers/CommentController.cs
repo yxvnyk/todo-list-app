@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
@@ -17,11 +18,13 @@ public class CommentController : Controller
 
     [HttpPost]
     [Route("create")]
-    public async Task<IActionResult> Create(CommentDTO comment, string returnUrl)
+    public async Task<IActionResult> Create(CommentDTO commentDto, string returnUrl)
     {
+        ArgumentNullException.ThrowIfNull(commentDto);
+        //commentDto.AuthorId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
         if (this.ModelState.IsValid)
         {
-            _ = await this.apiService.AddAsync(comment);
+            _ = await this.apiService.AddAsync(commentDto);
         }
 
         foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))

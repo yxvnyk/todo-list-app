@@ -1,12 +1,11 @@
-@model CompleteEditorViewModel
-
+@model string
 @{
     Layout = "_TaskLayout";
 }
-
+    
 <div class="text-center" style="margin-top: 30vh">
-    <h2>Success!</h2>
-    <p>@Model.Title have been successfuly @Model.Method</p>
+    <h2>You do not have permission</h2>
+    <p>Unfortunately, you do not have permission to @Model</p>
     <p>Now you can find it in corresponding To-do List</p>
     <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Return to Main menu</a>
 </div>

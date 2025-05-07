@@ -1,6 +1,6 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApp.Infrastructure;
-using TodoListApp.WebApp.Models;
 
 namespace TodoListApp.WebApp.Controllers;
 
@@ -24,6 +24,8 @@ public class DetailsController : Controller
         }
 
         model.ReturnUrl = returnUrl;
-        return this.View(model);
+        var ownerId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+
+        return this.View((model, ownerId == model.OwnerId));
     }
 }

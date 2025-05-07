@@ -13,6 +13,8 @@ public class TaskFilter : PaginationFilter
 
     public string? AssigneeId { get; set; }
 
+    public string? OwnerId { get; set; }
+
     public int TodoListId { get; set; }
 
     public Overdue? Overdue { get; set; }

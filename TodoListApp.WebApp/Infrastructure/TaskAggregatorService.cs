@@ -24,6 +24,7 @@ public class TaskAggregatorService
             return null;
         }
 
+        var ownerId = await this.taskWebApi.GetTaskOwnerId(id);
         var comments = await this.commentWebApi.GetAllByTaskAsync(id);
         var tags = await this.tagWebApi.GetAllByTaskAsync(id);
 
@@ -32,6 +33,7 @@ public class TaskAggregatorService
             Task = task,
             Comments = comments,
             Tags = tags,
+            OwnerId = ownerId,
         };
     }
 }

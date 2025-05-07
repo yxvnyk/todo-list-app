@@ -27,7 +27,7 @@ public class AuthController : Controller
     }
 
     [HttpGet("signout")]
-    public async Task<IActionResult> SignOut(string returnUrl = null)
+    public new async Task<IActionResult> SignOut()
     {
         await this.HttpContext.SignOutAsync(
         IdentityConstants.ApplicationScheme);
@@ -67,6 +67,7 @@ public class AuthController : Controller
 
         var claims = new List<Claim>
         {
+            new Claim(ClaimTypes.NameIdentifier, user.Id),
             new Claim(ClaimTypes.Name, user.Email),
             new Claim(ClaimTypes.Email, user.Email),
         };
@@ -83,7 +84,7 @@ public class AuthController : Controller
         {
             //AllowRefresh = <bool>,
             // Refreshing the authentication session
-            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(5),
+            ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30),
             IsPersistent = true,
             //IssuedUtc = <DateTimeOffset>
             //RedirectUri = <string>

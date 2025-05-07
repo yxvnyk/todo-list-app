@@ -56,10 +56,4 @@ internal class TagDatabaseService : ITagDatabaseService
     {
         return await this.repository.DeleteByIdAsync(id);
     }
-
-    public async Task<bool> TaskExist(int id)
-    {
-        var exist = await this.repository.TaskExist(id);
-        return exist;
-    }
 }

@@ -7,4 +7,6 @@ namespace TodoListApp.WebApp.Services.Interfaces;
 public interface ITagWebApiService : ICrud<TagDTO, TagUpdateDTO, TagPaging>
 {
     Task<IEnumerable<TagDTO>?> GetAllByTaskAsync(int id);
+
+    Task<IEnumerable<TagDTO>?> GetAllAsync(string ownerId, string assigneeId);
 }

@@ -64,9 +64,14 @@ internal class TaskDatabaseService : ITaskDatabaseService
         return false;
     }
 
-    public async Task<bool> TodoListExist(int id)
+    public async Task<bool> TaskExist(int id)
     {
         return await this.repository.TaskExist(id);
+    }
+
+    public string? GetTaskOwnerId(int taskId)
+    {
+        return this.repository.GetTaskOwnerId(taskId);
     }
 
     Task<IEnumerable<TaskDTO>> ICrud<TaskDTO, TaskUpdateDTO, TaskFilter>.GetAllAsync(TaskFilter filter)

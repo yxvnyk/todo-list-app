@@ -8,5 +8,5 @@ public class AbstractEditorViewModel
 
     public string? ThemeColor { get; set; }
 
-    public string ReturnUrl { get; set; } = "/";
+    public string? ReturnUrl { get; set; } = "/";
 }

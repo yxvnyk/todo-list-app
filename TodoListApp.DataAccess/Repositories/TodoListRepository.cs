@@ -32,9 +32,9 @@ public class TodoListRepository : ITodoListRepository
             entityList = entityList.Where(t => t.Title == filter.Title);
         }
 
-        if (filter.UserId != null)
+        if (filter.OwnerId != null)
         {
-            entityList = entityList.Where(t => t.UserId == filter.UserId);
+            entityList = entityList.Where(t => t.OwnerId == filter.OwnerId);
         }
 
         var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
@@ -64,5 +64,11 @@ public class TodoListRepository : ITodoListRepository
         }
 
         return false;
+    }
+
+    public async Task<bool> TodoListExist(int id)
+    {
+        var exist = await this.context.TodoLists.FindAsync(id);
+        return exist != null;
     }
 }

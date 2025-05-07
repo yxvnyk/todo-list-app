@@ -1,26 +1,27 @@
-@model (IEnumerable<TagDTO>? tags, int? id)
+@model (IEnumerable<TagDTO>? tags, int? id, bool taskAggregation)
 @{
     string url = @ViewContext.HttpContext.Request.PathAndQuery();
 }
 <div class="container">
     <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0">Tags</h6>
-        <form asp-action="Create" asp-controller="Tag" asp-route-returnUrl="@url" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" name="tag.TaskId" value="@Model.id" />
 
-            <div class="form-group">
-                <label for="tag.Name">Add Tag</label>
-                <input name="tag.Name" class="form-control" rows="3" placeholder="Write your tag..."></input>
-            </div>
-
-            <div class="form-group mt-3 text-center">
-                <button type="submit" class="btn btn-primary mt-2">Create</button>
-            </div>
-        </form>
-    @{
-        if (Model.tags != null)
+        @if (Model.taskAggregation)
         {
+            <form asp-action="Create" asp-controller="Tag" asp-route-returnUrl="@url" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" name="tag.TaskId" value="@Model.id" />
+
+                <div class="form-group">
+                    <label for="tag.Name">Add Tag</label>
+                    <input name="tag.Name" class="form-control" rows="3" placeholder="Write your tag..."></input>
+                </div>
+
+                <div class="form-group mt-3 text-center">
+                    <button type="submit" class="btn btn-primary mt-2">Create</button>
+                </div>
+            </form>
+
             foreach (var tag in Model.tags ?? Enumerable.Empty<TagDTO>())
             {
                 <span class="bg-light rounded-1">#@tag.Name
@@ -48,10 +49,8 @@
                             </div>""
                         </div>
                     </div>
-                    </span>
+                </span>
             }
-    ;
         }
-    }
     </div>
 </div>

@@ -31,31 +31,8 @@ else
         <div class="text-center">
             <h1 class="display-4">@Model.Title</h1>
         </div>
-        @* <div class="bg-primary text-white p-2"> *@
-        @*     <div class="container-fluid"> *@
-        @*         <div class="row"> *@
-        @*             <div class="col navbar-brand"> *@
-        @*                 <a class="btn btn-light" asp-controller="Task" asp-action="Create" asp-route-id="@Model" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()"> *@
-        @*                     New task *@
-        @*                 </a> *@
-
-        @*             </div> *@
-        @*             <div class="col-6 text-end"> *@
-        @*                 <vc:cart-summary /> *@
-        @*             </div> *@
-        @*         </div> *@
-        @*     </div> *@
-        @* </div> *@
-
-
-
         @foreach (var task in @Model.List)
         {
-            @* <li class="list-group-item style=" width: 60%;"">
-                    <input class="form-check-input me-1" type="checkbox" value="" id="firstCheckbox">
-                    <label class="form-check-label" for="firstCheckbox">@task.Title</label>
-                    </li>
-                    *@
             string color = "bg-dark";
             var overdue = DateTime.Compare(task.DueDate.GetValueOrDefault(), DateTime.Now);
             if (overdue < 0)
@@ -128,12 +105,6 @@ else
                 </div>
                 
             </div>
-
-            @*<a href="#" class="nav-link text-white">*@
-            @* <a href="@Url.Action(nameof(TaskController.GetAllTaskByListId), nameof(TaskController))?id=@list.Id" class="nav-link text-white" aria-current="page">
-                    @list?.Title
-                </a>*@
-
         }
     </div>
 }

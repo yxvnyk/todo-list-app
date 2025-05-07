@@ -1,68 +1,71 @@
-@model TaskViewModel
+@model (TaskViewModel taskAggregation, bool userIdEqualTaskOwnerId)
 @{
     this.Layout = "_TaskLayout";
 }
 <div class="container p-3">
     <h1> <span class="badge text-bg-secondary">Task details</span></h1>
     <div>
-        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" asp-route-id="@Model?.Task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
-            Edit
-        </a>
-        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal_@Model?.Task?.Id">
-            Delete
-        </button>
+        @if (Model.userIdEqualTaskOwnerId)
+        {
+            <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" asp-route-id="@Model.taskAggregation.Task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                Edit
+            </a>
+            <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal_@Model.taskAggregation.Task?.Id">
+                Delete
+            </button>
 
-        <!-- Modal -->
-        <div class="modal fade" id="modal_@Model?.Task?.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel_@Model?.Task?.Id" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalLabel_@Model.Task.Id">Do your really want to delete the task?</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        When you click "Delete" button this task with all details and comments will permanently removed
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <a class="btn btn-danger" asp-controller="Task" asp-action="Delete" asp-route-id="@Model.Task.Id" asp-route-returnUrl="@Model.ReturnUrl">
-                            Delete
-                        </a>
-                    </div>
-                </div>""
+            <!-- Modal -->
+            <div class="modal fade" id="modal_@Model.taskAggregation.Task?.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel_@Model.taskAggregation.Task?.Id" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalLabel_@Model.taskAggregation.Task?.Id">Do your really want to delete the task?</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            When you click "Delete" button this task with all details and comments will permanently removed
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <a class="btn btn-danger" asp-controller="Task" asp-action="Delete" asp-route-id="@Model.taskAggregation.Task?.Id" asp-route-returnUrl="@Model.taskAggregation.ReturnUrl">
+                                Delete
+                            </a>
+                        </div>
+                    </div>""
+                </div>
             </div>
-        </div>
+        }
     <table class="table table-sm table-bordered table-striped">
         <tbody>
             <tr>
                 <th>Title</th>
-                <th>@Model?.Task?.Title</th>
+                <th>@Model.taskAggregation.Task?.Title</th>
             </tr>
             <tr>
                 <th>Status</th>
-                <th>@Model?.Task?.Status</th>
+                <th>@Model.taskAggregation.Task?.Status</th>
             </tr>
             <tr>
                 <th>Description</th>
-                <th>@(Model?.Task?.Description ?? "-")</th>
+                <th>@(Model.taskAggregation.Task?.Description ?? "-")</th>
             </tr>
             <tr>
                 <th>Date created</th>
-                <th>@Model?.Task?.DateCreated.ToString("dd/MM/yyyy")</th>
+                <th>@Model.taskAggregation.Task?.DateCreated.ToString("dd/MM/yyyy")</th>
             </tr>
             <tr>
                 <th>Due date</th>
-                <th>@(Model?.Task.DueDate?.ToString("dd/MM/yyyy"))</th>
+                <th>@(Model.taskAggregation.Task?.DueDate?.ToString("dd/MM/yyyy"))</th>
             </tr>
             <tr>
                 <th>Assignee</th>
-                <th>@Model?.Task?.AssigneeId</th>
+                <th>@Model.taskAggregation.Task?.AssigneeId</th>
             </tr>
         </tbody>
     </table>
     </div>
-    <partial name="_TagsPartial.cshtml" model="@(Model?.Tags, Model?.Task.Id)" />
-    <partial name="_CommentsPartial.cshtml" model="@Model" />
+    <partial name="_TagsPartial.cshtml" model="@((Model.taskAggregation.Tags, Model.taskAggregation.Task?.Id, Model.userIdEqualTaskOwnerId))" />
+    <partial name="_CommentsPartial.cshtml" model="@((Model.taskAggregation, Model.userIdEqualTaskOwnerId))" />
     <a class="btn btn-secondary"
-       href="@Model?.ReturnUrl">Back</a>
+       href="@Model.taskAggregation.ReturnUrl">Back</a>
 </div>

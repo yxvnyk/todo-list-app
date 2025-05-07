@@ -8,4 +8,6 @@ public interface ITaskRepository : ICrud<TaskEntity, TaskFilter>
     new Task<(IQueryable<TaskEntity>, int)> GetAllAsync(TaskFilter filter);
 
     Task<bool> TaskExist(int id);
+
+    string? GetTaskOwnerId(int taskId);
 }

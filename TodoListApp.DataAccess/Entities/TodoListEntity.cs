@@ -18,7 +18,7 @@ public class TodoListEntity
 
     [Required]
     [MaxLength(450)]
-    public string UserId { get; set; } = string.Empty;
+    public string OwnerId { get; set; } = string.Empty;
 
     public IEnumerable<TaskEntity>? Tasks { get; set; }
 }

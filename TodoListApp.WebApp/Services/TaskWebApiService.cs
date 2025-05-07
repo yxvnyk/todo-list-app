@@ -22,6 +22,31 @@ public class TaskWebApiService : ITaskWebApiService
         this.httpService = httpService;
     }
 
+    public async Task<string> GetTaskOwnerId(int taskId)
+    {
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/GetOwnerId?taskId={taskId}"));
+        if (response == null)
+        {
+            return string.Empty;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return string.Empty;
+        }
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            return string.Empty;
+        }
+
+        Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
+        string json = await response.Content.ReadAsStringAsync();
+        Console.WriteLine(json);
+        string? ownerId = await response.Content.ReadAsStringAsync();
+        return ownerId;
+    }
+
     public async Task<TaskPaging?> GetAllByListAsync(int id)
     {
         TaskFilter filter = new TaskFilter()
@@ -156,7 +181,7 @@ public class TaskWebApiService : ITaskWebApiService
         return model;
     }
 
-    public async Task<IEnumerable<TaskDTO>?> GetAllAsync(int id)
+    public async Task<IEnumerable<TaskDTO>?> GetAllAsync(string id)
     {
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
         var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task?AssigneeId={id}"));

@@ -12,13 +12,14 @@ namespace TodoListApp.WebApi.Controllers
     [Route("api/[controller]")]
     public class CommentController : Controller
     {
-        private readonly ICommentDatabaseService repository;
-
+        private readonly ICommentDatabaseService commentRepository;
+        private readonly ITaskDatabaseService taskRepository;
         private readonly ILogger logger;
 
-        public CommentController(ICommentDatabaseService commentDatabaseService, ILogger<CommentController> logger)
+        public CommentController(ICommentDatabaseService commentDatabaseService, ITaskDatabaseService taskRepository, ILogger<CommentController> logger)
         {
-            this.repository = commentDatabaseService;
+            this.commentRepository = commentDatabaseService;
+            this.taskRepository = taskRepository;
             this.logger = logger;
         }
 
@@ -27,7 +28,7 @@ namespace TodoListApp.WebApi.Controllers
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllComments));
 
-            var list = await this.repository.GetAllAsync(filter);
+            var list = await this.commentRepository.GetAllAsync(filter);
             if (list.Any())
             {
                 return this.Ok(list);
@@ -48,7 +49,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.BadRequest("Request body cannot be empty.");
             }
 
-            bool result = await this.repository.UpdateAsync(model, id);
+            bool result = await this.commentRepository.UpdateAsync(model, id);
             if (result)
             {
                 return this.Ok();
@@ -69,14 +70,14 @@ namespace TodoListApp.WebApi.Controllers
                 return this.BadRequest("Request body cannot be empty.");
             }
 
-            var taskExist = await this.repository.TaskExist(model.TaskId);
+            var taskExist = await this.taskRepository.TaskExist(model.TaskId);
             if (!taskExist)
             {
                 LoggerExtensions.LogWarning(this.logger, "Task with the given ID does not exist.");
                 return this.BadRequest("Task with the given ID does not exist.");
             }
 
-            await this.repository.CreateAsync(model);
+            await this.commentRepository.CreateAsync(model);
 
             return this.Ok();
         }
@@ -86,7 +87,7 @@ namespace TodoListApp.WebApi.Controllers
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.DeleteComment));
 
-            bool result = await this.repository.DeleteByIdAsync(id);
+            bool result = await this.commentRepository.DeleteByIdAsync(id);
             if (result)
             {
                 return this.NoContent();

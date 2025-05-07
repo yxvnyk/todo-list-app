@@ -49,7 +49,7 @@ public class CommentWebApiService : ICommentWebApiService
         return response.StatusCode;
     }
 
-    public Task<IEnumerable<CommentDTO>?> GetAllAsync(int id)
+    public Task<IEnumerable<CommentDTO>?> GetAllAsync(string id)
     {
         throw new NotImplementedException();
     }

@@ -4,5 +4,5 @@ public class TodoListFilter : PaginationFilter
 {
     public string? Title { get; set; }
 
-    public string? UserId { get; set; }
+    public string? OwnerId { get; set; }
 }

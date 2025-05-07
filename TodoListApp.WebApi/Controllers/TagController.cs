@@ -12,19 +12,21 @@ namespace TodoListApp.WebApi.Controllers;
 [Route("api/[controller]")]
 public class TagController : Controller
 {
-    private readonly ITagDatabaseService repository;
+    private readonly ITagDatabaseService tagRepository;
+    private readonly ITaskDatabaseService taskRepository;
     private readonly ILogger logger;
 
-    public TagController(ITagDatabaseService commentDatabaseService, ILogger<TagController> logger)
+    public TagController(ITagDatabaseService commentDatabaseService, ITaskDatabaseService taskRepository, ILogger<TagController> logger)
     {
-        this.repository = commentDatabaseService;
+        this.tagRepository = commentDatabaseService;
+        this.taskRepository = taskRepository;
         this.logger = logger;
     }
 
     [HttpGet]
     public async Task<ActionResult<TagDTO>> GetAllTags([FromQuery] TagFilter filter)
     {
-        var list = await this.repository.GetAllAsync(filter);
+        var list = await this.tagRepository.GetAllAsync(filter);
         if (list.Any())
         {
             list = list.DistinctBy(x => x.Name); // return without duplication
@@ -46,7 +48,7 @@ public class TagController : Controller
             return this.BadRequest("Request body cannot be empty.");
         }
 
-        bool result = await this.repository.UpdateAsync(model, id);
+        bool result = await this.tagRepository.UpdateAsync(model, id);
         if (result)
         {
             return this.Ok();
@@ -67,14 +69,14 @@ public class TagController : Controller
             return this.BadRequest("Request body cannot be empty.");
         }
 
-        var taskExist = await this.repository.TaskExist(model.TaskId);
+        var taskExist = await this.taskRepository.TaskExist(model.TaskId);
         if (!taskExist)
         {
             LoggerExtensions.LogWarning(this.logger, "Task with the given ID does not exist.");
             return this.BadRequest("Task with the given ID does not exist.");
         }
 
-        await this.repository.CreateAsync(model);
+        await this.tagRepository.CreateAsync(model);
 
         return this.Ok();
     }
@@ -84,7 +86,7 @@ public class TagController : Controller
     {
         LoggerExtensions.LogTrace(this.logger, nameof(this.DeleteTag));
 
-        bool result = await this.repository.DeleteByIdAsync(id);
+        bool result = await this.tagRepository.DeleteByIdAsync(id);
         if (result)
         {
             return this.NoContent();

@@ -26,6 +26,9 @@ public class TaskEntity
     [MaxLength(450)]
     public string AssigneeId { get; set; } = string.Empty;
 
+    [MaxLength(450)]
+    public string OwnerId { get; set; } = string.Empty;
+
     [ForeignKey("TodoList")]
     public int TodoListId { get; set; }
 

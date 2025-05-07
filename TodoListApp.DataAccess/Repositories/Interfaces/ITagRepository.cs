@@ -5,5 +5,4 @@ namespace TodoListApp.DataAccess.Repositories.Interfaces;
 
 public interface ITagRepository : ICrud<TagEntity, TagFilter>
 {
-    Task<bool> TaskExist(int id);
 }

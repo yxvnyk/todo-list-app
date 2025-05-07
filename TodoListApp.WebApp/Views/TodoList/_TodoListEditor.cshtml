@@ -19,7 +19,7 @@
             }
             @if (todoList?.Id == 0)
             {
-                <input type="hidden" asp-for="List.UserId" value="@todoList?.UserId" />
+                <input type="hidden" asp-for="List.OwnerId" value="@todoList?.OwnerId" />
             }
             <div class="form-group">
                 <label asp-for="List.Title" class="control-label"></label>

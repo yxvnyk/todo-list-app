@@ -45,7 +45,7 @@ public class TodoListDatabaseService : ITodoListDatabaseService
         if (entity != null)
         {
             _ = this.mapper.Map(model, entity);
-            _ = this.repository.SaveChangesAsync();
+            await this.repository.SaveChangesAsync();
             return true;
         }
 
@@ -55,5 +55,10 @@ public class TodoListDatabaseService : ITodoListDatabaseService
     public async Task<bool> DeleteByIdAsync(int id)
     {
         return await this.repository.DeleteByIdAsync(id);
+    }
+
+    public Task<bool> TodoListExist(int id)
+    {
+        return this.repository.TodoListExist(id);
     }
 }

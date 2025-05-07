@@ -31,7 +31,7 @@
             }
             @if (task?.Id == 0)
             {
-                <input type="hidden" asp-for="Task.AssigneeId" value="admin" />
+                <input type="hidden" asp-for="Task.AssigneeId" value="@task.AssigneeId" />
                 <input type="hidden" asp-for="Task.TodoListId" value="@task?.TodoListId" />
                 <input type="hidden" asp-for="Task.Status" value="NotStarted" />
             }

@@ -19,10 +19,10 @@ internal class TodoListWebApiService : ITodoListWebApiService
         this.httpService = httpService;
     }
 
-    public async Task<IEnumerable<TodoListDTO>?> GetAllAsync(int id)
+     public async Task<IEnumerable<TodoListDTO>?> GetAllAsync(string ownerId)
     {
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
-        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, "/api/TodoList"));
+        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList?OwnerId={ownerId}"));
         if (response == null)
         {
             return new List<TodoListDTO>();

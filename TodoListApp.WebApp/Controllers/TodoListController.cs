@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
@@ -19,9 +20,9 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet("Get")]
-        public async Task<IActionResult> GetAllLists(int listId = 0)
+        public async Task<IActionResult> GetAllLists(string ownerId = "")
         {
-            var list = await this.apiService.GetAllAsync(listId);
+            var list = await this.apiService.GetAllAsync(ownerId);
             if (list == null)
             {
                 return this.NotFound();
@@ -53,12 +54,12 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet]
-        [Route("create/{id:alpha}")]
-        public async Task<IActionResult> Create(string id, string returnUrl)
+        [Route("create")]
+        public IActionResult Create(string returnUrl = "/")
         {
             TodoListDTO task = new TodoListDTO()
             {
-                UserId = id,
+                OwnerId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!,
             };
             return this.View((task, returnUrl));
         }

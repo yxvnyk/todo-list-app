@@ -7,7 +7,7 @@ public interface ICrud<T, TUpdate, TPagging>
 {
     Task<T?> GetByIdAsync(int id);
 
-    Task<IEnumerable<T>?> GetAllAsync(int id);
+    Task<IEnumerable<T>?> GetAllAsync(string id);
 
     Task<HttpStatusCode?> DeleteAsync(int id);
 

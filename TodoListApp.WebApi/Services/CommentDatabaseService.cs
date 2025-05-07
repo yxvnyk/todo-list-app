@@ -48,6 +48,11 @@ public class CommentDatabaseService : ICommentDatabaseService
         return entity != null ? this.mapper.Map<CommentDTO>(entity) : null;
     }
 
+    public Task<bool> TaskExist(int id)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task<bool> UpdateAsync(CommentUpdateDTO model, int id)
     {
         ArgumentNullException.ThrowIfNull(model);
@@ -60,10 +65,5 @@ public class CommentDatabaseService : ICommentDatabaseService
         }
 
         return false;
-    }
-
-    public async Task<bool> TaskExist(int id)
-    {
-        return await this.repository.TaskExist(id);
     }
 }

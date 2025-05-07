@@ -11,4 +11,6 @@ public class TaskViewModel
     public IEnumerable<TagDTO>? Tags { get; set; }
 
     public string ReturnUrl { get; set; } = "/";
+
+    public string OwnerId { get; set; } = string.Empty;
 }

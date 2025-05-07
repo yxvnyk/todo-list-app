@@ -39,9 +39,16 @@ public class TaskRepository : ITaskRepository
     {
         var tasks = this.context.Tasks.AsQueryable();
 
-        if (!string.IsNullOrEmpty(filter.AssigneeId))
+        if (!string.IsNullOrEmpty(filter?.AssigneeId) || !string.IsNullOrEmpty(filter?.OwnerId))
         {
-            tasks = tasks.Where(t => t.AssigneeId == filter.AssigneeId);
+            tasks = tasks
+                .Include(task => task.TodoList)
+                .Where(t =>
+                    t.TodoList != null &&
+                    (
+                        (!string.IsNullOrEmpty(filter.AssigneeId) && t.AssigneeId == filter.AssigneeId)
+                        ||
+                        (!string.IsNullOrEmpty(filter.OwnerId) && t.TodoList.OwnerId != null && t.TodoList.OwnerId == filter.OwnerId)));
         }
 
         if (filter.TodoListId > 0)
@@ -122,6 +129,12 @@ public class TaskRepository : ITaskRepository
     {
         var exist = await this.context.Tasks.FindAsync(id);
         return exist != null;
+    }
+
+    public string? GetTaskOwnerId(int taskId)
+    {
+        return this.context.Tasks.Where(t => t.Id == taskId).
+            Select(t => t.TodoList!.OwnerId).FirstOrDefault();
     }
 
     IQueryable<TaskEntity> ICrud<TaskEntity, TaskFilter>.GetAllAsync(TaskFilter filter)

@@ -6,5 +6,4 @@ namespace TodoListApp.WebApi.Data.Repository.Interfaces;
 
 public interface ICommentDatabaseService : ICrud<CommentDTO, CommentUpdateDTO, CommentFilter>
 {
-    Task<bool> TaskExist(int id);
 }

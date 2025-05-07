@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
@@ -17,13 +18,20 @@ public class TagController : Controller
 
     [HttpGet]
     [Route("TagMenu")]
-    public async Task<IActionResult> TagMenu(string returnUrl, int id = 0)
+    public async Task<IActionResult> TagMenu(string returnUrl)
     {
-        var list = await this.apiService.GetAllAsync(id);
-        if (list == null)
+        var user = this.User;
+        var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (user == null)
         {
-            return this.Redirect(returnUrl);
+            return this.View(new List<TodoListDTO>());
         }
+
+        var list = await this.apiService.GetAllAsync(userId!, userId!);
+        //if (list == null)
+        //{
+        //    return this.View((new List<TagDTO>(), returnUrl));
+        //}
 
         _ = this.Ok(list);
         return this.View((list, returnUrl));

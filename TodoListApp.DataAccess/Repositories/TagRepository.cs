@@ -29,6 +29,19 @@ public class TagRepository : ITagRepository
             tags = tags.Include(t => t.Task).Where(t => t.Task != null && t.Task.TodoListId == filter.TodoListId);
         }
 
+        if (!string.IsNullOrEmpty(filter?.AssigneeId) || !string.IsNullOrEmpty(filter?.OwnerId))
+        {
+            tags = tags
+                .Include(t => t.Task)
+                    .ThenInclude(task => task.TodoList)
+                .Where(t =>
+                    t.Task != null &&
+                    (
+                        (!string.IsNullOrEmpty(filter.AssigneeId) && t.Task.AssigneeId == filter.AssigneeId)
+                        ||
+                        (!string.IsNullOrEmpty(filter.OwnerId) && t.Task.TodoList != null && t.Task.TodoList.OwnerId == filter.OwnerId)));
+        }
+
         var pageNumber = (filter!.PageNumber - 1) * filter.PageSize;
 
         return tags.Skip(pageNumber).Take(filter.PageSize);
@@ -62,11 +75,5 @@ public class TagRepository : ITagRepository
         }
 
         return false;
-    }
-
-    public async Task<bool> TaskExist(int id)
-    {
-        var exist = await this.context.Tasks.FindAsync(id);
-        return exist != null;
     }
 }

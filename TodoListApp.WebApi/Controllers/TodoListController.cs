@@ -84,7 +84,7 @@ namespace TodoListApp.WebApi.Controllers
             }
 
             // TODO : role-based verification
-            if (string.IsNullOrEmpty(model.UserId))
+            if (string.IsNullOrEmpty(model.OwnerId))
             {
                 LoggerExtensions.LogWarning(this.logger, "User id cannot be empty");
                 return this.BadRequest("User id cannot be empty");
