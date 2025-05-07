@@ -8,15 +8,11 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace TodoListApp.WebApp.Services;
 
-public class CommentWebApiService : ICommentWebApiService
+public class CommentWebApiService : BaseApiService, ICommentWebApiService
 {
-    private readonly HttpClient httpClient;
-    private readonly IHttpService httpService;
-
     public CommentWebApiService(HttpClient httpClient, IHttpService httpService)
+        : base(httpClient, httpService)
     {
-        this.httpClient = httpClient;
-        this.httpService = httpService;
     }
 
     public async Task<HttpStatusCode?> AddAsync(CommentDTO model)
@@ -27,26 +23,14 @@ public class CommentWebApiService : ICommentWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Comment"), todoItemJson);
-
-        if (response == null)
-        {
-            return null;
-        }
-
-        return response.StatusCode;
+        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Comment"), todoItemJson);
+        return this.HandleResponseStatusAsync(response);
     }
 
     public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        using var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"));
-
-        if (response == null)
-        {
-            return null;
-        }
-
-        return response.StatusCode;
+        var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"));
+        return this.HandleResponseStatusAsync(response);
     }
 
     public Task<IEnumerable<CommentDTO>?> GetAllAsync(string id)
@@ -57,20 +41,7 @@ public class CommentWebApiService : ICommentWebApiService
     public async Task<IEnumerable<CommentDTO>?> GetAllByTaskAsync(int id)
     {
         var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment?TaskId={id}"));
-        if (response == null)
-        {
-            return null;
-        }
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return null;
-        }
-
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        List<CommentDTO>? model = await response.Content.ReadFromJsonAsync<List<CommentDTO>>();
-        return model;
+        return await this.HandleResponseAsync<IEnumerable<CommentDTO>>(response);
     }
 
     public Task<CommentDTO?> GetByIdAsync(int id)
@@ -87,13 +58,7 @@ public class CommentWebApiService : ICommentWebApiService
             Application.Json);
 
         Console.WriteLine(await todoItemJson.ReadAsStringAsync());
-        using var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"), todoItemJson);
-
-        if (response == null)
-        {
-            return null;
-        }
-
-        return response.StatusCode;
+        var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment/{id}"), todoItemJson);
+        return this.HandleResponseStatusAsync(response);
     }
 }

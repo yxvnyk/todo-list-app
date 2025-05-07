@@ -19,12 +19,16 @@
         
         <div class="my-3 p-3 rounded shadow-sm bg-dark bg-opacity-10">
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="btn btn-secondary"
+                    asp-action="GetAllTasksByTag" asp-controller="Task" asp-route-tag="@tag.Name"  type="button" >
                     @tag.Name
-                </button>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" asp-action="GetAllTasksByTag" asp-controller="Task" asp-route-tag="@tag.Name">Action</a></li>
-                </ul>
+                </a>
+                    @* <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"> *@
+                    @*     @tag.Name *@
+                    @* </button> *@
+                    @* <ul class="dropdown-menu"> *@
+                    @*     <li><a class="dropdown-item" asp-action="GetAllTasksByTag" asp-controller="Task" asp-route-tag="@tag.Name">Action</a></li> *@
+                    @* </ul> *@
             </div>
             
         </div>

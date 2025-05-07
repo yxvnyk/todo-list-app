@@ -10,41 +10,17 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace TodoListApp.WebApp.Services;
 
-public class TaskWebApiService : ITaskWebApiService
+public class TaskWebApiService : BaseApiService, ITaskWebApiService
 {
-    private readonly HttpClient httpClient;
-
-    private readonly IHttpService httpService;
-
     public TaskWebApiService(HttpClient httpClient, IHttpService httpService)
+        : base(httpClient, httpService)
     {
-        this.httpClient = httpClient;
-        this.httpService = httpService;
     }
 
-    public async Task<string> GetTaskOwnerId(int taskId)
+    public async Task<string?> GetTaskOwnerId(int taskId)
     {
         var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/GetOwnerId?taskId={taskId}"));
-        if (response == null)
-        {
-            return string.Empty;
-        }
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return string.Empty;
-        }
-
-        if (response.StatusCode == HttpStatusCode.Unauthorized)
-        {
-            return string.Empty;
-        }
-
-        Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        string? ownerId = await response.Content.ReadAsStringAsync();
-        return ownerId;
+        return await this.HandleResponseAsync<string>(response);
     }
 
     public async Task<TaskPaging?> GetAllByListAsync(int id)
@@ -61,20 +37,7 @@ public class TaskWebApiService : ITaskWebApiService
             Application.Json);
 
         var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        if (response == null)
-        {
-            return null;
-        }
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return null;
-        }
-
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        TaskPaging? model = await response.Content.ReadFromJsonAsync<TaskPaging>();
-        return model;
+        return await this.HandleResponseAsync<TaskPaging>(response);
     }
 
     public async Task<TaskPaging?> GetAllByFilterAsync(TaskFilter filter)
@@ -86,20 +49,7 @@ public class TaskWebApiService : ITaskWebApiService
             Application.Json);
 
         var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        if (response == null)
-        {
-            return null;
-        }
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return null;
-        }
-
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        TaskPaging? model = await response.Content.ReadFromJsonAsync<TaskPaging>();
-        return model;
+        return await this.HandleResponseAsync<TaskPaging>(response);
     }
 
     public async Task<IEnumerable<TaskPaging>?> GetAllByTagAsync(string tag)
@@ -116,20 +66,7 @@ public class TaskWebApiService : ITaskWebApiService
             Application.Json);
 
         var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        if (response == null)
-        {
-            return null;
-        }
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return null;
-        }
-
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        List<TaskPaging>? model = await response.Content.ReadFromJsonAsync<List<TaskPaging>>();
-        return model;
+        return await this.HandleResponseAsync<IEnumerable<TaskPaging>>(response);
     }
 
     public async Task<IEnumerable<TaskPaging>?> GetAllByAssigneeAsync(string id)
@@ -146,59 +83,21 @@ public class TaskWebApiService : ITaskWebApiService
             Application.Json);
 
         var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        if (response == null)
-        {
-            return null;
-        }
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return null;
-        }
-
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        List<TaskPaging>? model = await response.Content.ReadFromJsonAsync<List<TaskPaging>>();
-        return model;
+        return await this.HandleResponseAsync<IEnumerable<TaskPaging>>(response);
     }
 
     public async Task<TaskDTO?> GetByIdAsync(int id)
     {
         var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
-        if (response == null)
-        {
-            return null;
-        }
-
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return null;
-        }
-
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        TaskDTO? model = await response.Content.ReadFromJsonAsync<TaskDTO>();
-        return model;
+        return await this.HandleResponseAsync<TaskDTO>(response);
     }
 
     public async Task<IEnumerable<TaskDTO>?> GetAllAsync(string id)
     {
         Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
         var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task?AssigneeId={id}"));
-        if (response == null)
-        {
-            return null;
-        }
+        return await this.HandleResponseAsync<IEnumerable<TaskDTO>>(response);
 
-        if (response.StatusCode == HttpStatusCode.NotFound)
-        {
-            return null;
-        }
-
-        string json = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(json);
-        List<TaskDTO>? model = await response.Content.ReadFromJsonAsync<List<TaskDTO>>();
-        return model;
     }
 
     public async Task<HttpStatusCode?> AddAsync(TaskDTO model)
@@ -209,14 +108,8 @@ public class TaskWebApiService : ITaskWebApiService
             Encoding.UTF8,
             Application.Json);
 
-        using var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task"), todoItemJson);
-
-        if (response == null)
-        {
-            return null;
-        }
-
-        return response.StatusCode;
+        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task"), todoItemJson);
+        return this.HandleResponseStatusAsync(response);
     }
 
     public async Task<HttpStatusCode?> UpdateAsync(TaskUpdateDTO model, int id)
@@ -228,25 +121,13 @@ public class TaskWebApiService : ITaskWebApiService
             Application.Json);
 
         Console.WriteLine(await todoItemJson.ReadAsStringAsync());
-        using var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"), todoItemJson);
-
-        if (response == null)
-        {
-            return null;
-        }
-
-        return response.StatusCode;
+        var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"), todoItemJson);
+        return this.HandleResponseStatusAsync(response);
     }
 
     public async Task<HttpStatusCode?> DeleteAsync(int id)
     {
-        using var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
-
-        if (response == null)
-        {
-            return null;
-        }
-
-        return response.StatusCode;
+        var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
+        return this.HandleResponseStatusAsync(response);
     }
 }

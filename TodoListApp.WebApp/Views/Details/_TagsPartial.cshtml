@@ -13,7 +13,7 @@
                 <input type="hidden" name="tag.TaskId" value="@Model.id" />
 
                 <div class="form-group">
-                    <label for="tag.Name">Add Tag</label>
+                    @* <label for="tag.Name">Add Tag</label> *@
                     <input name="tag.Name" class="form-control" rows="3" placeholder="Write your tag..."></input>
                 </div>
 
@@ -21,14 +21,16 @@
                     <button type="submit" class="btn btn-primary mt-2">Create</button>
                 </div>
             </form>
-
-            foreach (var tag in Model.tags ?? Enumerable.Empty<TagDTO>())
-            {
-                <span class="bg-light rounded-1">#@tag.Name
-                        <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center p-0 ms-2" style="width: 24px; height: 24px;" data-bs-toggle="modal" data-bs-target="#modal_@tag.Id">
+        }
+         @foreach (var tag in Model.tags ?? Enumerable.Empty<TagDTO>())
+         {  
+            <span class="bg-light rounded-1">#@tag.Name
+                @if (Model.taskAggregation)
+                {
+                    <button type="button" class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center justify-content-center p-0 ms-2" style="width: 24px; height: 24px;" data-bs-toggle="modal" data-bs-target="#modal_@tag.Id">
                             ×
                     </button>
-
+           
                     <!-- Modal -->
                     <div class="modal fade" id="modal_@tag.Id" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="modalLabel_@tag.Id" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -46,11 +48,12 @@
                                         Delete
                                     </a>
                                 </div>
-                            </div>""
+                            </div>
                         </div>
                     </div>
-                </span>
-            }
+                }
+            </span>
+           
         }
     </div>
 </div>

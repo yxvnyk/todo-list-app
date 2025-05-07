@@ -1,4 +1,3 @@
-using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
@@ -15,6 +14,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
+        ArgumentNullException.ThrowIfNull(context);
         ArgumentNullException.ThrowIfNull(next);
         try
         {

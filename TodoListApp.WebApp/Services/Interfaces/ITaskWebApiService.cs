@@ -15,5 +15,5 @@ public interface ITaskWebApiService : ICrud<TaskDTO, TaskUpdateDTO, TaskPaging>
 
     Task<TaskPaging?> GetAllByFilterAsync(TaskFilter filter);
 
-    Task<string> GetTaskOwnerId(int taskId);
+    Task<string?> GetTaskOwnerId(int taskId);
 }

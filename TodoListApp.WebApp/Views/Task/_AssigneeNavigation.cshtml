@@ -24,6 +24,8 @@
                     </button>
                     <ul class="dropdown-menu">
                         <li class="dropdown">
+
+                            @* Status *@
                             <a class="dropdown-item dropdown-toggle" href="#">Status</a>
                             <ul class="dropdown-menu">
 
@@ -74,6 +76,8 @@
                         Sort
                     </button>
                     <ul class="dropdown-menu">
+
+                            @* Title *@
                         <li class="dropdown">
                             <a class="dropdown-item dropdown-toggle" href="#">Title</a>
                             <ul class="dropdown-menu">
@@ -90,6 +94,39 @@
                                     <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
                                         <input type="hidden" asp-for="@Model.AssigneeId" name="AssigneeId" value="@Model.AssigneeId" />
                                         <input type="hidden" name="SortBy" value="@("Title")" />
+                                        <input type="hidden" name="IsDescending" value="true" />
+                                        <button type="submit" class="dropdown-item">By desceding</button>
+                                    </form>
+                                </li>
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" name="Overdue" value="@TodoListApp.DataAccess.Filters.Enums.Overdue.None" />
+                                        <input type="hidden" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="returnUrl"
+                                               value="@ViewContext.HttpContext.Request.PathAndQuery()" />
+                                        <button type="submit" class="dropdown-item">Without sorting</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+
+                        @* Due date *@
+                        <li class="dropdown">
+                            <a class="dropdown-item dropdown-toggle" href="#">Due date</a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" asp-for="@Model.AssigneeId" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="SortBy" value="@("DueData")" />
+                                        <button type="submit" class="dropdown-item">By asceding</button>
+                                    </form>
+                                </li>
+
+                                <li>
+                                    <form asp-controller="Task" asp-action="GetAllTasksByFilter" method="post" class="dropdown-item p-0">
+                                        <input type="hidden" asp-for="@Model.AssigneeId" name="AssigneeId" value="@Model.AssigneeId" />
+                                        <input type="hidden" name="SortBy" value="@("DueDate")" />
                                         <input type="hidden" name="IsDescending" value="true" />
                                         <button type="submit" class="dropdown-item">By desceding</button>
                                     </form>

@@ -1,5 +1,4 @@
 using System.Net;
-using TodoListApp.WebApi.Models;
 
 namespace TodoListApp.WebApp.Services.Interfaces;
 
