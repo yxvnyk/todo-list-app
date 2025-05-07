@@ -72,7 +72,7 @@ else
                         <a class="btn btn-info btn-sm" asp-controller="Details" asp-action="TaskDetails" method="post" asp-route-id="@task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                             Details
                         </a>
-                        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" method="post" asp-route-id="@task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+                        <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" method="post" asp-route-taskId="@task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                             Edit
                         </a>
                         <!-- Button trigger modal -->

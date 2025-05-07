@@ -27,11 +27,15 @@
                         <option value="Completed">Completed</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label asp-for="Task.AssigneeId" class="control-label"></label>
+                    <input asp-for="Task.AssigneeId" value="@Model?.Task?.AssigneeId" class="form-control" />
+                </div>
 
             }
             @if (task?.Id == 0)
             {
-                <input type="hidden" asp-for="Task.AssigneeId" value="@task.AssigneeId" />
+                <input type="hidden" asp-for="Task.AssigneeId" value="@task?.AssigneeId" />
                 <input type="hidden" asp-for="Task.TodoListId" value="@task?.TodoListId" />
                 <input type="hidden" asp-for="Task.Status" value="NotStarted" />
             }

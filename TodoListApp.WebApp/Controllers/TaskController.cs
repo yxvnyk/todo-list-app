@@ -142,7 +142,7 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         [HttpGet]
-        [Route("edit/{id:int}")]
+        [Route("edit/{taskId:int}")]
         public async Task<IActionResult> Edit(int taskId, string returnUrl)
         {
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;

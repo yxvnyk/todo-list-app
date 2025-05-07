@@ -7,7 +7,7 @@
     <div>
         @if (Model.userIdEqualTaskOwnerId)
         {
-            <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" asp-route-id="@Model.taskAggregation.Task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
+            <a class="btn btn-warning btn-sm" asp-controller="Task" asp-action="Edit" asp-route-taskId="@Model.taskAggregation.Task?.Id" asp-route-returnUrl="@ViewContext.HttpContext.Request.PathAndQuery()">
                 Edit
             </a>
             <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modal_@Model.taskAggregation.Task?.Id">
