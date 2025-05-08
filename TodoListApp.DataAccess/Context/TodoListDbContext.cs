@@ -20,22 +20,22 @@ public class TodoListDbContext : DbContext
     /// <summary>
     /// Gets or sets the <see cref="DbSet{TodoListEntity}"/> representing the Todo Lists table.
     /// </summary>
-    public DbSet<TodoListEntity> TodoLists { get; set; }
+    public DbSet<TodoListEntity> TodoLists { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the <see cref="DbSet{TaskEntity}"/> representing the Tasks table.
     /// </summary>
-    public DbSet<TaskEntity> Tasks { get; set; }
+    public DbSet<TaskEntity> Tasks { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the <see cref="DbSet{CommentEntity}"/> representing the Comments table.
     /// </summary>
-    public DbSet<CommentEntity> Comments { get; set; }
+    public DbSet<CommentEntity> Comments { get; set; } = default!;
 
     /// <summary>
     /// Gets or sets the <see cref="DbSet{TagEntity}"/> representing the Tags table.
     /// </summary>
-    public DbSet<TagEntity> Tags { get; set; }
+    public DbSet<TagEntity> Tags { get; set; } = default!;
 
     /// <summary>
     /// Configures the model relationships and schema needed for the context.

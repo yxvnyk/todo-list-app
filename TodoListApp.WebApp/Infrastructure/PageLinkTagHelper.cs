@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -91,7 +92,7 @@ namespace TodoListApp.WebApp.Infrastructure
                     this.PageUrlValues[key: "page"] = i;
                     tag.Attributes[key: "href"] = urlHelper.Action(this.PageAction, this.PageUrlValues);
 
-                    _ = tag.InnerHtml.Append(i.ToString());
+                    _ = tag.InnerHtml.Append(i.ToString(CultureInfo.InvariantCulture));
                     _ = result.InnerHtml.AppendHtml(tag);
                     if (this.PageClassesEnabled)
                     {

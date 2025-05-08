@@ -4,7 +4,7 @@ public interface ICrud<TEntity, TFilter>
 {
     IQueryable<TEntity> GetAllAsync(TFilter filter);
 
-    Task CreateAsync(TEntity model);
+    Task CreateAsync(TEntity entity);
 
     Task SaveChangesAsync();
 

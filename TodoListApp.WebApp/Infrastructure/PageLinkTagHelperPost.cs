@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -95,7 +96,7 @@ namespace TodoListApp.WebApp.Infrastructure
                     TagBuilder pageNumber = new TagBuilder("input");
                     pageNumber.Attributes["type"] = "hidden";
                     pageNumber.Attributes["name"] = "PageNumber";
-                    pageNumber.Attributes["value"] = i.ToString();
+                    pageNumber.Attributes["value"] = i.ToString(CultureInfo.InvariantCulture);
                     _ = form.InnerHtml.AppendHtml(pageNumber);
 
                     foreach (var pair in this.PagePostValues)
@@ -109,7 +110,7 @@ namespace TodoListApp.WebApp.Infrastructure
 
                     TagBuilder button = new TagBuilder("button");
                     button.Attributes["type"] = "submit";
-                    _ = button.InnerHtml.Append(i.ToString());
+                    _ = button.InnerHtml.Append(i.ToString(CultureInfo.InvariantCulture));
 
                     if (this.PageClassesEnabled)
                     {
