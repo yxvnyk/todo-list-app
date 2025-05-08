@@ -1,0 +1,29 @@
+@model (string name, string email, string id)
+@{
+    Layout = "_MinimalLayout";
+}
+<partial name="_Navbar" />
+<div class="p-5 mb-4 bg-light rounded-3">
+    <h1 class="display-5 fw-bold">Your data</h1>
+
+    <table class="table table-sm table-bordered table-striped">
+        <tbody>
+            <tr>
+                <th>Name</th>
+                <th>@Model.name</th>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <th>@Model.email</th>
+            </tr>
+            <tr>
+                <th>Identification number</th>
+                <th>@Model.id</th>
+            </tr>
+        </tbody>
+    </table>
+    @* <div class="container-fluid py-5"> *@
+    @*     <p class="col-md-8 fs-4">Using a series of utilities, you can create this jumbotron, just like the one in previous versions of Bootstrap. Check out the examples below for how you can remix and restyle it to your liking.</p> *@
+         <button class="btn btn-primary btn-md" type="button">Reset password</button> 
+    @* </div> *@
+</div>

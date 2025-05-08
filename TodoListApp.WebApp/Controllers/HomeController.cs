@@ -1,7 +1,6 @@
-using System.Diagnostics;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TodoListApp.WebApp.Models;
 
 namespace WebApplication1.Controllers;
 
@@ -24,9 +23,14 @@ public class HomeController : Controller
         return this.View();
     }
 
-    public IActionResult Privacy()
+    [HttpGet("Profile")]
+    [Authorize]
+    public IActionResult Profile()
     {
-        return this.View();
+        var email = this.User.FindFirst(ClaimTypes.Email)?.Value!;
+        var name = this.User.FindFirst(ClaimTypes.Name)?.Value!;
+        var id = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
+        return this.View((name, email, id));
     }
 
     //  [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

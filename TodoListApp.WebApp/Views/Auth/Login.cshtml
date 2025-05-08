@@ -1,3 +1,4 @@
+@model string
 @{
     Layout = "_MinimalLayout";
 }
@@ -36,7 +37,11 @@
                     <a asp-action="SignIn" asp-controller="Auth">Sign-in</a>
                 </div>
         </div>
-        
+
+        @if (!string.IsNullOrEmpty(Model))
+        {
+                <div class="text-danger">@Model</div>
+        }
         <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
     </form>
 </main>

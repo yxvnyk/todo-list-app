@@ -1,8 +1,10 @@
+using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.UserDataAccess;
 using TodoListApp.WebApi.Models.DTO;
@@ -54,20 +56,20 @@ public class AuthController : Controller
 
         if (user == null)
         {
-            return this.Unauthorized();
+            return this.View("Login", "Wrong email");
         }
 
         var result = await this.signInManager.CheckPasswordSignInAsync(user, registerDTO?.Password, false);
 
         if (!result.Succeeded)
         {
-            return this.Unauthorized();
+            return this.View("Login", "Wrong password");
         }
 
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Name, user.Email),
+            new Claim(ClaimTypes.Name, user.UserName),
             new Claim(ClaimTypes.Email, user.Email),
         };
         var userRoles = await this.userManager.GetRolesAsync(user);
