@@ -3,9 +3,10 @@
     TaskDTO? task = Model.Task;
 }
 
-<h3 class="bg-@Model.ThemeColor text-white text-center p-1">@Model.Title a Task</h3>
-<div class="row">
-    <div class="col-md-4">
+<h2 class="text-black text-center p-1">@Model.Title a Tasks</h2>
+
+<div class="">
+    <div class="m-auto g-3" style="max-width: 450px;">
 
         <form asp-action="@Model.CallbackMethodName" asp-controller="Task" asp-route-id="@(task?.Id != 0 ? task?.Id : null)" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

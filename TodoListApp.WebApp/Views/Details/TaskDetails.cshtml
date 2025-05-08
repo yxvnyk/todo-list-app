@@ -1,9 +1,11 @@
 @model (TaskViewModel taskAggregation, bool userIdEqualTaskOwnerId)
 @{
-    this.Layout = "_TaskLayout";
+    this.Layout = "_MinimalLayout";
 }
 <div class="container p-3">
-    <h1> <span class="badge text-bg-secondary">Task details</span></h1>
+    @* <h1> <span class="badge text-bg-secondary">Task details</span></h1> *@
+    <h2 class="text-black text-center p-1">Task details</h2>
+
     <div>
         @if (Model.userIdEqualTaskOwnerId)
         {

@@ -1,6 +1,6 @@
 @model SearchViewModel?
 @{
-    Layout = "_TaskLayout";
+    Layout = "_MinimalLayout";
 }
 <partial name="_Navbar" />
 
@@ -9,14 +9,17 @@
 
     @if(Model != null)
     {
-        <div class="container-fluid">
+        <div class="container-fluid m-auto">
             <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search">
 
-                <select class=" btn-secondary form-select me-2" name="searchBy">
-                    <option value="Title" selected="@(Model.SearchBy == "Title")">Title</option>
-                    <option value="CreationDate" selected="@(Model.SearchBy == "CreationDate")">Creation date</option>
-                    <option value="DueDate" selected="@(Model.SearchBy == "DueDate")">Due date</option>
-                </select>
+                <div style="max-width: 150px">
+                    <select class="btn-secondary form-select me-2" name="searchBy">
+                        <option value="Title" selected="@(Model.SearchBy == "Title")">Title</option>
+                        <option value="CreationDate" selected="@(Model.SearchBy == "CreationDate")">Creation date</option>
+                        <option value="DueDate" selected="@(Model.SearchBy == "DueDate")">Due date</option>
+                    </select>
+                </div>
+                
 
                 <input class="form-control me-2" type="search" name="query" value="@Model.Query"  aria-label="Search">
                 <button class="btn btn-outline-success" type="submit">Search</button>
@@ -56,18 +59,23 @@
     }
     else
     {
-        <div class="container-fluid">
-            <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search">
+        <div class="container">
+            <div class="m-auto g-3" style="max-width: 600px;">
+                <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search">
 
-                <select class=" btn-secondary form-select me-2" name="searchBy">
-                    <option value="Title">Title</option>
-                    <option value="CreationDate">Creation date</option>
-                    <option value="DueDate">Due date</option>
-                </select>
+                    <div class="w-auto">
+                        <select class=" btn-secondary form-select me-2" name="searchBy">
+                            <option value="Title">Title</option>
+                            <option value="CreationDate">Creation date</option>
+                            <option value="DueDate">Due date</option>
+                        </select>
+                    </div>
 
-                <input class="form-control me-2" type="search" name="query" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+                    <input class="form-control me-2" style="max-width: 500px" type="search" name="query" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+            
         </div>
     }
 

@@ -1,11 +1,9 @@
 @model TaskListPageViewModel
 <style>
-    /* Hover-based dropdown */
     .dropdown:hover > .dropdown-menu {
     display: block;
     }
 
-    /* Optional: Style for the nested dropdown */
     .dropdown-menu .dropdown-menu {
     display: none;
     margin-left: 100%;
@@ -39,8 +37,8 @@ else
             {
                 color = "bg-danger";
             }
-            <div class="my-3 p-3 rounded shadow-sm @color  bg-opacity-10">
-                <h6 class="border-bottom pb-2 mb-0">@task.Title</h6>
+            <div class="my-2 p-2 rounded shadow-sm @color  bg-opacity-10">
+                <h6 class="border-bottom pb-2 mb-0 mx-2">@task.Title</h6>
                 <div class="d-flex flex-column flex-md-row justify-content-between text-body-secondary pt-3">
                     <div class="d-flex">
 
@@ -64,7 +62,7 @@ else
                         </form>
 
                         
-                        <div style="word-wrap: break-word;">
+                        <div style="word-wrap: break-word;" class="mx-1">
                             @task?.Description
                         </div>
                     </div>
