@@ -8,10 +8,21 @@ namespace TodoListApp.WebApp.Controllers;
 [Route("Error")]
 public class ErrorController : Controller
 {
+    private readonly ILogger logger;
+
+    public ErrorController(ILogger<ErrorController> logger)
+    {
+        this.logger = logger;
+    }
+
     public IActionResult Index()
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.Index));
+
         var exception = this.HttpContext.Features.Get<IExceptionHandlerFeature>()?.Error;
         ErrorViewModel errorModel = new ErrorViewModel();
+
+        LoggerExtensions.LogError(this.logger, exception?.Message!);
 
         switch (exception)
         {

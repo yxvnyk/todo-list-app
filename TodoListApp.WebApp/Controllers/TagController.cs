@@ -10,16 +10,20 @@ namespace TodoListApp.WebApp.Controllers;
 public class TagController : Controller
 {
     private readonly ITagWebApiService apiService;
+    private readonly ILogger logger;
 
-    public TagController(ITagWebApiService apiService)
+    public TagController(ITagWebApiService apiService, ILogger<TagController> logger)
     {
         this.apiService = apiService;
+        this.logger = logger;
     }
 
     [HttpGet]
     [Route("TagMenu")]
     public async Task<IActionResult> TagMenu(string returnUrl)
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.TagMenu));
+
         var user = this.User;
         var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (user == null)
@@ -28,10 +32,6 @@ public class TagController : Controller
         }
 
         var list = await this.apiService.GetAllAsync(userId!, userId!);
-        //if (list == null)
-        //{
-        //    return this.View((new List<TagDTO>(), returnUrl));
-        //}
 
         _ = this.Ok(list);
         return this.View((list, returnUrl));
@@ -41,6 +41,8 @@ public class TagController : Controller
     [Route("create")]
     public async Task<IActionResult> Create(TagDTO tag, string returnUrl)
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
+
         if (this.ModelState.IsValid)
         {
             _ = await this.apiService.AddAsync(tag);
@@ -58,8 +60,12 @@ public class TagController : Controller
     [Route("edit/{id:int}")]
     public async Task<IActionResult> Update(TagUpdateDTO tag, int id, string returnUrl)
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
+
         if (this.ModelState.IsValid)
         {
+            LoggerExtensions.LogTrace(this.logger, "Invalid ModelState");
+
             _ = await this.apiService.UpdateAsync(tag, id);
         }
 
@@ -70,6 +76,8 @@ public class TagController : Controller
     [Route("delete")]
     public async Task<IActionResult> Delete(int id, string returnUrl)
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.Delete));
+
         _ = await this.apiService.DeleteAsync(id);
         return this.Redirect(returnUrl);
     }

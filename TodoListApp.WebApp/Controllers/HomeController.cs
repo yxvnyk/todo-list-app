@@ -20,6 +20,8 @@ public class HomeController : Controller
     [Authorize]
     public IActionResult Index()
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.Index));
+
         return this.View();
     }
 
@@ -27,13 +29,15 @@ public class HomeController : Controller
     [Authorize]
     public IActionResult Profile()
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.Profile));
+
         var email = this.User.FindFirst(ClaimTypes.Email)?.Value!;
         var name = this.User.FindFirst(ClaimTypes.Name)?.Value!;
         var id = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
         return this.View((name, email, id));
     }
 
-    //  [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    // [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     //  public IActionResult Error()
     //  {
     //      return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });

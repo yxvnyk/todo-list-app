@@ -22,7 +22,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (SqlException)
         {
-            LoggerExtensions.LogError(this.logger);
+            LoggerExtensions.LogError(this.logger, "SqlException");
             var details = new ProblemDetails()
             {
                 Detail = "Database error has been occured",
@@ -35,7 +35,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (TimeoutException)
         {
-            LoggerExtensions.LogError(this.logger);
+            LoggerExtensions.LogError(this.logger, "TimeoutException");
             var details = new ProblemDetails()
             {
                 Detail = "The request time out.",
@@ -49,7 +49,7 @@ public class ExceptionHandlingMiddleware : IMiddleware
         }
         catch (Exception)
         {
-            LoggerExtensions.LogError(this.logger);
+            LoggerExtensions.LogError(this.logger, "An error has occured");
             context.Response.StatusCode = 500;
             throw;
         }

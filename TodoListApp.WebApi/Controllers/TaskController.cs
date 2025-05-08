@@ -17,7 +17,7 @@ namespace TodoListApp.WebApi.Controllers
         private readonly ITodoListDatabaseService todoListService;
         private readonly ILogger logger;
 
-        public TaskController(ITaskDatabaseService taskDatabaseService, ITodoListDatabaseService todoListService, ILogger<TagController> logger)
+        public TaskController(ITaskDatabaseService taskDatabaseService, ITodoListDatabaseService todoListService, ILogger<TaskController> logger)
         {
             this.taskService = taskDatabaseService;
             this.logger = logger;

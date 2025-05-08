@@ -1,10 +1,8 @@
-using System.Globalization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.UserDataAccess;
 using TodoListApp.WebApi.Models.DTO;
@@ -19,17 +17,21 @@ public class AuthController : Controller
     private readonly UserManager<AppUser> userManager;
     private readonly SignInManager<AppUser> signInManager;
     private readonly ITokenService tokenService;
+    private readonly ILogger logger;
 
-    public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService)
+    public AuthController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, ITokenService tokenService, ILogger<AuthController> logger)
     {
         this.userManager = userManager;
         this.signInManager = signInManager;
         this.tokenService = tokenService;
+        this.logger = logger;
     }
 
     [HttpGet("logout")]
     public async Task<IActionResult> LogOut()
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.LogOut));
+
         await this.HttpContext.SignOutAsync(
         IdentityConstants.ApplicationScheme);
 
@@ -45,8 +47,11 @@ public class AuthController : Controller
     [HttpPost("login")]
     public async Task<IActionResult> LogIn(LoginDTO registerDTO)
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.LogIn));
+
         if (!this.ModelState.IsValid)
         {
+            LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
             return this.View();
         }
 
@@ -56,6 +61,7 @@ public class AuthController : Controller
 
         if (user == null)
         {
+            LoggerExtensions.LogWarning(this.logger, "Wrong email");
             return this.View("Login", "Wrong email");
         }
 
@@ -63,6 +69,7 @@ public class AuthController : Controller
 
         if (!result.Succeeded)
         {
+            LoggerExtensions.LogWarning(this.logger, "Wrong password");
             return this.View("Login", "Wrong password");
         }
 
@@ -106,20 +113,27 @@ public class AuthController : Controller
     [HttpGet("complete")]
     public IActionResult LogInComplete()
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.LogInComplete));
+
         return this.View("~/Views/Home/Index.cshtml");
     }
 
     [HttpGet("signin")]
     public IActionResult SignIn()
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.SignIn));
+
         return this.View();
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDTO register)
     {
+        LoggerExtensions.LogTrace(this.logger, nameof(this.Register));
+
         if (!this.ModelState.IsValid)
         {
+            LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
             return this.View();
         }
 
@@ -138,9 +152,11 @@ public class AuthController : Controller
                 return this.RedirectToAction("Login");
             }
 
+            LoggerExtensions.LogWarning(this.logger, "Role adding faild");
             return this.View();
         }
 
+        LoggerExtensions.LogWarning(this.logger, "User creating faild");
         return this.View();
     }
 }

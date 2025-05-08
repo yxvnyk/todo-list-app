@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Logging;
+
 public static partial class LoggerExtensions
 {
     [LoggerMessage(
@@ -9,8 +11,8 @@ public static partial class LoggerExtensions
     [LoggerMessage(
         EventId = 1002,
         Level = LogLevel.Error,
-        Message = "An error has been accured.")]
-    public static partial void LogError(ILogger logger);
+        Message = "{details}.")]
+    public static partial void LogError(ILogger logger, string details);
 
     [LoggerMessage(
         EventId = 1003,
