@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using TodoListApp.WebApi.Models.CustomValidations;
 using TodoListApp.WebApi.Models.Enums;
 
 namespace TodoListApp.WebApi.Models.DTO.UpdateDTO;
@@ -14,6 +15,7 @@ public class TaskUpdateDTO
 
     public DateTime? DateCreated { get; set; }
 
+    [MinDate]
     public DateTime? DueDate { get; set; }
 
     [EnumDataType(typeof(Status), ErrorMessage = "Invalid status value.")]

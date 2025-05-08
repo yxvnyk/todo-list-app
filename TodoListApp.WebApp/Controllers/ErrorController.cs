@@ -29,7 +29,7 @@ public class ErrorController : Controller
                 return this.View("~/Views/Auth/AuthMenu.cshtml");
             default:
                 errorModel.ReturnUrl = "/Home/Index";
-                errorModel.Error = "An error occurred.";
+                errorModel.Error = "An error has occurred.";
                 return this.View("Index", errorModel);
         }
     }

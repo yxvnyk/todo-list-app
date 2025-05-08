@@ -6,7 +6,7 @@
 <h3 class="bg-@Model.ThemeColor text-white text-center p-1">@Model.Title a Task</h3>
 <div class="row">
     <div class="col-md-4">
-       
+
         <form asp-action="@Model.CallbackMethodName" asp-controller="Task" asp-route-id="@(task?.Id != 0 ? task?.Id : null)" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             @if (task?.Id != 0)
@@ -39,8 +39,10 @@
                 <input type="hidden" asp-for="Task.TodoListId" value="@task?.TodoListId" />
                 <input type="hidden" asp-for="Task.Status" value="NotStarted" />
             }
+
             <div class="form-group">
                 <label asp-for="Task.Title" class="control-label"></label>
+                @Html.ValidationMessageFor(model => model.Title)
                 <input asp-for="Task.Title" class="form-control" />
                 <span asp-validation-for="Task.Title" class="text-danger"></span>
             </div>
@@ -54,13 +56,16 @@
                 <input asp-for="Task.DueDate" class="form-control" />
                 <span asp-validation-for="Task.DueDate" class="text-danger"></span>
             </div>
-          
-            
+
+            @* @if (!string.IsNullOrEmpty(Model!.Error)) *@
+            @* { *@
+            @*     <p>@Model.Error</p> *@
+            @* } *@
             <div class="form-group mt-3 text-center">
                 <button type="submit" class="btn btn-success">
                     Save
                 </button>
-                <a class="btn btn-primary" type="submit" href="@Model.ReturnUrl">Back</a>
+                <a class="btn btn-primary" type="submit" href="@Model?.ReturnUrl">Back</a>
             </div>
             <div class="form-group mt-3 text-center">
                

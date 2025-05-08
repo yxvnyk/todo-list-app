@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -26,13 +25,13 @@ public class AuthController : Controller
         this.tokenService = tokenService;
     }
 
-    [HttpGet("signout")]
-    public new async Task<IActionResult> SignOut()
+    [HttpGet("logout")]
+    public async Task<IActionResult> LogOut()
     {
         await this.HttpContext.SignOutAsync(
         IdentityConstants.ApplicationScheme);
 
-        return this.RedirectToAction("login");
+        return this.View("AuthMenu");
     }
 
     [HttpGet("login")]
@@ -49,7 +48,7 @@ public class AuthController : Controller
             return this.View();
         }
 
-        var email = registerDTO.Email.ToLower();
+        var email = registerDTO?.Email?.ToLower(System.Globalization.CultureInfo.CurrentCulture);
         var user = await this.userManager.Users
             .FirstOrDefaultAsync(x => x.Email.ToLower() == email);
 
@@ -82,12 +81,13 @@ public class AuthController : Controller
 
         var authProperties = new AuthenticationProperties
         {
-            //AllowRefresh = <bool>,
+            // AllowRefresh = <bool>,
             // Refreshing the authentication session
             ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30),
             IsPersistent = true,
-            //IssuedUtc = <DateTimeOffset>
-            //RedirectUri = <string>
+
+            // IssuedUtc = <DateTimeOffset>
+            // RedirectUri = <string>
         };
 
         await this.HttpContext.SignInAsync(

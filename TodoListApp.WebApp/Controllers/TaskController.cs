@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Security.Claims;
 using System.Text.Json;
@@ -170,7 +171,27 @@ namespace TodoListApp.WebApp.Controllers
                 });
             }
 
-            return this.Redirect(returnUrl);
+            if (Task == null)
+            {
+                return this.Redirect(returnUrl);
+            }
+
+            foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+
+            var dto = new TaskDTO
+            {
+                Id = id,
+                Title = Task.Title ?? string.Empty,
+                Description = Task.Description,
+                DateCreated = Task.DateCreated ?? DateTime.UtcNow,
+                DueDate = Task.DueDate,
+                Status = Task.Status ?? Status.NotStarted,
+                AssigneeId = Task.AssigneeId ?? string.Empty,
+            };
+            return this.View("Edit", (dto, returnUrl));
         }
 
         [HttpGet]
@@ -218,7 +239,7 @@ namespace TodoListApp.WebApp.Controllers
                 Console.WriteLine(error.ErrorMessage);
             }
 
-            return this.Redirect(returnUrl);
+            return this.View("Create", (task, returnUrl));
         }
     }
 }

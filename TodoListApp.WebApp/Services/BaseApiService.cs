@@ -53,4 +53,24 @@ public abstract class BaseApiService
 
         return response.StatusCode;
     }
+
+    protected async Task<string?> HandleResponsePlainTextAsync(HttpResponseMessage? response)
+    {
+        if (response == null)
+        {
+            return default;
+        }
+
+        if (response.StatusCode == HttpStatusCode.NotFound)
+        {
+            return default;
+        }
+
+        if (response.StatusCode == HttpStatusCode.Unauthorized)
+        {
+            throw new UnauthorizedAccessException();
+        }
+
+        return await response.Content.ReadAsStringAsync();
+    }
 }

@@ -20,7 +20,8 @@ public class TaskWebApiService : BaseApiService, ITaskWebApiService
     public async Task<string?> GetTaskOwnerId(int taskId)
     {
         var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/GetOwnerId?taskId={taskId}"));
-        return await this.HandleResponseAsync<string>(response);
+        var result = await this.HandleResponsePlainTextAsync(response);
+        return result;
     }
 
     public async Task<TaskPaging?> GetAllByListAsync(int id)
