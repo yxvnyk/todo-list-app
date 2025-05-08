@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,7 +8,7 @@ namespace TodoListApp.UserDataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
@@ -22,22 +22,22 @@ namespace TodoListApp.UserDataAccess.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "3759a894-f8cd-4c25-b931-32b7dce9b511");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "43dd47e0-fa8a-4335-905c-ee4f0fb4eb41");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "459e60f0-8c97-4a06-a290-89f582ada7ec");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "d644a7f8-a9c2-4396-86ee-0fe403c0d848");

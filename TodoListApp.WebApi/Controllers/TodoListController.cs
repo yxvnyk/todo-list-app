@@ -7,6 +7,9 @@ using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers
 {
+    /// <summary>
+    /// Provides API endpoints for managing to-do lists.
+    /// </summary>
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
@@ -15,12 +18,22 @@ namespace TodoListApp.WebApi.Controllers
         private readonly ITodoListDatabaseService repository;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TodoListController"/> class.
+        /// </summary>
+        /// <param name="todoListDatabaseService">The service for interacting with to-do list data.</param>
+        /// <param name="logger">The logger instance for logging information.</param>
         public TodoListController(ITodoListDatabaseService todoListDatabaseService, ILogger<TodoListController> logger)
         {
             this.repository = todoListDatabaseService;
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all to-do lists based on the provided filter.
+        /// </summary>
+        /// <param name="filter">The filter parameters for retrieving to-do lists.</param>
+        /// <returns>A list of to-do lists matching the filter criteria.</returns>
         [HttpGet]
         public async Task<ActionResult<TodoListDTO>> GetAllLists([FromQuery] TodoListFilter filter)
         {
@@ -36,6 +49,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("No lists found");
         }
 
+        /// <summary>
+        /// Retrieves a specific to-do list by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the to-do list.</param>
+        /// <returns>The to-do list with the specified ID.</returns>
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TaskDTO>> GetTodoList(int id)
         {
@@ -51,6 +69,12 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound($"To-do list with {id} not found");
         }
 
+        /// <summary>
+        /// Updates an existing to-do list with the specified ID.
+        /// </summary>
+        /// <param name="model">The to-do list data to update.</param>
+        /// <param name="id">The ID of the to-do list to update.</param>
+        /// <returns>A response indicating the result of the update operation.</returns>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateList([FromBody] TodoListUpdateDTO model, int id)
         {
@@ -72,6 +96,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound($"TodoList with ID {id} not found.");
         }
 
+        /// <summary>
+        /// Adds a new to-do list.
+        /// </summary>
+        /// <param name="model">The to-do list data to add.</param>
+        /// <returns>A response indicating the result of the add operation.</returns>
         [HttpPost]
         public async Task<IActionResult> AddList([FromBody] TodoListDTO model)
         {
@@ -95,6 +124,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.Ok();
         }
 
+        /// <summary>
+        /// Deletes a to-do list with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the to-do list to delete.</param>
+        /// <returns>A response indicating the result of the delete operation.</returns>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteList([FromRoute] int id)
         {

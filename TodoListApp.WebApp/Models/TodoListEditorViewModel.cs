@@ -1,8 +1,15 @@
 using TodoListApp.WebApi.Models;
 
-namespace TodoListApp.WebApp.Models;
-
-public class TodoListEditorViewModel : AbstractEditorViewModel
+namespace TodoListApp.WebApp.Models
 {
-    public TodoListDTO? List { get; set; }
+    /// <summary>
+    /// Represents the view model for editing a to-do list, containing the list's details.
+    /// </summary>
+    public class TodoListEditorViewModel : AbstractEditorViewModel
+    {
+        /// <summary>
+        /// Gets or sets the to-do list details.
+        /// </summary>
+        public TodoListDTO? List { get; set; }
+    }
 }

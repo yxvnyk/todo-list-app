@@ -1,16 +1,35 @@
 using TodoListApp.WebApi.Models;
 
-namespace TodoListApp.WebApp.Models;
-
-public class TaskListPageViewModel
+namespace TodoListApp.WebApp.Models
 {
-    public IEnumerable<TaskDTO>? List { get; set; }
+    /// <summary>
+    /// Represents the view model for the task list page, containing tasks and related information for displaying tasks.
+    /// </summary>
+    public class TaskListPageViewModel
+    {
+        /// <summary>
+        /// Gets or sets the collection of tasks to be displayed on the page.
+        /// </summary>
+        public IEnumerable<TaskDTO>? List { get; set; }
 
-    public string? Title { get; set; }
+        /// <summary>
+        /// Gets or sets the title of the page.
+        /// </summary>
+        public string? Title { get; set; }
 
-    public string? ReturnUrl { get; set; }
+        /// <summary>
+        /// Gets or sets the return URL to navigate back after completing the action.
+        /// </summary>
+        public string? ReturnUrl { get; set; }
 
-    public string? AssigneeId { get; set; }
+        /// <summary>
+        /// Gets or sets the ID of the assignee (if filtering tasks by assignee).
+        /// </summary>
+        public string? AssigneeId { get; set; }
 
-    public int TodoListId { get; set; }
+        /// <summary>
+        /// Gets or sets the ID of the todo list this task list belongs to.
+        /// </summary>
+        public int TodoListId { get; set; }
+    }
 }

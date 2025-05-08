@@ -1,10 +1,23 @@
-namespace TodoListApp.WebApi.Models.DTO.PagingDTO;
-public class CommentPaging
+namespace TodoListApp.WebApi.Models.DTO.PagingDTO
 {
-    public IEnumerable<TaskDTO>? Items { get; set; }
+    /// <summary>
+    /// Represents a paginated collection of TaskDTO items for comments.
+    /// </summary>
+    public class CommentPaging
+    {
+        /// <summary>
+        /// Gets or sets the collection of TaskDTO items for the current page.
+        /// </summary>
+        public IEnumerable<TaskDTO>? Items { get; set; }
 
-    public int? CurrentPage { get; set; }
+        /// <summary>
+        /// Gets or sets the current page number in the pagination.
+        /// </summary>
+        public int? CurrentPage { get; set; }
 
-    public int TotalCount { get; set; }
-
+        /// <summary>
+        /// Gets or sets the total number of items across all pages.
+        /// </summary>
+        public int TotalCount { get; set; }
+    }
 }

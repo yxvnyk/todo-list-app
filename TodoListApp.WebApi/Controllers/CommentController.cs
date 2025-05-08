@@ -7,6 +7,9 @@ using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers
 {
+    /// <summary>
+    /// Provides API endpoints for managing comments related to tasks.
+    /// </summary>
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
@@ -16,6 +19,12 @@ namespace TodoListApp.WebApi.Controllers
         private readonly ITaskDatabaseService taskRepository;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CommentController"/> class.
+        /// </summary>
+        /// <param name="commentDatabaseService">The service for interacting with comment data.</param>
+        /// <param name="taskRepository">The service for interacting with task data.</param>
+        /// <param name="logger">The logger instance for logging information.</param>
         public CommentController(ICommentDatabaseService commentDatabaseService, ITaskDatabaseService taskRepository, ILogger<CommentController> logger)
         {
             this.commentRepository = commentDatabaseService;
@@ -23,6 +32,11 @@ namespace TodoListApp.WebApi.Controllers
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all comments based on the specified filter.
+        /// </summary>
+        /// <param name="filter">The filter parameters for retrieving comments.</param>
+        /// <returns>A list of comments matching the filter criteria.</returns>
         [HttpGet]
         public async Task<ActionResult<TagDTO>> GetAllComments([FromQuery] CommentFilter filter)
         {
@@ -38,6 +52,12 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("No comments found");
         }
 
+        /// <summary>
+        /// Updates an existing comment with the specified ID.
+        /// </summary>
+        /// <param name="model">The comment data to update.</param>
+        /// <param name="id">The ID of the comment to update.</param>
+        /// <returns>A response indicating the result of the update operation.</returns>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateComment([FromBody] CommentUpdateDTO model, int id)
         {
@@ -59,6 +79,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound($"Comment with ID {id} not found or invalid data");
         }
 
+        /// <summary>
+        /// Adds a new comment to a task.
+        /// </summary>
+        /// <param name="model">The comment data to add.</param>
+        /// <returns>A response indicating the result of the add operation.</returns>
         [HttpPost]
         public async Task<IActionResult> AddComment([FromBody] CommentDTO model)
         {
@@ -82,6 +107,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.Ok();
         }
 
+        /// <summary>
+        /// Deletes a comment with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the comment to delete.</param>
+        /// <returns>A response indicating the result of the delete operation.</returns>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteComment([FromRoute] int id)
         {

@@ -13,6 +13,9 @@ using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
 {
+    /// <summary>
+    /// Controller for handling task-related operations in the web application.
+    /// </summary>
     [Route("task")]
     [Authorize]
     public class TaskController : Controller
@@ -20,20 +23,35 @@ namespace TodoListApp.WebApp.Controllers
         private readonly ITaskWebApiService apiService;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskController"/> class.
+        /// </summary>
+        /// <param name="apiService">Service for interacting with task Web API.</param>
+        /// <param name="logger">Logger instance.</param>
         public TaskController(ITaskWebApiService apiService, ILogger<TaskController> logger)
         {
             this.apiService = apiService;
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Displays the search view for tasks.
+        /// </summary>
+        /// <returns>The search view.</returns>
         [HttpGet("Search")]
         public IActionResult Search()
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.Search));
-
             return this.View();
         }
 
+        /// <summary>
+        /// Searches for tasks based on the specified query and criteria.
+        /// </summary>
+        /// <param name="query">The search query.</param>
+        /// <param name="searchBy">The field to search by.</param>
+        /// <param name="page">Page number for pagination.</param>
+        /// <returns>The search results view.</returns>
         [HttpGet]
         public async Task<IActionResult> SearchBy(string query, string searchBy, int page = 1)
         {
@@ -46,6 +64,7 @@ namespace TodoListApp.WebApp.Controllers
                 AssigneeId = assigneeId,
                 OwnerId = assigneeId,
             };
+
             DateTime date;
             switch (searchBy)
             {
@@ -55,14 +74,12 @@ namespace TodoListApp.WebApp.Controllers
                     {
                         filter.DueDate = date;
                     }
-
                     break;
                 case "CreationDate":
                     if (DateTime.TryParseExact(query, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                     {
                         filter.CreationDate = date;
                     }
-
                     break;
                 default:
                     break;
@@ -77,6 +94,12 @@ namespace TodoListApp.WebApp.Controllers
             });
         }
 
+        /// <summary>
+        /// Retrieves all tasks belonging to a specific list.
+        /// </summary>
+        /// <param name="listId">ID of the list.</param>
+        /// <param name="page">Page number for pagination.</param>
+        /// <returns>The task list view.</returns>
         [HttpGet("Get")]
         public async Task<IActionResult> GetAllTasksByListId(int listId, int page = 1)
         {
@@ -91,6 +114,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.View((list, listId));
         }
 
+        /// <summary>
+        /// Retrieves all tasks filtered by a tag.
+        /// </summary>
+        /// <param name="tag">The tag to filter by.</param>
+        /// <param name="page">Page number for pagination.</param>
+        /// <returns>The view with filtered tasks.</returns>
         [HttpGet("GetByTag")]
         public async Task<IActionResult> GetAllTasksByTag(string tag, int page = 1)
         {
@@ -105,6 +134,10 @@ namespace TodoListApp.WebApp.Controllers
             return this.View((list, tag));
         }
 
+        /// <summary>
+        /// Retrieves all tasks assigned to the current user.
+        /// </summary>
+        /// <returns>The view with tasks assigned to the user.</returns>
         [HttpGet("GetByAssignee")]
         public async Task<IActionResult> GetAllTasksByAssigneeId()
         {
@@ -120,6 +153,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.View((list, assigneeId));
         }
 
+        /// <summary>
+        /// Stores the provided filter in the session and redirects to filtered results.
+        /// </summary>
+        /// <param name="filter">Task filter to apply.</param>
+        /// <param name="returnUrl">URL to return to after applying filter.</param>
+        /// <returns>Redirection to filtered results view.</returns>
         [HttpPost("GetByFilter")]
         public IActionResult GetAllTasksByFilter(TaskFilter filter, string returnUrl = "/")
         {
@@ -129,6 +168,11 @@ namespace TodoListApp.WebApp.Controllers
             return this.RedirectToAction("FilteredResults", new { returnUrl = returnUrl });
         }
 
+        /// <summary>
+        /// Displays results based on a previously stored filter.
+        /// </summary>
+        /// <param name="returnUrl">URL to return to if filter is missing.</param>
+        /// <returns>The filtered results view.</returns>
         [HttpGet("FilteredResults")]
         public async Task<IActionResult> FilteredResults(string returnUrl)
         {
@@ -146,6 +190,13 @@ namespace TodoListApp.WebApp.Controllers
             return this.Redirect(returnUrl);
         }
 
+        /// <summary>
+        /// Marks a task as complete with a given status.
+        /// </summary>
+        /// <param name="id">Task ID.</param>
+        /// <param name="status">New status for the task.</param>
+        /// <param name="returnUrl">URL to return to after update.</param>
+        /// <returns>Redirection to returnUrl.</returns>
         [HttpPost("complete")]
         public IActionResult TaskComplete(int id, Status status, string returnUrl)
         {
@@ -159,6 +210,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.Redirect(returnUrl);
         }
 
+        /// <summary>
+        /// Displays the edit form for a task.
+        /// </summary>
+        /// <param name="taskId">Task ID to edit.</param>
+        /// <param name="returnUrl">URL to return to after editing.</param>
+        /// <returns>The edit view.</returns>
         [HttpGet]
         [Route("edit/{taskId:int}")]
         public async Task<IActionResult> Edit(int taskId, string returnUrl)
@@ -177,6 +234,13 @@ namespace TodoListApp.WebApp.Controllers
             return this.View((task, returnUrl));
         }
 
+        /// <summary>
+        /// Updates the task with new values.
+        /// </summary>
+        /// <param name="Task">Updated task model.</param>
+        /// <param name="id">Task ID.</param>
+        /// <param name="returnUrl">URL to return to.</param>
+        /// <returns>The result view or the edit form with validation errors.</returns>
         [HttpPost]
         [Route("edit/{id:int}")]
         public async Task<IActionResult> Update(TaskUpdateDTO Task, int id, string returnUrl)
@@ -186,7 +250,6 @@ namespace TodoListApp.WebApp.Controllers
             if (Task == null)
             {
                 LoggerExtensions.LogWarning(this.logger, "Task is empty");
-
                 return this.Redirect(returnUrl);
             }
 
@@ -220,6 +283,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.View("Edit", (dto, returnUrl));
         }
 
+        /// <summary>
+        /// Deletes a task if the current user is the owner.
+        /// </summary>
+        /// <param name="taskId">Task ID to delete.</param>
+        /// <param name="returnUrl">URL to return to after deletion.</param>
+        /// <returns>Redirection to returnUrl or permission error view.</returns>
         [HttpGet]
         [Route("delete")]
         public async Task<IActionResult> Delete(int taskId, string returnUrl)
@@ -239,6 +308,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.Redirect(returnUrl);
         }
 
+        /// <summary>
+        /// Displays the create task form.
+        /// </summary>
+        /// <param name="listId">The ID of the list the task will belong to.</param>
+        /// <param name="returnUrl">URL to return to after creation.</param>
+        /// <returns>The create task view.</returns>
         [HttpGet]
         [Route("create/{listId:int}")]
         public IActionResult Create(int listId, string returnUrl)
@@ -253,6 +328,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.View((task, returnUrl));
         }
 
+        /// <summary>
+        /// Submits a new task to be created.
+        /// </summary>
+        /// <param name="task">Task data to create.</param>
+        /// <param name="returnUrl">URL to return to after creation.</param>
+        /// <returns>The result view or the create form with validation errors.</returns>
         [HttpPost("create/{returnUrl}")]
         public async Task<IActionResult> Create(TaskDTO task, string returnUrl)
         {

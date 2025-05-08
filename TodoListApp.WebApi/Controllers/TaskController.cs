@@ -8,6 +8,9 @@ using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 
 namespace TodoListApp.WebApi.Controllers
 {
+    /// <summary>
+    /// Provides API endpoints for managing tasks in a to-do list.
+    /// </summary>
     [ApiController]
     [Authorize]
     [Route("api/[controller]")]
@@ -17,6 +20,12 @@ namespace TodoListApp.WebApi.Controllers
         private readonly ITodoListDatabaseService todoListService;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskController"/> class.
+        /// </summary>
+        /// <param name="taskDatabaseService">The service for interacting with task data.</param>
+        /// <param name="todoListService">The service for interacting with to-do list data.</param>
+        /// <param name="logger">The logger instance for logging information.</param>
         public TaskController(ITaskDatabaseService taskDatabaseService, ITodoListDatabaseService todoListService, ILogger<TaskController> logger)
         {
             this.taskService = taskDatabaseService;
@@ -24,6 +33,11 @@ namespace TodoListApp.WebApi.Controllers
             this.todoListService = todoListService;
         }
 
+        /// <summary>
+        /// Retrieves the owner ID of the task specified by its ID.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <returns>The owner ID of the specified task.</returns>
         [HttpGet("GetOwnerId")]
         public ActionResult<string> GetTaskOwnerId(int taskId)
         {
@@ -38,6 +52,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("OwnerId not found");
         }
 
+        /// <summary>
+        /// Retrieves all tasks based on the provided filter.
+        /// </summary>
+        /// <param name="filter">The filter parameters for retrieving tasks.</param>
+        /// <returns>A list of tasks matching the filter criteria.</returns>
         [HttpGet]
         public async Task<ActionResult<TaskDTO>> GetAllTasks([FromQuery] TaskFilter filter)
         {
@@ -53,6 +72,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("No tasks found");
         }
 
+        /// <summary>
+        /// Retrieves tasks based on the provided filter using a POST request.
+        /// </summary>
+        /// <param name="filter">The filter parameters for retrieving tasks.</param>
+        /// <returns>A list of tasks matching the filter criteria.</returns>
         [HttpPost("search")]
         public async Task<ActionResult<TaskPaging>> GetAllTasksByPost([FromBody] TaskFilter filter)
         {
@@ -68,6 +92,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound("No tasks found");
         }
 
+        /// <summary>
+        /// Retrieves a task by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the task.</param>
+        /// <returns>The task with the specified ID.</returns>
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TaskDTO>> GetTask(int id)
         {
@@ -83,6 +112,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound($"Task with {id} not found");
         }
 
+        /// <summary>
+        /// Adds a new task to the specified to-do list.
+        /// </summary>
+        /// <param name="model">The task data to add.</param>
+        /// <returns>A response indicating the result of the add operation.</returns>
         [HttpPost]
         public async Task<IActionResult> AddTask([FromBody] TaskDTO model)
         {
@@ -111,6 +145,12 @@ namespace TodoListApp.WebApi.Controllers
             return this.Ok();
         }
 
+        /// <summary>
+        /// Updates an existing task with the specified ID.
+        /// </summary>
+        /// <param name="model">The task data to update.</param>
+        /// <param name="id">The ID of the task to update.</param>
+        /// <returns>A response indicating the result of the update operation.</returns>
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateTask([FromBody] TaskUpdateDTO model, int id)
         {
@@ -132,6 +172,11 @@ namespace TodoListApp.WebApi.Controllers
             return this.NotFound($"Task with ID {id} not found.");
         }
 
+        /// <summary>
+        /// Deletes a task with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the task to delete.</param>
+        /// <returns>A response indicating the result of the delete operation.</returns>
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {

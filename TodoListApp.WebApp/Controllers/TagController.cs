@@ -4,81 +4,115 @@ using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApp.Services.Interfaces;
 
-namespace TodoListApp.WebApp.Controllers;
-
-[Route("tag")]
-public class TagController : Controller
+namespace TodoListApp.WebApp.Controllers
 {
-    private readonly ITagWebApiService apiService;
-    private readonly ILogger logger;
-
-    public TagController(ITagWebApiService apiService, ILogger<TagController> logger)
+    /// <summary>
+    /// Controller for managing tags associated with tasks.
+    /// </summary>
+    [Route("tag")]
+    public class TagController : Controller
     {
-        this.apiService = apiService;
-        this.logger = logger;
-    }
+        private readonly ITagWebApiService apiService;
+        private readonly ILogger logger;
 
-    [HttpGet]
-    [Route("TagMenu")]
-    public async Task<IActionResult> TagMenu(string returnUrl)
-    {
-        LoggerExtensions.LogTrace(this.logger, nameof(this.TagMenu));
-
-        var user = this.User;
-        var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (user == null)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TagController"/> class.
+        /// </summary>
+        /// <param name="apiService">Service for interacting with the tag-related API.</param>
+        /// <param name="logger">Logger for logging activities within the controller.</param>
+        public TagController(ITagWebApiService apiService, ILogger<TagController> logger)
         {
-            return this.View(new List<TodoListDTO>());
+            this.apiService = apiService;
+            this.logger = logger;
         }
 
-        var list = await this.apiService.GetAllAsync(userId!, userId!);
-
-        _ = this.Ok(list);
-        return this.View((list, returnUrl));
-    }
-
-    [HttpPost]
-    [Route("create")]
-    public async Task<IActionResult> Create(TagDTO tag, string returnUrl)
-    {
-        LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
-
-        if (this.ModelState.IsValid)
+        /// <summary>
+        /// Displays the tag management menu.
+        /// Retrieves all tags associated with the current user and returns them to the view.
+        /// </summary>
+        /// <param name="returnUrl">The URL to return to after completing the action.</param>
+        /// <returns>The view displaying the tag menu with the list of tags.</returns>
+        [HttpGet]
+        [Route("TagMenu")]
+        public async Task<IActionResult> TagMenu(string returnUrl)
         {
-            _ = await this.apiService.AddAsync(tag);
+            LoggerExtensions.LogTrace(this.logger, nameof(this.TagMenu));
+
+            var user = this.User;
+            var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (user == null)
+            {
+                return this.View(new List<TodoListDTO>());
+            }
+
+            var list = await this.apiService.GetAllAsync(userId!, userId!);
+
+            _ = this.Ok(list);
+            return this.View((list, returnUrl));
         }
 
-        foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))
+        /// <summary>
+        /// Creates a new tag.
+        /// </summary>
+        /// <param name="tag">The tag information to be added.</param>
+        /// <param name="returnUrl">The URL to return to after completing the action.</param>
+        /// <returns>A redirection to the specified return URL after the tag is created.</returns>
+        [HttpPost]
+        [Route("create")]
+        public async Task<IActionResult> Create(TagDTO tag, string returnUrl)
         {
-            Console.WriteLine(error.ErrorMessage);
+            LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
+
+            if (this.ModelState.IsValid)
+            {
+                _ = await this.apiService.AddAsync(tag);
+            }
+
+            foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine(error.ErrorMessage);
+            }
+
+            return this.Redirect(returnUrl);
         }
 
-        return this.Redirect(returnUrl);
-    }
-
-    [HttpPost]
-    [Route("edit/{id:int}")]
-    public async Task<IActionResult> Update(TagUpdateDTO tag, int id, string returnUrl)
-    {
-        LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
-
-        if (this.ModelState.IsValid)
+        /// <summary>
+        /// Updates an existing tag by its ID.
+        /// </summary>
+        /// <param name="tag">The updated tag information.</param>
+        /// <param name="id">The ID of the tag to be updated.</param>
+        /// <param name="returnUrl">The URL to return to after completing the action.</param>
+        /// <returns>A redirection to the specified return URL after the tag is updated.</returns>
+        [HttpPost]
+        [Route("edit/{id:int}")]
+        public async Task<IActionResult> Update(TagUpdateDTO tag, int id, string returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, "Invalid ModelState");
+            LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
 
-            _ = await this.apiService.UpdateAsync(tag, id);
+            if (this.ModelState.IsValid)
+            {
+                LoggerExtensions.LogTrace(this.logger, "Invalid ModelState");
+
+                _ = await this.apiService.UpdateAsync(tag, id);
+            }
+
+            return this.Redirect(returnUrl);
         }
 
-        return this.Redirect(returnUrl);
-    }
+        /// <summary>
+        /// Deletes a tag by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the tag to be deleted.</param>
+        /// <param name="returnUrl">The URL to return to after completing the action.</param>
+        /// <returns>A redirection to the specified return URL after the tag is deleted.</returns>
+        [HttpGet]
+        [Route("delete")]
+        public async Task<IActionResult> Delete(int id, string returnUrl)
+        {
+            LoggerExtensions.LogTrace(this.logger, nameof(this.Delete));
 
-    [HttpGet]
-    [Route("delete")]
-    public async Task<IActionResult> Delete(int id, string returnUrl)
-    {
-        LoggerExtensions.LogTrace(this.logger, nameof(this.Delete));
-
-        _ = await this.apiService.DeleteAsync(id);
-        return this.Redirect(returnUrl);
+            _ = await this.apiService.DeleteAsync(id);
+            return this.Redirect(returnUrl);
+        }
     }
 }

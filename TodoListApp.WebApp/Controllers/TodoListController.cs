@@ -8,19 +8,32 @@ using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
 {
+    /// <summary>
+    /// Controller for managing to-do lists through the Web API.
+    /// </summary>
     [Route("TodoLists")]
     [Authorize]
-    public class TodoListController: Controller
+    public class TodoListController : Controller
     {
         private readonly ITodoListWebApiService apiService;
         private readonly ILogger logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TodoListController"/> class.
+        /// </summary>
+        /// <param name="todoListWebApi">Service for to-do list operations.</param>
+        /// <param name="logger">Logger instance.</param>
         public TodoListController(ITodoListWebApiService todoListWebApi, ILogger<TodoListController> logger)
         {
             this.apiService = todoListWebApi;
             this.logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all to-do lists for a given owner.
+        /// </summary>
+        /// <param name="ownerId">Optional owner ID. If empty, all lists are fetched.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the to-do lists or a NotFound result.</returns>
         [HttpGet("Get")]
         public async Task<IActionResult> GetAllLists(string ownerId = "")
         {
@@ -38,6 +51,11 @@ namespace TodoListApp.WebApp.Controllers
             return this.View(list);
         }
 
+        /// <summary>
+        /// Creates a new to-do list.
+        /// </summary>
+        /// <param name="model">The to-do list model.</param>
+        /// <returns>An <see cref="IActionResult"/> containing the created list or a NotFound result.</returns>
         [HttpPost("Post")]
         public async Task<IActionResult> CreateTodoList([FromBody] TodoListDTO model)
         {
@@ -55,6 +73,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.Ok(list);
         }
 
+        /// <summary>
+        /// Deletes a to-do list by its ID.
+        /// </summary>
+        /// <param name="listId">The ID of the list to delete.</param>
+        /// <param name="returnUrl">URL to redirect to after deletion.</param>
+        /// <returns>A redirect to the specified return URL.</returns>
         [HttpGet]
         [Route("delete")]
         public async Task<IActionResult> Delete(int listId, string returnUrl)
@@ -65,6 +89,11 @@ namespace TodoListApp.WebApp.Controllers
             return this.Redirect(returnUrl);
         }
 
+        /// <summary>
+        /// Renders the to-do list creation form.
+        /// </summary>
+        /// <param name="returnUrl">URL to return to after creation.</param>
+        /// <returns>A view with the to-do list model and return URL.</returns>
         [HttpGet]
         [Route("create")]
         public IActionResult Create(string returnUrl = "/")
@@ -78,6 +107,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.View((task, returnUrl));
         }
 
+        /// <summary>
+        /// Handles creation of a to-do list from form submission.
+        /// </summary>
+        /// <param name="list">The to-do list to create.</param>
+        /// <param name="returnUrl">URL to return to after creation.</param>
+        /// <returns>A view indicating completion or a redirect on failure.</returns>
         [HttpPost]
         [Route("create")]
         public async Task<IActionResult> Create(TodoListDTO list, string returnUrl)
@@ -104,6 +139,12 @@ namespace TodoListApp.WebApp.Controllers
             return this.Redirect(returnUrl);
         }
 
+        /// <summary>
+        /// Renders the to-do list editing form.
+        /// </summary>
+        /// <param name="listId">The ID of the list to edit.</param>
+        /// <param name="returnUrl">URL to return to after editing.</param>
+        /// <returns>A view with the to-do list data and return URL.</returns>
         [HttpGet]
         [Route("edit/{listId:int}")]
         public async Task<IActionResult> Edit(int listId, string returnUrl)
@@ -114,9 +155,16 @@ namespace TodoListApp.WebApp.Controllers
             return this.View((task, returnUrl));
         }
 
+        /// <summary>
+        /// Updates an existing to-do list.
+        /// </summary>
+        /// <param name="list">The updated list data.</param>
+        /// <param name="listId">The ID of the list to update.</param>
+        /// <param name="returnUrl">URL to return to after update.</param>
+        /// <returns>A view indicating completion or a redirect on failure.</returns>
         [HttpPost]
         [Route("edit/{listId:int}")]
-        public async Task<IActionResult> Update(TodoListUpdateDTO List, int listId, string returnUrl)
+        public async Task<IActionResult> Update(TodoListUpdateDTO list, int listId, string returnUrl)
         {
             LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
 
@@ -124,7 +172,7 @@ namespace TodoListApp.WebApp.Controllers
             {
                 LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
 
-                _ = await this.apiService.UpdateAsync(List, listId);
+                _ = await this.apiService.UpdateAsync(list, listId);
                 return this.View("CompleteEditor", new CompleteEditorViewModel()
                 {
                     Title = "To-do list",

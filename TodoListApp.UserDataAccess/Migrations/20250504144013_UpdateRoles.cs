@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -8,27 +8,27 @@ namespace TodoListApp.UserDataAccess.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "3759a894-f8cd-4c25-b931-32b7dce9b511");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "43dd47e0-fa8a-4335-905c-ee4f0fb4eb41");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "459e60f0-8c97-4a06-a290-89f582ada7ec");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "d644a7f8-a9c2-4396-86ee-0fe403c0d848");
 
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
@@ -42,27 +42,27 @@ namespace TodoListApp.UserDataAccess.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "31c056e4-b724-45cb-bee4-83d24b04983f");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "558d88cf-146f-41a7-a1fb-5d576f88ca4d");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "8222ce84-5aad-4914-90ef-588a53de9192");
 
-            migrationBuilder.DeleteData(
+            _ = migrationBuilder.DeleteData(
                 table: "AspNetRoles",
                 keyColumn: "Id",
                 keyValue: "8f10f1b0-7ab4-467e-bb00-df3c359c2d66");
 
-            migrationBuilder.InsertData(
+            _ = migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]

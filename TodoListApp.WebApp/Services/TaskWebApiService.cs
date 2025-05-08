@@ -8,127 +8,186 @@ using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApp.Services.Interfaces;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace TodoListApp.WebApp.Services;
-
-public class TaskWebApiService : BaseApiService, ITaskWebApiService
+namespace TodoListApp.WebApp.Services
 {
-    public TaskWebApiService(HttpClient httpClient, IHttpService httpService)
-        : base(httpClient, httpService)
+    /// <summary>
+    /// Service for interacting with the Task API, providing CRUD operations and advanced task queries.
+    /// </summary>
+    public class TaskWebApiService : BaseApiService, ITaskWebApiService
     {
-    }
-
-    public async Task<string?> GetTaskOwnerId(int taskId)
-    {
-        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/GetOwnerId?taskId={taskId}"));
-        var result = await this.HandleResponsePlainTextAsync(response);
-        return result;
-    }
-
-    public async Task<TaskPaging?> GetAllByListAsync(int id)
-    {
-        TaskFilter filter = new TaskFilter()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskWebApiService"/> class.
+        /// </summary>
+        /// <param name="httpClient">The <see cref="HttpClient"/> used to send HTTP requests.</param>
+        /// <param name="httpService">The <see cref="IHttpService"/> used to handle HTTP requests.</param>
+        public TaskWebApiService(HttpClient httpClient, IHttpService httpService)
+            : base(httpClient, httpService)
         {
-            TodoListId = id,
-        };
+        }
 
-        ArgumentNullException.ThrowIfNull(filter);
-        using var filterJson = new StringContent(
-            JsonSerializer.Serialize(filter),
-            Encoding.UTF8,
-            Application.Json);
-
-        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        return await this.HandleResponseAsync<TaskPaging>(response);
-    }
-
-    public async Task<TaskPaging?> GetAllByFilterAsync(TaskFilter filter)
-    {
-        ArgumentNullException.ThrowIfNull(filter);
-        using var filterJson = new StringContent(
-            JsonSerializer.Serialize(filter),
-            Encoding.UTF8,
-            Application.Json);
-
-        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        return await this.HandleResponseAsync<TaskPaging>(response);
-    }
-
-    public async Task<IEnumerable<TaskPaging>?> GetAllByTagAsync(string tag)
-    {
-        TaskFilter filter = new TaskFilter()
+        /// <summary>
+        /// Retrieves the owner ID of a task.
+        /// </summary>
+        /// <param name="taskId">The ID of the task.</param>
+        /// <returns>A task that represents the asynchronous operation, with the owner ID as the result.</returns>
+        public async Task<string?> GetTaskOwnerId(int taskId)
         {
-            TagName = tag,
-        };
+            var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/GetOwnerId?taskId={taskId}"));
+            var result = await this.HandleResponsePlainTextAsync(response);
+            return result;
+        }
 
-        ArgumentNullException.ThrowIfNull(filter);
-        using var filterJson = new StringContent(
-            JsonSerializer.Serialize(filter),
-            Encoding.UTF8,
-            Application.Json);
-
-        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        return await this.HandleResponseAsync<IEnumerable<TaskPaging>>(response);
-    }
-
-    public async Task<IEnumerable<TaskPaging>?> GetAllByAssigneeAsync(string id)
-    {
-        TaskFilter filter = new TaskFilter()
+        /// <summary>
+        /// Retrieves tasks that belong to a specific todo list.
+        /// </summary>
+        /// <param name="id">The ID of the todo list.</param>
+        /// <returns>A task that represents the asynchronous operation, with a <see cref="TaskPaging"/> object as the result.</returns>
+        public async Task<TaskPaging?> GetAllByListAsync(int id)
         {
-            AssigneeId = id,
-        };
+            TaskFilter filter = new TaskFilter()
+            {
+                TodoListId = id,
+            };
 
-        ArgumentNullException.ThrowIfNull(filter);
-        using var filterJson = new StringContent(
-            JsonSerializer.Serialize(filter),
-            Encoding.UTF8,
-            Application.Json);
+            ArgumentNullException.ThrowIfNull(filter);
+            using var filterJson = new StringContent(
+                JsonSerializer.Serialize(filter),
+                Encoding.UTF8,
+                Application.Json);
 
-        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
-        return await this.HandleResponseAsync<IEnumerable<TaskPaging>>(response);
-    }
+            var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+            return await this.HandleResponseAsync<TaskPaging>(response);
+        }
 
-    public async Task<TaskDTO?> GetByIdAsync(int id)
-    {
-        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
-        return await this.HandleResponseAsync<TaskDTO>(response);
-    }
+        /// <summary>
+        /// Retrieves tasks based on a provided filter.
+        /// </summary>
+        /// <param name="filter">The filter to apply for task search.</param>
+        /// <returns>A task that represents the asynchronous operation, with a <see cref="TaskPaging"/> object as the result.</returns>
+        public async Task<TaskPaging?> GetAllByFilterAsync(TaskFilter filter)
+        {
+            ArgumentNullException.ThrowIfNull(filter);
+            using var filterJson = new StringContent(
+                JsonSerializer.Serialize(filter),
+                Encoding.UTF8,
+                Application.Json);
 
-    public async Task<IEnumerable<TaskDTO>?> GetAllAsync(string id)
-    {
-        Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
-        var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task?AssigneeId={id}"));
-        return await this.HandleResponseAsync<IEnumerable<TaskDTO>>(response);
+            var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+            return await this.HandleResponseAsync<TaskPaging>(response);
+        }
 
-    }
+        /// <summary>
+        /// Retrieves tasks that are associated with a specific tag.
+        /// </summary>
+        /// <param name="tag">The tag to filter tasks by.</param>
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TaskPaging"/> objects as the result.</returns>
+        public async Task<IEnumerable<TaskPaging>?> GetAllByTagAsync(string tag)
+        {
+            TaskFilter filter = new TaskFilter()
+            {
+                TagName = tag,
+            };
 
-    public async Task<HttpStatusCode?> AddAsync(TaskDTO model)
-    {
-        ArgumentNullException.ThrowIfNull(model);
-        using var todoItemJson = new StringContent(
-            JsonSerializer.Serialize(model),
-            Encoding.UTF8,
-            Application.Json);
+            ArgumentNullException.ThrowIfNull(filter);
+            using var filterJson = new StringContent(
+                JsonSerializer.Serialize(filter),
+                Encoding.UTF8,
+                Application.Json);
 
-        var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task"), todoItemJson);
-        return this.HandleResponseStatusAsync(response);
-    }
+            var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+            return await this.HandleResponseAsync<IEnumerable<TaskPaging>>(response);
+        }
 
-    public async Task<HttpStatusCode?> UpdateAsync(TaskUpdateDTO model, int id)
-    {
-        ArgumentNullException.ThrowIfNull(model);
-        using var todoItemJson = new StringContent(
-            JsonSerializer.Serialize(model),
-            Encoding.UTF8,
-            Application.Json);
+        /// <summary>
+        /// Retrieves tasks that are assigned to a specific user.
+        /// </summary>
+        /// <param name="id">The ID of the assignee.</param>
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TaskPaging"/> objects as the result.</returns>
+        public async Task<IEnumerable<TaskPaging>?> GetAllByAssigneeAsync(string id)
+        {
+            TaskFilter filter = new TaskFilter()
+            {
+                AssigneeId = id,
+            };
 
-        Console.WriteLine(await todoItemJson.ReadAsStringAsync());
-        var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"), todoItemJson);
-        return this.HandleResponseStatusAsync(response);
-    }
+            ArgumentNullException.ThrowIfNull(filter);
+            using var filterJson = new StringContent(
+                JsonSerializer.Serialize(filter),
+                Encoding.UTF8,
+                Application.Json);
 
-    public async Task<HttpStatusCode?> DeleteAsync(int id)
-    {
-        var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
-        return this.HandleResponseStatusAsync(response);
+            var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task/search"), filterJson);
+            return await this.HandleResponseAsync<IEnumerable<TaskPaging>>(response);
+        }
+
+        /// <summary>
+        /// Retrieves a task by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the task.</param>
+        /// <returns>A task that represents the asynchronous operation, with a <see cref="TaskDTO"/> object as the result.</returns>
+        public async Task<TaskDTO?> GetByIdAsync(int id)
+        {
+            var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
+            return await this.HandleResponseAsync<TaskDTO>(response);
+        }
+
+        /// <summary>
+        /// Retrieves tasks assigned to a specific user.
+        /// </summary>
+        /// <param name="id">The ID of the assignee.</param>
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TaskDTO"/> objects as the result.</returns>
+        public async Task<IEnumerable<TaskDTO>?> GetAllAsync(string id)
+        {
+            Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
+            var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task?AssigneeId={id}"));
+            return await this.HandleResponseAsync<IEnumerable<TaskDTO>>(response);
+        }
+
+        /// <summary>
+        /// Adds a new task by sending a POST request to the Task API.
+        /// </summary>
+        /// <param name="model">The task to be added.</param>
+        /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
+        public async Task<HttpStatusCode?> AddAsync(TaskDTO model)
+        {
+            ArgumentNullException.ThrowIfNull(model);
+            using var todoItemJson = new StringContent(
+                JsonSerializer.Serialize(model),
+                Encoding.UTF8,
+                Application.Json);
+
+            var response = await this.httpService.PostAsync(new Uri(this.httpClient.BaseAddress!, "/api/Task"), todoItemJson);
+            return this.HandleResponseStatusAsync(response);
+        }
+
+        /// <summary>
+        /// Updates an existing task by sending a PUT request to the Task API.
+        /// </summary>
+        /// <param name="model">The task update data.</param>
+        /// <param name="id">The ID of the task to update.</param>
+        /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
+        public async Task<HttpStatusCode?> UpdateAsync(TaskUpdateDTO model, int id)
+        {
+            ArgumentNullException.ThrowIfNull(model);
+            using var todoItemJson = new StringContent(
+                JsonSerializer.Serialize(model),
+                Encoding.UTF8,
+                Application.Json);
+
+            Console.WriteLine(await todoItemJson.ReadAsStringAsync());
+            var response = await this.httpService.PutAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"), todoItemJson);
+            return this.HandleResponseStatusAsync(response);
+        }
+
+        /// <summary>
+        /// Deletes a task by sending a DELETE request to the Task API.
+        /// </summary>
+        /// <param name="id">The ID of the task to delete.</param>
+        /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
+        public async Task<HttpStatusCode?> DeleteAsync(int id)
+        {
+            var response = await this.httpService.DeleteAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
+            return this.HandleResponseStatusAsync(response);
+        }
     }
 }
