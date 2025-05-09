@@ -13,8 +13,8 @@ namespace TodoListApp.WebApi.Models.Logging
         private static readonly Action<ILogger, string, Exception?> Error =
         LoggerMessage.Define<string>(
             LogLevel.Error,
-            new EventId(1003, "Hello"),
-            "Hello, world from {Class}!");
+            new EventId(1003, "Error logging"),
+            "An error has occured: {Class}!");
 
         /// <summary>
         /// Defines a log action for logging warnings.
@@ -22,8 +22,8 @@ namespace TodoListApp.WebApi.Models.Logging
         private static readonly Action<ILogger, string, Exception?> Warning =
         LoggerMessage.Define<string>(
             LogLevel.Warning,
-            new EventId(1003, "Hello"),
-            "Hello, world from {Class}!");
+            new EventId(1003, "Warning logging"),
+            "{Class}!");
 
         /// <summary>
         /// Defines a log action for logging trace-level messages.
@@ -31,8 +31,8 @@ namespace TodoListApp.WebApi.Models.Logging
         private static readonly Action<ILogger, string, Exception?> Trace =
         LoggerMessage.Define<string>(
             LogLevel.Trace,
-            new EventId(1003, "Hello"),
-            "Received request to {Class}!");
+            new EventId(1003, "Trace logginf"),
+            "Received request to {Class}");
 
         /// <summary>
         /// Logs an error message with the specified class name.

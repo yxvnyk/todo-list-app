@@ -54,7 +54,7 @@ namespace TodoListApp.WebApp.Controllers
         /// <summary>
         /// Updates an existing comment using the provided <see cref="CommentUpdateDto"/> and comment ID, and redirects to the specified return URL.
         /// </summary>
-        /// <param name="comment">The comment update data transfer object containing the new comment details.</param>
+        /// <param name="commentDto">The comment update data transfer object containing the new comment details.</param>
         /// <param name="id">The ID of the comment to be updated.</param>
         /// <param name="returnUrl">The URL to which the user should be redirected after the operation.</param>
         /// <returns>Redirects to the provided return URL after the comment is updated.</returns>

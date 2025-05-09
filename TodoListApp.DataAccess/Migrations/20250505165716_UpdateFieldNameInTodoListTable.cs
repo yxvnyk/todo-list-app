@@ -8,7 +8,7 @@ namespace TodoListApp.WebApi.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            ArgumentNullException.ThrowIfNull(migrationBuilder, nameof(migrationBuilder));
+            ArgumentNullException.ThrowIfNull(migrationBuilder);
             _ = migrationBuilder.RenameColumn(
                 name: "UserId",
                 table: "TodoLists",
@@ -25,7 +25,7 @@ namespace TodoListApp.WebApi.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            ArgumentNullException.ThrowIfNull(migrationBuilder, nameof(migrationBuilder));
+            ArgumentNullException.ThrowIfNull(migrationBuilder);
             _ = migrationBuilder.DropColumn(
                 name: "OwnerId",
                 table: "Tasks");

@@ -76,9 +76,9 @@ namespace TodoListApp.WebApp.Controllers
                 return this.View();
             }
 
-            var email = registerDTO?.Email?.ToLower(System.Globalization.CultureInfo.CurrentCulture);
             var user = await this.userManager.Users
-                .FirstOrDefaultAsync(x => x.Email.ToLower() == email);
+             .FirstOrDefaultAsync(x =>
+                 EF.Functions.Collate(x.Email, "Latin1_General_CI_AS") == registerDTO.Email);
 
             if (user == null)
             {
