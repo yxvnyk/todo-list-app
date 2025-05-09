@@ -204,7 +204,8 @@ const noop = () => {};
  */
 
 const reflow = element => {
-    void element.offsetHeight;
+    // Trigger reflow: read offsetHeight intentionally
+    const _ = element.offsetHeight;
 };
 
 const getjQuery = () => {
