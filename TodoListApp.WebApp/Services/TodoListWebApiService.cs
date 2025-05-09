@@ -43,7 +43,7 @@ namespace TodoListApp.WebApp.Services
         /// <summary>
         /// Adds a new to-do list by sending a POST request to the To-doList API.
         /// </summary>
-        /// <param name="model">The todo list to be added.</param>
+        /// <param name="model">The to-do list to be added.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
         public async Task<HttpStatusCode?> AddAsync(TodoListDto model)
         {

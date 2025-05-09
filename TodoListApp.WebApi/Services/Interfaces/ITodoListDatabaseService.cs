@@ -7,7 +7,7 @@ namespace TodoListApp.WebApi.Data.Repository.Interfaces
     /// <summary>
     /// Defines operations for managing to-do lists in the system, including CRUD operations and additional to-do list-specific functionality.
     /// </summary>
-    public interface ITodoListDatabaseService : ICrud<TodoListDto, TodoListUpdateDto, TodoListFilter>
+    public interface ITodoListDatabaseService : ICrud<TodoListDto, TodoListUpdateDto>
     {
         /// <summary>
         /// Checks if a to-do list with the specified ID exists in the system.

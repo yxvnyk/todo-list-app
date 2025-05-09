@@ -7,21 +7,26 @@
 
 <div class="">
     <div class="m-auto g-3" style="max-width: 450px;">
+        <form asp-action="@Model.CallbackMethodName"
+              asp-controller="Task"
+              asp-route-id="@(task?.Id != 0 ? task?.Id : null)"
+              asp-route-returnUrl="@Model.ReturnUrl"
+              method="post">
 
-        <form asp-action="@Model.CallbackMethodName" asp-controller="Task" asp-route-id="@(task?.Id != 0 ? task?.Id : null)" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             @if (task?.Id != 0)
             {
                 <div class="form-group">
-                    <label asp-for="Task.Id" class="control-label" for="Task_Id"></label>
+                    <label for="Task_Id" class="control-label">Task ID</label>
                     <input asp-for="Task.Id" class="form-control" readonly id="Task_Id" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Task.DateCreated" class="control-label" for="Task_DateCreated"></label>
+                    <label for="Task_DateCreated" class="control-label">Date Created</label>
                     <input asp-for="Task.DateCreated" class="form-control" readonly id="Task_DateCreated" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Task.Status" class="control-label" for="Task_Status"></label>
+                    <label for="Task_Status" class="control-label">Status</label>
                     <select asp-for="Task.Status" class="form-control" id="Task_Status">
                         <option value="NotStarted">Not started</option>
                         <option value="InProgress">In progress</option>
@@ -29,10 +34,11 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Task.AssigneeId" class="control-label" for="Task_AssigneeId"></label>
+                    <label for="Task_AssigneeId" class="control-label">Assignee ID</label>
                     <input asp-for="Task.AssigneeId" value="@task?.AssigneeId" class="form-control" id="Task_AssigneeId" />
                 </div>
             }
+
             @if (task?.Id == 0)
             {
                 <input type="hidden" asp-for="Task.AssigneeId" value="@task?.AssigneeId" />
@@ -41,26 +47,25 @@
             }
 
             <div class="form-group">
-                <label asp-for="Task.Title" class="control-label" for="Task_Title"></label>
-                @Html.ValidationMessageFor(model => model.Title)
+                <label for="Task_Title" class="control-label">Title</label>
                 <input asp-for="Task.Title" class="form-control" id="Task_Title" />
                 <span asp-validation-for="Task.Title" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Task.Description" class="control-label" for="Task_Description"></label>
+                <label for="Task_Description" class="control-label">Description</label>
                 <input asp-for="Task.Description" class="form-control" id="Task_Description" />
                 <span asp-validation-for="Task.Description" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Task.DueDate" class="control-label" for="Task_DueDate"></label>
+                <label for="Task_DueDate" class="control-label">Due Date</label>
                 <input asp-for="Task.DueDate" class="form-control" id="Task_DueDate" />
                 <span asp-validation-for="Task.DueDate" class="text-danger"></span>
             </div>
 
             <div class="form-group mt-3 text-center">
-                <button type="submit" class="btn btn-success">
-                    Save
-                </button>
+                <button type="submit" class="btn btn-success">Save</button>
                 <a class="btn btn-primary" href="@Model?.ReturnUrl">Back</a>
             </div>
 

@@ -3432,9 +3432,6 @@ textarea.form-control-lg {
 .dropend .dropdown-toggle:empty::after {
   margin-right: 0;
 }
-.dropend .dropdown-toggle::after {
-  vertical-align: 0;
-}
 
 .dropstart .dropdown-menu[data-bs-popper] {
   top: 0;
@@ -3449,9 +3446,7 @@ textarea.form-control-lg {
   vertical-align: 0.255em;
   content: "";
 }
-.dropstart .dropdown-toggle::after {
-  display: none;
-}
+
 .dropstart .dropdown-toggle::before {
   display: inline-block;
   margin-left: 0.255em;
@@ -3463,9 +3458,6 @@ textarea.form-control-lg {
 }
 .dropstart .dropdown-toggle:empty::after {
   margin-right: 0;
-}
-.dropstart .dropdown-toggle::before {
-  vertical-align: 0;
 }
 
 .dropdown-divider {

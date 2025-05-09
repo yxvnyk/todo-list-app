@@ -168,7 +168,7 @@ namespace TodoListApp.WebApp.Controllers
             this.logger.LogTrace(nameof(this.GetAllTasksByFilter));
 
             this.HttpContext.Session.SetString("filter", JsonSerializer.Serialize(filter));
-            return this.RedirectToAction("FilteredResults", new { returnUrl = returnUrl });
+            return this.RedirectToAction("FilteredResults", new { returnUrl });
         }
 
         /// <summary>
@@ -190,7 +190,12 @@ namespace TodoListApp.WebApp.Controllers
             }
 
             this.logger.LogWarning("Json is null or empty");
-            return this.Redirect(returnUrl?.ToString()!);
+            if (returnUrl != null)
+            {
+                return this.Redirect(returnUrl.ToString());
+            }
+
+            return this.Redirect("~/Home/Index");
         }
 
         /// <summary>
@@ -210,7 +215,12 @@ namespace TodoListApp.WebApp.Controllers
                 Status = status,
             };
             _ = this.apiService.UpdateAsync(model, id);
-            return this.Redirect(returnUrl?.ToString()!);
+            if (returnUrl != null)
+            {
+                return this.Redirect(returnUrl.ToString());
+            }
+
+            return this.Redirect("~/Home/Index");
         }
 
         /// <summary>
@@ -253,7 +263,12 @@ namespace TodoListApp.WebApp.Controllers
             if (task == null)
             {
                 this.logger.LogWarning("Task is empty");
-                return this.Redirect(returnUrl?.ToString()!);
+                if (returnUrl != null)
+                {
+                    return this.Redirect(returnUrl.ToString());
+                }
+
+                return this.Redirect("~/Home/Index");
             }
 
             if (this.ModelState.IsValid)
@@ -308,7 +323,12 @@ namespace TodoListApp.WebApp.Controllers
             }
 
             _ = await this.apiService.DeleteAsync(taskId);
-            return this.Redirect(returnUrl?.ToString()!);
+            if (returnUrl != null)
+            {
+                return this.Redirect(returnUrl.ToString());
+            }
+
+            return this.Redirect("~/Home/Index");
         }
 
         /// <summary>

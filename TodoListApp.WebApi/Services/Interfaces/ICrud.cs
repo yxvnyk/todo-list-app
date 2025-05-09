@@ -5,8 +5,7 @@ namespace TodoListApp.WebApi.Data.Repository.Interfaces
     /// </summary>
     /// <typeparam name="T">The type of the entity (DTO) to be managed by this repository.</typeparam>
     /// <typeparam name="TUpdate">The type of the model used for updating an entity.</typeparam>
-    /// <typeparam name="TFilter">The type of the filter used to query or search for entities.</typeparam>
-    public interface ICrud<T, TUpdate, TFilter>
+    public interface ICrud<T, TUpdate>
     {
         /// <summary>
         /// Creates a new entity.

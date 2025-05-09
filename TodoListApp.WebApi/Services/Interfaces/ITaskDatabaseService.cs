@@ -8,7 +8,7 @@ namespace TodoListApp.WebApi.Data.Repository.Interfaces
     /// <summary>
     /// Defines operations for managing tasks in the system, including CRUD operations and additional task-specific functionality.
     /// </summary>
-    public interface ITaskDatabaseService : ICrud<TaskDto, TaskUpdateDto, TaskFilter>
+    public interface ITaskDatabaseService : ICrud<TaskDto, TaskUpdateDto>
     {
         /// <summary>
         /// Retrieves all entities based on the provided filter.

@@ -58,13 +58,22 @@ namespace TodoListApp.WebApi.Data.Repository
         /// <returns>A task representing the asynchronous operation, with a paginated result of task DTOs.</returns>
         public async Task<TaskPaging> GetAllAsync(TaskFilter filter)
         {
-            ArgumentNullException.ThrowIfNull(filter);
+            if (filter == null)
+            {
+                return new TaskPaging
+                {
+                    Items = new List<TaskDto>(),
+                    TotalCount = 0,
+                    CurrentPage = 0,
+                };
+            }
+
             var pair = await this.repository.GetAllAsync(filter);
             var tasks = pair.Item1;
             return new TaskPaging()
             {
                 Items = await tasks.Select(x => this.mapper.Map<TaskDto>(x)).ToListAsync(),
-                TotalCount = (pair.Item2 + (filter.PageSize - 1)) / 5,
+                TotalCount = (pair.Item2 + (filter.PageSize - 1)) / filter.PageSize,
                 CurrentPage = filter.PageNumber,
             };
         }

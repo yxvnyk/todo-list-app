@@ -7,7 +7,7 @@ namespace TodoListApp.WebApi.Data.Repository.Interfaces
     /// <summary>
     /// Defines the operations for managing tags in the system, including CRUD operations.
     /// </summary>
-    public interface ITagDatabaseService : ICrud<TagDto, TagUpdateDto, TagFilter>
+    public interface ITagDatabaseService : ICrud<TagDto, TagUpdateDto>
     {
         /// <summary>
         /// Retrieves all entities based on the provided filter.

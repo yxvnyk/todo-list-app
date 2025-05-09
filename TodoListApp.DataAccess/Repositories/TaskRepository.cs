@@ -36,7 +36,6 @@ public class TaskRepository : ITaskRepository
 
     public async Task<(IQueryable<TaskEntity>, int)> GetAllAsync(TaskFilter filter)
     {
-        ArgumentNullException.ThrowIfNull(filter);
         var tasks = this.context.Tasks.AsQueryable();
 
         if (!string.IsNullOrEmpty(filter?.AssigneeId) || !string.IsNullOrEmpty(filter?.OwnerId))

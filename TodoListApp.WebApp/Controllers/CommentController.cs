@@ -48,7 +48,12 @@ namespace TodoListApp.WebApp.Controllers
                 Console.WriteLine(error.ErrorMessage);
             }
 
-            return this.Redirect(returnUrl?.ToString()!);
+            if (returnUrl != null)
+            {
+                return this.Redirect(returnUrl.ToString());
+            }
+
+            return this.Redirect("~/Home/Index");
         }
 
         /// <summary>
@@ -70,7 +75,12 @@ namespace TodoListApp.WebApp.Controllers
                 _ = await this.apiService.UpdateAsync(commentDto, id);
             }
 
-            return this.Redirect(returnUrl?.ToString()!);
+            if (returnUrl != null)
+            {
+                return this.Redirect(returnUrl.ToString());
+            }
+
+            return this.Redirect("~/Home/Index");
         }
 
         /// <summary>
@@ -86,7 +96,13 @@ namespace TodoListApp.WebApp.Controllers
             this.logger.LogTrace(nameof(this.Delete));
 
             _ = await this.apiService.DeleteAsync(id);
-            return this.Redirect(returnUrl?.ToString()!);
+
+            if (returnUrl != null)
+            {
+                return this.Redirect(returnUrl.ToString());
+            }
+
+            return this.Redirect("~/Home/Index");
         }
     }
 }

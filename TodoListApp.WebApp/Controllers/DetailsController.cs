@@ -40,7 +40,12 @@ namespace TodoListApp.WebApp.Controllers
 
             if (model == null)
             {
-                return this.Redirect(returnUrl?.ToString()!);
+                if (returnUrl != null)
+                {
+                    return this.Redirect(returnUrl.ToString());
+                }
+
+                return this.Redirect("~/Home/Index");
             }
 
             model.ReturnUrl = returnUrl;

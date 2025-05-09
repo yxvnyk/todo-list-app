@@ -203,9 +203,8 @@ const noop = () => {};
  * @see https://www.charistheo.io/blog/2021/02/restart-a-css-animation-with-javascript/#restarting-a-css-animation
  */
 
-
 const reflow = element => {
-  element.offsetHeight; // eslint-disable-line no-unused-expressions
+    void element.offsetHeight;
 };
 
 const getjQuery = () => {
@@ -1533,7 +1532,7 @@ class Carousel extends BaseComponent {
 
     if (!activeElement || !nextElement) {
       // Some weirdness is happening, so we bail
-      // todo: change tests that use empty divs to avoid this check
+      // to-do: change tests that use empty divs to avoid this check
       return;
     }
 
@@ -4026,22 +4025,6 @@ class Tooltip extends BaseComponent {
    _isShown() {
        return this.tip?.classList.contains(CLASS_NAME_SHOW$2);
    }
-
-  _getOffset() {
-    const {
-      offset
-    } = this._config;
-
-    if (typeof offset === 'string') {
-      return offset.split(',').map(value => Number.parseInt(value, 10));
-    }
-
-    if (typeof offset === 'function') {
-      return popperData => offset(popperData, this._element);
-    }
-
-    return offset;
-  }
 
   _resolvePossibleFunction(arg) {
     return typeof arg === 'function' ? arg.call(this._element) : arg;

@@ -92,33 +92,33 @@ The developer's checklist for week 1:
 - [+] T03: Implement Epic 1 backend functionality in the *TodoListApp.WebApi* application.
 - [+] T05: Implement Epic 2 backend functionality in the *TodoListApp.WebApi* application.
 - [+] T07: Implement Epic 3 backend functionality in the *TodoListApp.WebApi* application.
-- [ ] All changes are committed and pushed to the remote repository.
-- [ ] There are no major or critical issues or blockers found during building the solution.
+- [+] All changes are committed and pushed to the remote repository.
+- [+] There are no major or critical issues or blockers found during building the solution.
 
 
 ### Week 2
 
 The developer's checklist for week 2:
 
-- [ ] T04: Implement Epic 1 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] T06: Implement Epic 2 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] T08: Implement Epic 3 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] T09: Implement Epic 4 backend functionality in the *TodoListApp.WebApi* application.
-- [ ] T11: Implement Epic 5 backend functionality in the *TodoListApp.WebApi* application.
-- [ ] All changes are committed and pushed to the remote repository.
-- [ ] There are no major or critical issues or blockers found during building the solution.
+- [+] T04: Implement Epic 1 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] T06: Implement Epic 2 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] T08: Implement Epic 3 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] T09: Implement Epic 4 backend functionality in the *TodoListApp.WebApi* application.
+- [+] T11: Implement Epic 5 backend functionality in the *TodoListApp.WebApi* application.
+- [+] All changes are committed and pushed to the remote repository.
+- [+] There are no major or critical issues or blockers found during building the solution.
 
 
 #### Week 3
 
 The developer's checklist for week 3:
 
-- [ ] T10: Implement Epic 4 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] T12: Implement Epic 5 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] T13: Implement Epic 6 backend functionality in the *TodoListApp.WebApi* application.
-- [ ] T14: Implement Epic 6 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] T15: Implement Epic 7 functionality in the *TodoListApp.WebApp* application.
-- [ ] T16: Implement Epic 8 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] T17: Implement Epic 8 frontend functionality in the *TodoListApp.WebApp* application.
-- [ ] All changes are committed and pushed to the remote repository.
-- [ ] There are no major or critical issues or blockers found during building the solution.
+- [+] T10: Implement Epic 4 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] T12: Implement Epic 5 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] T13: Implement Epic 6 backend functionality in the *TodoListApp.WebApi* application.
+- [+] T14: Implement Epic 6 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] T15: Implement Epic 7 functionality in the *TodoListApp.WebApp* application.
+- [+] T16: Implement Epic 8 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] T17: Implement Epic 8 frontend functionality in the *TodoListApp.WebApp* application.
+- [+] All changes are committed and pushed to the remote repository.
+- [+] There are no major or critical issues or blockers found during building the solution.
