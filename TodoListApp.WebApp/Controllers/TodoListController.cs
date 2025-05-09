@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApi.Models.Logging;
 using TodoListApp.WebApp.Models;
 using TodoListApp.WebApp.Services.Interfaces;
 
@@ -37,12 +38,12 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("Get")]
         public async Task<IActionResult> GetAllLists(string ownerId = "")
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllLists));
+            this.logger.LogTrace(nameof(this.GetAllLists));
 
             var list = await this.apiService.GetAllAsync(ownerId);
             if (list == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "List equal to null");
+                this.logger.LogWarning("List equal to null");
 
                 return this.NotFound();
             }
@@ -57,15 +58,14 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="model">The to-do list model.</param>
         /// <returns>An <see cref="IActionResult"/> containing the created list or a NotFound result.</returns>
         [HttpPost("Post")]
-        public async Task<IActionResult> CreateTodoList([FromBody] TodoListDTO model)
+        public async Task<IActionResult> CreateTodoList([FromBody] TodoListDto model)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.CreateTodoList));
+            this.logger.LogTrace(nameof(this.CreateTodoList));
 
-            ArgumentNullException.ThrowIfNull(model);
             var list = await this.apiService.AddAsync(model);
             if (list == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "List equal to null");
+                this.logger.LogWarning("List equal to null");
 
                 return this.NotFound();
             }
@@ -81,12 +81,12 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A redirect to the specified return URL.</returns>
         [HttpGet]
         [Route("delete")]
-        public async Task<IActionResult> Delete(int listId, string returnUrl)
+        public async Task<IActionResult> Delete(int listId, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Delete));
+            this.logger.LogTrace(nameof(this.Delete));
 
             _ = await this.apiService.DeleteAsync(listId);
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -96,11 +96,11 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A view with the to-do list model and return URL.</returns>
         [HttpGet]
         [Route("create")]
-        public IActionResult Create(string returnUrl = "/")
+        public IActionResult Create(Uri returnUrl = default!)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
+            this.logger.LogTrace(nameof(this.Create));
 
-            TodoListDTO task = new TodoListDTO()
+            TodoListDto task = new TodoListDto()
             {
                 OwnerId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!,
             };
@@ -115,13 +115,13 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A view indicating completion or a redirect on failure.</returns>
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create(TodoListDTO list, string returnUrl)
+        public async Task<IActionResult> Create(TodoListDto list, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
+            this.logger.LogTrace(nameof(this.Create));
 
             if (this.ModelState.IsValid)
             {
-                LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
+                this.logger.LogWarning("Invalid ModelState");
 
                 _ = await this.apiService.AddAsync(list);
                 return this.View("CompleteEditor", new CompleteEditorViewModel()
@@ -136,7 +136,7 @@ namespace TodoListApp.WebApp.Controllers
                 Console.WriteLine(error.ErrorMessage);
             }
 
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -147,9 +147,9 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A view with the to-do list data and return URL.</returns>
         [HttpGet]
         [Route("edit/{listId:int}")]
-        public async Task<IActionResult> Edit(int listId, string returnUrl)
+        public async Task<IActionResult> Edit(int listId, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Edit));
+            this.logger.LogTrace(nameof(this.Edit));
 
             var task = await this.apiService.GetByIdAsync(listId);
             return this.View((task, returnUrl));
@@ -164,13 +164,13 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A view indicating completion or a redirect on failure.</returns>
         [HttpPost]
         [Route("edit/{listId:int}")]
-        public async Task<IActionResult> Update(TodoListUpdateDTO list, int listId, string returnUrl)
+        public async Task<IActionResult> Update(TodoListUpdateDto list, int listId, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
+            this.logger.LogTrace(nameof(this.Update));
 
             if (this.ModelState.IsValid)
             {
-                LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
+                this.logger.LogWarning("Invalid ModelState");
 
                 _ = await this.apiService.UpdateAsync(list, listId);
                 return this.View("CompleteEditor", new CompleteEditorViewModel()
@@ -180,7 +180,7 @@ namespace TodoListApp.WebApp.Controllers
                 });
             }
 
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
     }
 }

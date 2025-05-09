@@ -5,7 +5,7 @@ namespace TodoListApp.WebApi.Models
     /// <summary>
     /// Represents a data transfer object (DTO) for a comment.
     /// </summary>
-    public class CommentDTO
+    public class CommentDto
     {
         /// <summary>
         /// Gets or sets the unique identifier of the comment.

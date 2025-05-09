@@ -24,6 +24,6 @@ namespace TodoListApp.WebApp.Models
         /// Gets or sets the URL to which the user will be redirected after the action is completed.
         /// Defaults to "/".
         /// </summary>
-        public string? ReturnUrl { get; set; } = "/";
+        public Uri? ReturnUrl { get; set; } = default!;
     }
 }

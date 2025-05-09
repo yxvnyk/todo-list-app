@@ -33,7 +33,7 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="model">The comment DTO containing the information to be saved.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task CreateAsync(CommentDTO model)
+        public async Task CreateAsync(CommentDto model)
         {
             var entity = this.mapper.Map<CommentEntity>(model);
             await this.repository.CreateAsync(entity);
@@ -55,12 +55,10 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="filter">The filter used to query the comments.</param>
         /// <returns>A task representing the asynchronous operation, with a collection of comment DTOs.</returns>
-        public async Task<IEnumerable<CommentDTO>> GetAllAsync(CommentFilter filter)
+        public async Task<IEnumerable<CommentDto>> GetAllAsync(CommentFilter filter)
         {
-            ArgumentNullException.ThrowIfNull(filter);
-
             var comments = await this.repository.GetAllAsync(filter)
-                .Select(x => this.mapper.Map<CommentDTO>(x)).ToListAsync();
+                .Select(x => this.mapper.Map<CommentDto>(x)).ToListAsync();
 
             return comments;
         }
@@ -70,10 +68,10 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="id">The ID of the comment to retrieve.</param>
         /// <returns>A task representing the asynchronous operation, with the comment DTO or null if not found.</returns>
-        public async Task<CommentDTO?> GetByIdAsync(int id)
+        public async Task<CommentDto?> GetByIdAsync(int id)
         {
             var entity = await this.repository.GetByIdAsync(id);
-            return entity != null ? this.mapper.Map<CommentDTO>(entity) : null;
+            return entity != null ? this.mapper.Map<CommentDto>(entity) : null;
         }
 
         /// <summary>
@@ -92,9 +90,8 @@ namespace TodoListApp.WebApi.Data.Repository
         /// <param name="model">The comment update DTO containing the new data.</param>
         /// <param name="id">The ID of the comment to update.</param>
         /// <returns>A task representing the asynchronous operation, with a boolean indicating success or failure.</returns>
-        public async Task<bool> UpdateAsync(CommentUpdateDTO model, int id)
+        public async Task<bool> UpdateAsync(CommentUpdateDto model, int id)
         {
-            ArgumentNullException.ThrowIfNull(model);
             var exist = await this.repository.GetByIdAsync(id);
             if (exist != null)
             {

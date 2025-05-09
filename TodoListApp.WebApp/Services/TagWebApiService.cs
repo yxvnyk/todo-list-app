@@ -13,14 +13,19 @@ namespace TodoListApp.WebApp.Services
     /// </summary>
     public class TagWebApiService : BaseApiService, ITagWebApiService
     {
+        private readonly HttpClient httpClient;
+        private readonly IHttpService httpService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TagWebApiService"/> class.
         /// </summary>
-        /// <param name="client">The <see cref="HttpClient"/> used to send HTTP requests.</param>
-        /// <param name="httpService">The <see cref="IHttpService"/> used to handle HTTP requests.</param>
-        public TagWebApiService(HttpClient client, IHttpService httpService)
-            : base(client, httpService)
+        /// <param name="httpClient">The <see cref="HttpClient"/> used for making HTTP requests.</param>
+        /// <param name="httpService">The service used to handle HTTP requests and responses.</param>
+        public TagWebApiService(HttpClient httpClient, IHttpService httpService)
+            : base()
         {
+            this.httpClient = httpClient;
+            this.httpService = httpService;
         }
 
         /// <summary>
@@ -28,9 +33,8 @@ namespace TodoListApp.WebApp.Services
         /// </summary>
         /// <param name="model">The tag to be added.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
-        public async Task<HttpStatusCode?> AddAsync(TagDTO model)
+        public async Task<HttpStatusCode?> AddAsync(TagDto model)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,
@@ -56,23 +60,23 @@ namespace TodoListApp.WebApp.Services
         /// </summary>
         /// <param name="ownerId">The ID of the tag owner.</param>
         /// <param name="assigneeId">The ID of the assignee.</param>
-        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TagDTO"/> as the result.</returns>
-        public async Task<IEnumerable<TagDTO>?> GetAllAsync(string ownerId, string assigneeId)
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TagDto"/> as the result.</returns>
+        public async Task<IEnumerable<TagDto>?> GetAllAsync(string ownerId, string assigneeId)
         {
             Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
             var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag?OwnerId={ownerId}&AssigneeId={assigneeId}"));
-            return await this.HandleResponseAsync<IEnumerable<TagDTO>>(response);
+            return await this.HandleResponseAsync<IEnumerable<TagDto>>(response);
         }
 
         /// <summary>
         /// Retrieves a list of tags associated with a specific task.
         /// </summary>
         /// <param name="id">The ID of the task.</param>
-        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TagDTO"/> as the result.</returns>
-        public async Task<IEnumerable<TagDTO>?> GetAllByTaskAsync(int id)
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TagDto"/> as the result.</returns>
+        public async Task<IEnumerable<TagDto>?> GetAllByTaskAsync(int id)
         {
             var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Tag?TaskId={id}"));
-            return await this.HandleResponseAsync<IEnumerable<TagDTO>>(response);
+            return await this.HandleResponseAsync<IEnumerable<TagDto>>(response);
         }
 
         /// <summary>
@@ -81,9 +85,8 @@ namespace TodoListApp.WebApp.Services
         /// <param name="model">The tag update data.</param>
         /// <param name="id">The ID of the tag to update.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
-        public async Task<HttpStatusCode?> UpdateAsync(TagUpdateDTO model, int id)
+        public async Task<HttpStatusCode?> UpdateAsync(TagUpdateDto model, int id)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,
@@ -100,8 +103,8 @@ namespace TodoListApp.WebApp.Services
         /// Not implemented: Retrieves a tag by its ID.
         /// </summary>
         /// <param name="id">The ID of the tag.</param>
-        /// <returns>A task that represents the asynchronous operation, with the <see cref="TagDTO"/> as the result.</returns>
-        public Task<TagDTO?> GetByIdAsync(int id)
+        /// <returns>A task that represents the asynchronous operation, with the <see cref="TagDto"/> as the result.</returns>
+        public Task<TagDto?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }
@@ -110,8 +113,8 @@ namespace TodoListApp.WebApp.Services
         /// Not implemented: Retrieves a list of tags by ID.
         /// </summary>
         /// <param name="id">The ID of the tags.</param>
-        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TagDTO"/> as the result.</returns>
-        public Task<IEnumerable<TagDTO>?> GetAllAsync(string id)
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TagDto"/> as the result.</returns>
+        public Task<IEnumerable<TagDto>?> GetAllAsync(string id)
         {
             throw new NotImplementedException();
         }

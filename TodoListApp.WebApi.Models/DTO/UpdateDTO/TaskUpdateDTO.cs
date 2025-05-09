@@ -8,7 +8,7 @@ namespace TodoListApp.WebApi.Models.DTO.UpdateDTO
     /// <summary>
     /// Represents the data transfer object (DTO) for updating a task.
     /// </summary>
-    public class TaskUpdateDTO
+    public class TaskUpdateDto
     {
         /// <summary>
         /// Gets or sets the title of the task.
@@ -39,7 +39,7 @@ namespace TodoListApp.WebApi.Models.DTO.UpdateDTO
         /// <remarks>
         /// The due date must be greater than or equal to the current date.
         /// </remarks>
-        [MinDate]
+        [MinDateAttribute]
         public DateTime? DueDate { get; set; }
 
         /// <summary>

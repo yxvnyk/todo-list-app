@@ -5,7 +5,7 @@ namespace TodoListApp.WebApi.Models
     /// <summary>
     /// Represents a data transfer object (DTO) for a tag associated with a task.
     /// </summary>
-    public class TagDTO
+    public class TagDto
     {
         /// <summary>
         /// Gets or sets the unique identifier of the tag.

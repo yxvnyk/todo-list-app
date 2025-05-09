@@ -1,4 +1,4 @@
-@model (IEnumerable<TagDTO> List, string url)
+@model (IEnumerable<TagDto> List, Uri url)
 @{
     Layout = "_NavLayout";
 }
@@ -14,7 +14,7 @@
 
     }
     else{
-    @foreach (TagDTO tag in Model.List)
+    @foreach (TagDto tag in Model.List)
     {
         
         <div class="my-3 p-3 rounded shadow-sm bg-dark bg-opacity-10">

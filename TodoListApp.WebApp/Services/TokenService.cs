@@ -39,17 +39,15 @@ namespace TodoListApp.WebApp.Services
         /// <returns>A task that represents the asynchronous operation, with the JWT token string as the result.</returns>
         public async Task<string> CreateToken(AppUser user)
         {
-            ArgumentNullException.ThrowIfNull(user);
-
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                new Claim(JwtRegisteredClaimNames.GivenName, user.UserName),
+                new Claim(JwtRegisteredClaimNames.Email, user?.Email!),
+                new Claim(JwtRegisteredClaimNames.GivenName, user?.UserName!),
             };
 
             var creds = new SigningCredentials(this.symmetricSecurityKey, SecurityAlgorithms.HmacSha512Signature);
 
-            var userRoles = await this.userManager.GetRolesAsync(user);
+            var userRoles = await this.userManager.GetRolesAsync(user!);
             foreach (var role in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, role.ToString()));

@@ -33,9 +33,10 @@ public class TagRepository : ITagRepository
         {
             tags = tags
                 .Include(t => t.Task)
-                    .ThenInclude(task => task.TodoList)
+                    .ThenInclude(task => task!.TodoList)
                 .Where(t =>
                     t.Task != null &&
+                    t.Task.TodoList != null &&
                     (
                         (!string.IsNullOrEmpty(filter.AssigneeId) && t.Task.AssigneeId == filter.AssigneeId)
                         ||

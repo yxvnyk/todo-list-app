@@ -10,6 +10,6 @@ namespace TodoListApp.WebApp.Models
         /// <summary>
         /// Gets or sets the to-do list details.
         /// </summary>
-        public TodoListDTO? List { get; set; }
+        public TodoListDto List { get; set; } = new TodoListDto();
     }
 }

@@ -5,7 +5,7 @@ namespace TodoListApp.WebApi.Models.DTO.UpdateDTO
     /// <summary>
     /// Represents the data transfer object (DTO) for updating a to-do list.
     /// </summary>
-    public class TodoListUpdateDTO
+    public class TodoListUpdateDto
     {
         /// <summary>
         /// Gets or sets the title of the to-do list.

@@ -18,16 +18,6 @@ namespace TodoListApp.WebApp.Models
         /// <summary>
         /// Gets or sets the URL to return to after the error.
         /// </summary>
-        public string? ReturnUrl { get; set; }
-
-        // /// <summary>
-        // /// Gets or sets the request identifier for debugging purposes.
-        // /// </summary>
-        // public string? RequestId { get; set; }
-
-        // /// <summary>
-        // /// Gets a value indicating whether the request ID should be shown.
-        // /// </summary>
-        // public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public Uri? ReturnUrl { get; set; }
     }
 }

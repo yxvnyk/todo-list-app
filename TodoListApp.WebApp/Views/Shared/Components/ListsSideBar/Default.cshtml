@@ -1,4 +1,4 @@
-@model IEnumerable<TodoListDTO>
+@model IEnumerable<TodoListDto>
 
 <nav class="navbar navbar-expand-sm navbar-dark mb-3 px-2">
     <div class="container-fluid">
@@ -23,7 +23,7 @@
         <!-- List Items -->
         <div class="sidebar-container list-group list-group-flush pe-4 ps-1">
             <ul class="nav nav-pills flex-column mb-auto">
-                @foreach (var list in Model ?? Enumerable.Empty<TodoListDTO>())
+                @foreach (var list in Model ?? Enumerable.Empty<TodoListDto>())
                 {
                     <li class="list-group-item bg-secondary bg-opacity-25 mb-2 rounded text-white border-0">
                         <div class="d-flex flex-column">

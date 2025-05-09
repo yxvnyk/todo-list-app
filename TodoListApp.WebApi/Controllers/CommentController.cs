@@ -4,6 +4,7 @@ using TodoListApp.DataAccess.Filters;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApi.Models.Logging;
 
 namespace TodoListApp.WebApi.Controllers
 {
@@ -38,9 +39,9 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="filter">The filter parameters for retrieving comments.</param>
         /// <returns>A list of comments matching the filter criteria.</returns>
         [HttpGet]
-        public async Task<ActionResult<TagDTO>> GetAllComments([FromQuery] CommentFilter filter)
+        public async Task<ActionResult<TagDto>> GetAllComments([FromQuery] CommentFilter filter)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllComments));
+            this.logger.LogTrace(nameof(this.GetAllComments));
 
             var list = await this.commentRepository.GetAllAsync(filter);
             if (list.Any())
@@ -48,7 +49,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(list);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "No comments found");
+            this.logger.LogWarning("No comments found");
             return this.NotFound("No comments found");
         }
 
@@ -59,13 +60,13 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="id">The ID of the comment to update.</param>
         /// <returns>A response indicating the result of the update operation.</returns>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateComment([FromBody] CommentUpdateDTO model, int id)
+        public async Task<IActionResult> UpdateComment([FromBody] CommentUpdateDto model, int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateComment));
+            this.logger.LogTrace(nameof(this.UpdateComment));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body is empty");
+                this.logger.LogWarning("Request body is empty");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
@@ -75,7 +76,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok();
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Invalid comment id or invalid data");
+            this.logger.LogWarning("Invalid comment id or invalid data");
             return this.NotFound($"Comment with ID {id} not found or invalid data");
         }
 
@@ -85,20 +86,20 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="model">The comment data to add.</param>
         /// <returns>A response indicating the result of the add operation.</returns>
         [HttpPost]
-        public async Task<IActionResult> AddComment([FromBody] CommentDTO model)
+        public async Task<IActionResult> AddComment([FromBody] CommentDto model)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.AddComment));
+            this.logger.LogTrace(nameof(this.AddComment));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body is empty.");
+                this.logger.LogWarning("Request body is empty.");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
             var taskExist = await this.taskRepository.TaskExist(model.TaskId);
             if (!taskExist)
             {
-                LoggerExtensions.LogWarning(this.logger, "Task with the given ID does not exist.");
+                this.logger.LogWarning("Task with the given ID does not exist.");
                 return this.BadRequest("Task with the given ID does not exist.");
             }
 
@@ -115,7 +116,7 @@ namespace TodoListApp.WebApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteComment([FromRoute] int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.DeleteComment));
+            this.logger.LogTrace($"Received request to {nameof(this.GetAllComments)}");
 
             bool result = await this.commentRepository.DeleteByIdAsync(id);
             if (result)
@@ -123,7 +124,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.NoContent();
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Comment with this id doesn't exist");
+            this.logger.LogWarning("Comment with this id doesn't exist");
             return this.NotFound($"Comment with ID {id} not found.");
         }
     }

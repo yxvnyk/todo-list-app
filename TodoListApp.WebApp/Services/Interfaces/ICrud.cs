@@ -7,8 +7,7 @@ namespace TodoListApp.WebApp.Services.Interfaces
     /// </summary>
     /// <typeparam name="T">The type of the resource.</typeparam>
     /// <typeparam name="TUpdate">The type used to update the resource.</typeparam>
-    /// <typeparam name="TPagging">The type used for pagination.</typeparam>
-    public interface ICrud<T, TUpdate, TPagging>
+    public interface ICrud<T, TUpdate>
     {
         /// <summary>
         /// Retrieves a resource by its identifier.

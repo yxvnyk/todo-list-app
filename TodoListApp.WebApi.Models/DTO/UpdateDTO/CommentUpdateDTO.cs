@@ -5,7 +5,7 @@ namespace TodoListApp.WebApi.Models.DTO.UpdateDTO
     /// <summary>
     /// Represents the data transfer object (DTO) for updating a comment.
     /// </summary>
-    public class CommentUpdateDTO
+    public class CommentUpdateDto
     {
         /// <summary>
         /// Gets or sets the content of the comment.

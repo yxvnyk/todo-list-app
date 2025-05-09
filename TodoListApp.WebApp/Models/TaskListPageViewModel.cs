@@ -10,7 +10,7 @@ namespace TodoListApp.WebApp.Models
         /// <summary>
         /// Gets or sets the collection of tasks to be displayed on the page.
         /// </summary>
-        public IEnumerable<TaskDTO>? List { get; set; }
+        public IEnumerable<TaskDto>? List { get; set; }
 
         /// <summary>
         /// Gets or sets the title of the page.
@@ -20,7 +20,7 @@ namespace TodoListApp.WebApp.Models
         /// <summary>
         /// Gets or sets the return URL to navigate back after completing the action.
         /// </summary>
-        public string? ReturnUrl { get; set; }
+        public Uri? ReturnUrl { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the assignee (if filtering tasks by assignee).
@@ -28,7 +28,7 @@ namespace TodoListApp.WebApp.Models
         public string? AssigneeId { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID of the todo list this task list belongs to.
+        /// Gets or sets the ID of the to-do list this task list belongs to.
         /// </summary>
         public int TodoListId { get; set; }
     }

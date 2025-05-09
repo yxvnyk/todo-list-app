@@ -39,28 +39,28 @@
     <table class="table table-sm table-bordered table-striped">
         <tbody>
             <tr>
-                <th>Title</th>
-                <th>@Model.taskAggregation.Task?.Title</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">@Model.taskAggregation.Task?.Title</th>
             </tr>
             <tr>
-                <th>Status</th>
-                <th>@Model.taskAggregation.Task?.Status</th>
+                <th scope="col">Status</th>
+                <th scope="col">@Model.taskAggregation.Task?.Status</th>
             </tr>
             <tr>
-                <th>Description</th>
-                <th>@(Model.taskAggregation.Task?.Description ?? "-")</th>
+                <th scope="col">Description</th>
+                <th scope="col">@(Model.taskAggregation.Task?.Description ?? "-")</th>
             </tr>
             <tr>
-                <th>Date created</th>
-                <th>@Model.taskAggregation.Task?.DateCreated.ToString("dd/MM/yyyy")</th>
+                <th scope="col">Date created</th>
+                <th scope="col">@Model.taskAggregation.Task?.DateCreated.ToString("dd/MM/yyyy")</th>
             </tr>
             <tr>
-                <th>Due date</th>
-                <th>@(Model.taskAggregation.Task?.DueDate?.ToString("dd/MM/yyyy"))</th>
+                <th scope="col">Due date</th>
+                <th scope="col">@(Model.taskAggregation.Task?.DueDate?.ToString("dd/MM/yyyy"))</th>
             </tr>
             <tr>
-                <th>Assignee</th>
-                <th>@Model.taskAggregation.Task?.AssigneeId</th>
+                <th scope="col">Assignee</th>
+                <th scope="col">@Model.taskAggregation.Task?.AssigneeId</th>
             </tr>
         </tbody>
     </table>

@@ -9,13 +9,6 @@ namespace TodoListApp.WebApi.Data.Repository.Interfaces
     public interface ICrud<T, TUpdate, TFilter>
     {
         /// <summary>
-        /// Retrieves all entities based on the provided filter.
-        /// </summary>
-        /// <param name="filter">The filter to apply to the query.</param>
-        /// <returns>A task representing the asynchronous operation. The task result contains an enumerable list of entities.</returns>
-        Task<IEnumerable<T>> GetAllAsync(TFilter filter);
-
-        /// <summary>
         /// Creates a new entity.
         /// </summary>
         /// <param name="model">The model representing the entity to create.</param>

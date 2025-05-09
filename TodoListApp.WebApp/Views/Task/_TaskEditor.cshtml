@@ -1,6 +1,6 @@
 @model TaskEditorViewModel
 @{
-    TaskDTO? task = Model.Task;
+    TaskDto task = Model.Task;
 }
 
 <h2 class="text-black text-center p-1">@Model.Title a Tasks</h2>
@@ -13,26 +13,25 @@
             @if (task?.Id != 0)
             {
                 <div class="form-group">
-                    <label asp-for="Task.Id" class="control-label"></label>
-                    <input asp-for="Task.Id" class="form-control" readonly />
+                    <label asp-for="Task.Id" class="control-label" for="Task_Id"></label>
+                    <input asp-for="Task.Id" class="form-control" readonly id="Task_Id" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Task.DateCreated" class="control-label"></label>
-                    <input asp-for="Task.DateCreated" class="form-control" readonly/>
+                    <label asp-for="Task.DateCreated" class="control-label" for="Task_DateCreated"></label>
+                    <input asp-for="Task.DateCreated" class="form-control" readonly id="Task_DateCreated" />
                 </div>
                 <div class="form-group">
-                    <label asp-for="Task.Status" class="control-label"></label>
-                    <select asp-for="Task.Status" class="form-control">
+                    <label asp-for="Task.Status" class="control-label" for="Task_Status"></label>
+                    <select asp-for="Task.Status" class="form-control" id="Task_Status">
                         <option value="NotStarted">Not started</option>
                         <option value="InProgress">In progress</option>
                         <option value="Completed">Completed</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Task.AssigneeId" class="control-label"></label>
-                    <input asp-for="Task.AssigneeId" value="@Model?.Task?.AssigneeId" class="form-control" />
+                    <label asp-for="Task.AssigneeId" class="control-label" for="Task_AssigneeId"></label>
+                    <input asp-for="Task.AssigneeId" value="@task?.AssigneeId" class="form-control" id="Task_AssigneeId" />
                 </div>
-
             }
             @if (task?.Id == 0)
             {
@@ -42,35 +41,29 @@
             }
 
             <div class="form-group">
-                <label asp-for="Task.Title" class="control-label"></label>
+                <label asp-for="Task.Title" class="control-label" for="Task_Title"></label>
                 @Html.ValidationMessageFor(model => model.Title)
-                <input asp-for="Task.Title" class="form-control" />
+                <input asp-for="Task.Title" class="form-control" id="Task_Title" />
                 <span asp-validation-for="Task.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Task.Description" class="control-label"></label>
-                <input asp-for="Task.Description" class="form-control" />
+                <label asp-for="Task.Description" class="control-label" for="Task_Description"></label>
+                <input asp-for="Task.Description" class="form-control" id="Task_Description" />
                 <span asp-validation-for="Task.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Task.DueDate" class="control-label"></label>
-                <input asp-for="Task.DueDate" class="form-control" />
+                <label asp-for="Task.DueDate" class="control-label" for="Task_DueDate"></label>
+                <input asp-for="Task.DueDate" class="form-control" id="Task_DueDate" />
                 <span asp-validation-for="Task.DueDate" class="text-danger"></span>
             </div>
 
-            @* @if (!string.IsNullOrEmpty(Model!.Error)) *@
-            @* { *@
-            @*     <p>@Model.Error</p> *@
-            @* } *@
             <div class="form-group mt-3 text-center">
                 <button type="submit" class="btn btn-success">
                     Save
                 </button>
-                <a class="btn btn-primary" type="submit" href="@Model?.ReturnUrl">Back</a>
+                <a class="btn btn-primary" href="@Model?.ReturnUrl">Back</a>
             </div>
-            <div class="form-group mt-3 text-center">
-               
-            </div>
+
         </form>
     </div>
 </div>

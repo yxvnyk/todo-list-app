@@ -5,7 +5,7 @@ namespace TodoListApp.WebApi.Models.CustomValidations
     /// <summary>
     /// A custom validation attribute that ensures the date is not in the past.
     /// </summary>
-    public sealed class MinDate : ValidationAttribute
+    public sealed class MinDateAttribute : ValidationAttribute
     {
         /// <summary>
         /// Validates whether the provided date is not in the past.

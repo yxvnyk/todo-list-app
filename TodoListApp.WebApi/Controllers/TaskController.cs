@@ -5,6 +5,7 @@ using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.PagingDTO;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApi.Models.Logging;
 
 namespace TodoListApp.WebApi.Controllers
 {
@@ -41,14 +42,14 @@ namespace TodoListApp.WebApi.Controllers
         [HttpGet("GetOwnerId")]
         public ActionResult<string> GetTaskOwnerId(int taskId)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetTaskOwnerId));
+            this.logger.LogTrace(nameof(this.GetTaskOwnerId));
             var id = this.taskService.GetTaskOwnerId(taskId);
             if (id != null)
             {
                 return this.Ok(id);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "OwnerId not found");
+            this.logger.LogWarning("OwnerId not found");
             return this.NotFound("OwnerId not found");
         }
 
@@ -58,9 +59,9 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="filter">The filter parameters for retrieving tasks.</param>
         /// <returns>A list of tasks matching the filter criteria.</returns>
         [HttpGet]
-        public async Task<ActionResult<TaskDTO>> GetAllTasks([FromQuery] TaskFilter filter)
+        public async Task<ActionResult<TaskDto>> GetAllTasks([FromQuery] TaskFilter filter)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasks));
+            this.logger.LogTrace(nameof(this.GetAllTasks));
 
             var taskPaging = await this.taskService.GetAllAsync(filter);
             if (taskPaging.Items != null)
@@ -68,7 +69,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(taskPaging);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "No tasks found");
+            this.logger.LogWarning("No tasks found");
             return this.NotFound("No tasks found");
         }
 
@@ -80,7 +81,7 @@ namespace TodoListApp.WebApi.Controllers
         [HttpPost("search")]
         public async Task<ActionResult<TaskPaging>> GetAllTasksByPost([FromBody] TaskFilter filter)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasks));
+            this.logger.LogTrace(nameof(this.GetAllTasks));
 
             var taskPaging = await this.taskService.GetAllAsync(filter);
             if (taskPaging.Items != null)
@@ -88,7 +89,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(taskPaging);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "No tasks found");
+            this.logger.LogWarning("No tasks found");
             return this.NotFound("No tasks found");
         }
 
@@ -98,9 +99,9 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="id">The ID of the task.</param>
         /// <returns>The task with the specified ID.</returns>
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<TaskDTO>> GetTask(int id)
+        public async Task<ActionResult<TaskDto>> GetTask(int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetTask));
+            this.logger.LogTrace(nameof(this.GetTask));
 
             var list = await this.taskService.GetByIdAsync(id);
             if (list != null)
@@ -108,7 +109,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(list);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+            this.logger.LogWarning("Request body cannot be empty.");
             return this.NotFound($"Task with {id} not found");
         }
 
@@ -118,13 +119,13 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="model">The task data to add.</param>
         /// <returns>A response indicating the result of the add operation.</returns>
         [HttpPost]
-        public async Task<IActionResult> AddTask([FromBody] TaskDTO model)
+        public async Task<IActionResult> AddTask([FromBody] TaskDto model)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.AddTask));
+            this.logger.LogTrace(nameof(this.AddTask));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+                this.logger.LogWarning("Request body cannot be empty.");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
@@ -136,7 +137,7 @@ namespace TodoListApp.WebApi.Controllers
             var taskExist = await this.todoListService.TodoListExist(model!.TodoListId);
             if (!taskExist)
             {
-                LoggerExtensions.LogWarning(this.logger, "To-do list with the given ID does not exist.");
+                this.logger.LogWarning("To-do list with the given ID does not exist.");
                 return this.BadRequest("To-do list with the given ID does not exist.");
             }
 
@@ -152,13 +153,13 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="id">The ID of the task to update.</param>
         /// <returns>A response indicating the result of the update operation.</returns>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateTask([FromBody] TaskUpdateDTO model, int id)
+        public async Task<IActionResult> UpdateTask([FromBody] TaskUpdateDto model, int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateTask));
+            this.logger.LogTrace(nameof(this.UpdateTask));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+                this.logger.LogWarning("Request body cannot be empty.");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
@@ -168,7 +169,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok();
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Task with ID {model.Id} not found.");
+            this.logger.LogWarning($"Task with ID {id} not found.");
             return this.NotFound($"Task with ID {id} not found.");
         }
 
@@ -180,7 +181,7 @@ namespace TodoListApp.WebApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteTask([FromRoute] int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.DeleteTask));
+            this.logger.LogTrace(nameof(this.DeleteTask));
 
             bool result = await this.taskService.DeleteByIdAsync(id);
             if (result)
@@ -188,7 +189,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.NoContent();
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Task with ID {id} not found");
+            this.logger.LogWarning($"Task with ID {id} not found");
             return this.NotFound($"Task with ID {id} not found.");
         }
     }

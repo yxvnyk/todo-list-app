@@ -9,40 +9,44 @@ using static System.Net.Mime.MediaTypeNames;
 namespace TodoListApp.WebApp.Services
 {
     /// <summary>
-    /// Service for interacting with the TodoList API, providing CRUD operations for todo lists.
+    /// Service for interacting with the To-doList API, providing CRUD operations for to-do lists.
     /// </summary>
     public class TodoListWebApiService : BaseApiService, ITodoListWebApiService
     {
+        private readonly HttpClient httpClient;
+        private readonly IHttpService httpService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TodoListWebApiService"/> class.
         /// </summary>
-        /// <param name="httpClient">The <see cref="HttpClient"/> used to send HTTP requests.</param>
-        /// <param name="httpService">The <see cref="IHttpService"/> used to handle HTTP requests.</param>
+        /// <param name="httpClient">The <see cref="HttpClient"/> used for making HTTP requests.</param>
+        /// <param name="httpService">The service used to handle HTTP requests and responses.</param>
         public TodoListWebApiService(HttpClient httpClient, IHttpService httpService)
-            : base(httpClient, httpService)
+            : base()
         {
+            this.httpClient = httpClient;
+            this.httpService = httpService;
         }
 
         /// <summary>
-        /// Retrieves all todo lists owned by a specific user.
+        /// Retrieves all to-do lists owned by a specific user.
         /// </summary>
         /// <param name="id">The ID of the owner.</param>
-        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TodoListDTO"/> objects as the result.</returns>
-        public async Task<IEnumerable<TodoListDTO>?> GetAllAsync(string id)
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TodoListDto"/> objects as the result.</returns>
+        public async Task<IEnumerable<TodoListDto>?> GetAllAsync(string id)
         {
             Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
             var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList?OwnerId={id}"));
-            return await this.HandleResponseAsync<IEnumerable<TodoListDTO>?>(response);
+            return await this.HandleResponseAsync<IEnumerable<TodoListDto>?>(response);
         }
 
         /// <summary>
-        /// Adds a new todo list by sending a POST request to the TodoList API.
+        /// Adds a new to-do list by sending a POST request to the To-doList API.
         /// </summary>
         /// <param name="model">The todo list to be added.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
-        public async Task<HttpStatusCode?> AddAsync(TodoListDTO model)
+        public async Task<HttpStatusCode?> AddAsync(TodoListDto model)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,
@@ -53,14 +57,13 @@ namespace TodoListApp.WebApp.Services
         }
 
         /// <summary>
-        /// Updates an existing todo list by sending a PUT request to the TodoList API.
+        /// Updates an existing to-do list by sending a PUT request to the To-doList API.
         /// </summary>
-        /// <param name="model">The todo list update data.</param>
-        /// <param name="id">The ID of the todo list to update.</param>
+        /// <param name="model">The to-do list update data.</param>
+        /// <param name="id">The ID of the to-do list to update.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
-        public async Task<HttpStatusCode?> UpdateAsync(TodoListUpdateDTO model, int id)
+        public async Task<HttpStatusCode?> UpdateAsync(TodoListUpdateDto model, int id)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,
@@ -71,9 +74,9 @@ namespace TodoListApp.WebApp.Services
         }
 
         /// <summary>
-        /// Deletes a todo list by sending a DELETE request to the TodoList API.
+        /// Deletes a to-do list by sending a DELETE request to the To-doList API.
         /// </summary>
-        /// <param name="id">The ID of the todo list to delete.</param>
+        /// <param name="id">The ID of the to-do list to delete.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
         public async Task<HttpStatusCode?> DeleteAsync(int id)
         {
@@ -82,14 +85,14 @@ namespace TodoListApp.WebApp.Services
         }
 
         /// <summary>
-        /// Retrieves a todo list by its ID.
+        /// Retrieves a to-do list by its ID.
         /// </summary>
-        /// <param name="id">The ID of the todo list.</param>
+        /// <param name="id">The ID of the to-do list.</param>
         /// <returns>A task that represents the asynchronous operation, with a <see cref="TodoListDTO"/> object as the result.</returns>
-        public async Task<TodoListDTO?> GetByIdAsync(int id)
+        public async Task<TodoListDto?> GetByIdAsync(int id)
         {
             var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/TodoList/{id}"));
-            return await this.HandleResponseAsync<TodoListDTO?>(response);
+            return await this.HandleResponseAsync<TodoListDto?>(response);
         }
     }
 }

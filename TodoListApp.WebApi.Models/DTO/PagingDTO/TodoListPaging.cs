@@ -8,7 +8,7 @@ namespace TodoListApp.WebApi.Models.DTO.PagingDTO
         /// <summary>
         /// Gets or sets the collection of TodoListDTO items for the current page.
         /// </summary>
-        public IEnumerable<TaskDTO>? Items { get; set; }
+        public IEnumerable<TaskDto>? Items { get; set; }
 
         /// <summary>
         /// Gets or sets the current page number in the pagination.

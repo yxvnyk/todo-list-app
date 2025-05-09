@@ -1,39 +1,67 @@
 using Microsoft.Extensions.Logging;
 
-namespace TodoListApp.WebApi.Models.Logging;
-
-public static partial class LoggerExtensions
+namespace TodoListApp.WebApi.Models.Logging
 {
     /// <summary>
-    /// Logs a trace-level message indicating a request was received for a specified action.
+    /// Provides extension methods for logging with various log levels.
     /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="actionName">The name of the action being requested.</param>
-    [LoggerMessage(
-        EventId = 1001,
-        Level = LogLevel.Trace,
-        Message = "Received request to {actionName}")]
-    public static partial void LogTrace(ILogger logger, string actionName);
+    public static partial class LoggerExtensions
+    {
+        /// <summary>
+        /// Defines a log action for logging errors.
+        /// </summary>
+        private static readonly Action<ILogger, string, Exception?> Error =
+        LoggerMessage.Define<string>(
+            LogLevel.Error,
+            new EventId(1003, "Hello"),
+            "Hello, world from {Class}!");
 
-    /// <summary>
-    /// Logs an error-level message with details provided about the error.
-    /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="details">Details about the error.</param>
-    [LoggerMessage(
-        EventId = 1002,
-        Level = LogLevel.Error,
-        Message = "{details}.")]
-    public static partial void LogError(ILogger logger, string details);
+        /// <summary>
+        /// Defines a log action for logging warnings.
+        /// </summary>
+        private static readonly Action<ILogger, string, Exception?> Warning =
+        LoggerMessage.Define<string>(
+            LogLevel.Warning,
+            new EventId(1003, "Hello"),
+            "Hello, world from {Class}!");
 
-    /// <summary>
-    /// Logs a warning-level message with specific details about the potential issue.
-    /// </summary>
-    /// <param name="logger">The logger instance.</param>
-    /// <param name="details">Details about the warning.</param>
-    [LoggerMessage(
-        EventId = 1003,
-        Level = LogLevel.Warning,
-        Message = "{details}")]
-    public static partial void LogWarning(ILogger logger, string details);
+        /// <summary>
+        /// Defines a log action for logging trace-level messages.
+        /// </summary>
+        private static readonly Action<ILogger, string, Exception?> Trace =
+        LoggerMessage.Define<string>(
+            LogLevel.Trace,
+            new EventId(1003, "Hello"),
+            "Received request to {Class}!");
+
+        /// <summary>
+        /// Logs an error message with the specified class name.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="class">The name of the class from which the log is generated.</param>
+        public static void LogError(this ILogger logger, string @class)
+        {
+            Error(logger, @class, null);
+        }
+
+        /// <summary>
+        /// Logs a warning message with the specified class name.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="class">The name of the class from which the log is generated.</param>
+        public static void LogWarning(this ILogger logger, string @class)
+        {
+            Warning(logger, @class, null);
+        }
+
+        /// <summary>
+        /// Logs a trace message with the specified class name.
+        /// </summary>
+        /// <param name="logger">The logger instance.</param>
+        /// <param name="class">The name of the class from which the log is generated.</param>
+        public static void LogTrace(this ILogger logger, string @class)
+        {
+            Trace(logger, @class, null);
+        }
+    }
 }

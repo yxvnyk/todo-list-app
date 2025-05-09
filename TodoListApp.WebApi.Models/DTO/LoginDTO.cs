@@ -5,7 +5,7 @@ namespace TodoListApp.WebApi.Models.DTO
     /// <summary>
     /// Represents a data transfer object (DTO) for user login.
     /// </summary>
-    public class LoginDTO
+    public class LoginDto
     {
         /// <summary>
         /// Gets or sets the username of the user.

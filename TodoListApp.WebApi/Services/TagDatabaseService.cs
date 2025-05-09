@@ -12,7 +12,7 @@ namespace TodoListApp.WebApi.Data.Repository
     /// <summary>
     /// Service implementation for managing tags in the database. Provides methods for creating, updating, retrieving, and deleting tags.
     /// </summary>
-    internal class TagDatabaseService : ITagDatabaseService
+    public class TagDatabaseService : ITagDatabaseService
     {
         private readonly ITagRepository repository;
         private readonly IMapper mapper;
@@ -33,10 +33,10 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="filter">The filter used to query the tags.</param>
         /// <returns>A task representing the asynchronous operation, with a collection of tag DTOs.</returns>
-        public async Task<IEnumerable<TagDTO>> GetAllAsync(TagFilter filter)
+        public async Task<IEnumerable<TagDto>> GetAllAsync(TagFilter filter)
         {
             var tags = await this.repository.GetAllAsync(filter).Select(x =>
-                this.mapper.Map<TagDTO>(x)).ToListAsync();
+                this.mapper.Map<TagDto>(x)).ToListAsync();
             return tags;
         }
 
@@ -45,7 +45,7 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="model">The tag DTO containing the information to be saved.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task CreateAsync(TagDTO model)
+        public async Task CreateAsync(TagDto model)
         {
             var entity = this.mapper.Map<TagEntity>(model);
             await this.repository.CreateAsync(entity);
@@ -57,7 +57,7 @@ namespace TodoListApp.WebApi.Data.Repository
         /// <param name="model">The tag update DTO containing the new data.</param>
         /// <param name="id">The ID of the tag to update.</param>
         /// <returns>A task representing the asynchronous operation, with a boolean indicating success or failure.</returns>
-        public async Task<bool> UpdateAsync(TagUpdateDTO model, int id)
+        public async Task<bool> UpdateAsync(TagUpdateDto model, int id)
         {
             var exist = await this.repository.GetByIdAsync(id);
             if (exist != null)
@@ -75,10 +75,10 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="id">The ID of the tag to retrieve.</param>
         /// <returns>A task representing the asynchronous operation, with the tag DTO or null if not found.</returns>
-        public async Task<TagDTO?> GetByIdAsync(int id)
+        public async Task<TagDto?> GetByIdAsync(int id)
         {
             var exist = await this.repository.GetByIdAsync(id);
-            return exist != null ? this.mapper.Map<TagDTO>(exist) : null;
+            return exist != null ? this.mapper.Map<TagDto>(exist) : null;
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace TodoListApp.WebApi.Data.Repository
     /// <summary>
     /// Service implementation for managing tasks in the database. Provides methods for creating, updating, retrieving, deleting, and checking tasks.
     /// </summary>
-    internal class TaskDatabaseService : ITaskDatabaseService
+    public sealed class TaskDatabaseService : ITaskDatabaseService
     {
         private readonly ITaskRepository repository;
         private readonly IMapper mapper;
@@ -34,7 +34,7 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="model">The task DTO containing the information to be saved.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task CreateAsync(TaskDTO model)
+        public async Task CreateAsync(TaskDto model)
         {
             var entity = this.mapper.Map<TaskEntity>(model);
             entity.DateCreated = DateTime.Now;
@@ -58,11 +58,12 @@ namespace TodoListApp.WebApi.Data.Repository
         /// <returns>A task representing the asynchronous operation, with a paginated result of task DTOs.</returns>
         public async Task<TaskPaging> GetAllAsync(TaskFilter filter)
         {
+            ArgumentNullException.ThrowIfNull(filter);
             var pair = await this.repository.GetAllAsync(filter);
             var tasks = pair.Item1;
             return new TaskPaging()
             {
-                Items = await tasks.Select(x => this.mapper.Map<TaskDTO>(x)).ToListAsync(),
+                Items = await tasks.Select(x => this.mapper.Map<TaskDto>(x)).ToListAsync(),
                 TotalCount = (pair.Item2 + (filter.PageSize - 1)) / 5,
                 CurrentPage = filter.PageNumber,
             };
@@ -73,10 +74,10 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="id">The ID of the task to retrieve.</param>
         /// <returns>A task representing the asynchronous operation, with the task DTO or null if not found.</returns>
-        public async Task<TaskDTO?> GetByIdAsync(int id)
+        public async Task<TaskDto?> GetByIdAsync(int id)
         {
             var task = await this.repository.GetByIdAsync(id);
-            return task is not null ? this.mapper.Map<TaskDTO>(task) : null;
+            return task is not null ? this.mapper.Map<TaskDto>(task) : null;
         }
 
         /// <summary>
@@ -85,7 +86,7 @@ namespace TodoListApp.WebApi.Data.Repository
         /// <param name="model">The task update DTO containing the new data.</param>
         /// <param name="id">The ID of the task to update.</param>
         /// <returns>A task representing the asynchronous operation, with a boolean indicating success or failure.</returns>
-        public async Task<bool> UpdateAsync(TaskUpdateDTO model, int id)
+        public async Task<bool> UpdateAsync(TaskUpdateDto model, int id)
         {
             var exist = await this.repository.GetByIdAsync(id);
             if (exist != null)
@@ -116,17 +117,6 @@ namespace TodoListApp.WebApi.Data.Repository
         public string? GetTaskOwnerId(int taskId)
         {
             return this.repository.GetTaskOwnerId(taskId);
-        }
-
-        /// <summary>
-        /// Retrieves all tasks that match the given filter.
-        /// This method is part of the ICrud interface, but is not implemented here as pagination is handled in the custom GetAllAsync method.
-        /// </summary>
-        /// <param name="filter">The filter used to query the tasks.</param>
-        /// <returns>A task representing the asynchronous operation, with a collection of task DTOs.</returns>
-        Task<IEnumerable<TaskDTO>> ICrud<TaskDTO, TaskUpdateDTO, TaskFilter>.GetAllAsync(TaskFilter filter)
-        {
-            throw new NotImplementedException();
         }
     }
 }

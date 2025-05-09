@@ -7,7 +7,7 @@ namespace TodoListApp.WebApi.Models
     /// <summary>
     /// Represents a data transfer object (DTO) for a task.
     /// </summary>
-    public class TaskDTO
+    public class TaskDto
     {
         /// <summary>
         /// Gets or sets the unique identifier of the task.
@@ -68,7 +68,7 @@ namespace TodoListApp.WebApi.Models
         public string AssigneeId { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets the unique identifier of the todo list to which the task belongs.
+        /// Gets or sets the unique identifier of the to-do list to which the task belongs.
         /// </summary>
         /// <remarks>
         /// This field is required.

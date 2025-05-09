@@ -10,7 +10,7 @@
     @if(Model != null)
     {
         <div class="container-fluid m-auto">
-            <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search">
+            <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search" aria-label="Search criteria">
 
                 <div style="max-width: 150px">
                     <select class="btn-secondary form-select me-2" name="searchBy">
@@ -61,7 +61,7 @@
     {
         <div class="container">
             <div class="m-auto g-3" style="max-width: 600px;">
-                <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" role="search">
+                <form class="d-flex" asp-action="SearchBy" asp-controller="Task" method="get" aria-label="Search criteria" role="search">
 
                     <div class="w-auto">
                         <select class=" btn-secondary form-select me-2" name="searchBy">

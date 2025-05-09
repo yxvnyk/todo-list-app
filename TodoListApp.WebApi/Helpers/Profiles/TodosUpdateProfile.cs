@@ -18,19 +18,19 @@ public class TodosUpdateProfile : Profile
     public TodosUpdateProfile()
     {
         // Map TodoListUpdateDTO to TodoListEntity, skipping null values
-        this.CreateMap<TodoListUpdateDTO, TodoListEntity>()
+        this.CreateMap<TodoListUpdateDto, TodoListEntity>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         // Map TaskUpdateDTO to TaskEntity, skipping null values
-        this.CreateMap<TaskUpdateDTO, TaskEntity>()
+        this.CreateMap<TaskUpdateDto, TaskEntity>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         // Map CommentUpdateDTO to CommentEntity, skipping null values
-        this.CreateMap<CommentUpdateDTO, CommentEntity>()
+        this.CreateMap<CommentUpdateDto, CommentEntity>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
         // Map TagUpdateDTO to TagEntity, skipping null values
-        this.CreateMap<TagUpdateDTO, TagEntity>()
+        this.CreateMap<TagUpdateDto, TagEntity>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
     }
 }

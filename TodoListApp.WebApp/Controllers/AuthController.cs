@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.UserDataAccess.Entity;
 using TodoListApp.WebApi.Models.DTO;
+using TodoListApp.WebApi.Models.Logging;
 using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
@@ -43,7 +44,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("logout")]
         public async Task<IActionResult> LogOut()
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.LogOut));
+            this.logger.LogTrace(nameof(this.LogOut));
 
             await this.HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
 
@@ -65,13 +66,13 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="registerDTO">The login data transfer object containing email and password.</param>
         /// <returns>Redirects to LogInComplete if successful, otherwise returns an error message.</returns>
         [HttpPost("login")]
-        public async Task<IActionResult> LogIn(LoginDTO registerDTO)
+        public async Task<IActionResult> LogIn(LoginDto registerDTO)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.LogIn));
+            this.logger.LogTrace(nameof(this.LogIn));
 
             if (!this.ModelState.IsValid)
             {
-                LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
+                this.logger.LogWarning("Invalid ModelState");
                 return this.View();
             }
 
@@ -81,7 +82,7 @@ namespace TodoListApp.WebApp.Controllers
 
             if (user == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Wrong email");
+                this.logger.LogWarning("Wrong email");
                 return this.View("Login", "Wrong email");
             }
 
@@ -89,7 +90,7 @@ namespace TodoListApp.WebApp.Controllers
 
             if (!result.Succeeded)
             {
-                LoggerExtensions.LogWarning(this.logger, "Wrong password");
+                this.logger.LogWarning("Wrong password");
                 return this.View("Login", "Wrong password");
             }
 
@@ -132,7 +133,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("complete")]
         public IActionResult LogInComplete()
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.LogInComplete));
+            this.logger.LogTrace(nameof(this.LogInComplete));
 
             return this.View("~/Views/Home/Index.cshtml");
         }
@@ -143,7 +144,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("signin")]
         public IActionResult SignIn()
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.SignIn));
+            this.logger.LogTrace(nameof(this.SignIn));
 
             return this.View();
         }
@@ -154,13 +155,13 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="register">The registration data transfer object containing username, email, and password.</param>
         /// <returns>Redirects to the login view upon successful registration, otherwise shows an error message.</returns>
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterDTO register)
+        public async Task<IActionResult> Register(RegisterDto register)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Register));
+            this.logger.LogTrace(nameof(this.Register));
 
             if (!this.ModelState.IsValid)
             {
-                LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
+                this.logger.LogWarning("Invalid ModelState");
                 return this.View();
             }
 
@@ -180,11 +181,11 @@ namespace TodoListApp.WebApp.Controllers
                     return this.RedirectToAction("Login");
                 }
 
-                LoggerExtensions.LogWarning(this.logger, "Role adding failed");
+                this.logger.LogWarning("Role adding failed");
                 return this.View();
             }
 
-            LoggerExtensions.LogWarning(this.logger, "User creation failed");
+            this.logger.LogWarning("User creation failed");
             return this.View();
         }
     }

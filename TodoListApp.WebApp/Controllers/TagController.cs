@@ -2,6 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApi.Models.Logging;
 using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
@@ -34,15 +35,15 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>The view displaying the tag menu with the list of tags.</returns>
         [HttpGet]
         [Route("TagMenu")]
-        public async Task<IActionResult> TagMenu(string returnUrl)
+        public async Task<IActionResult> TagMenu(Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.TagMenu));
+            this.logger.LogTrace(nameof(this.TagMenu));
 
             var user = this.User;
             var userId = user?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (user == null)
             {
-                return this.View(new List<TodoListDTO>());
+                return this.View(new List<TodoListDto>());
             }
 
             var list = await this.apiService.GetAllAsync(userId!, userId!);
@@ -59,9 +60,9 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A redirection to the specified return URL after the tag is created.</returns>
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create(TagDTO tag, string returnUrl)
+        public async Task<IActionResult> Create(TagDto tag, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
+            this.logger.LogTrace(nameof(this.Create));
 
             if (this.ModelState.IsValid)
             {
@@ -73,7 +74,7 @@ namespace TodoListApp.WebApp.Controllers
                 Console.WriteLine(error.ErrorMessage);
             }
 
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -85,18 +86,18 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A redirection to the specified return URL after the tag is updated.</returns>
         [HttpPost]
         [Route("edit/{id:int}")]
-        public async Task<IActionResult> Update(TagUpdateDTO tag, int id, string returnUrl)
+        public async Task<IActionResult> Update(TagUpdateDto tag, int id, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
+            this.logger.LogTrace(nameof(this.Update));
 
             if (this.ModelState.IsValid)
             {
-                LoggerExtensions.LogTrace(this.logger, "Invalid ModelState");
+                this.logger.LogTrace("Invalid ModelState");
 
                 _ = await this.apiService.UpdateAsync(tag, id);
             }
 
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -107,12 +108,12 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>A redirection to the specified return URL after the tag is deleted.</returns>
         [HttpGet]
         [Route("delete")]
-        public async Task<IActionResult> Delete(int id, string returnUrl)
+        public async Task<IActionResult> Delete(int id, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Delete));
+            this.logger.LogTrace(nameof(this.Delete));
 
             _ = await this.apiService.DeleteAsync(id);
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
     }
 }

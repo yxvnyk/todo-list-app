@@ -1,4 +1,4 @@
-@model (IEnumerable<TagDTO>? tags, int? id, bool taskAggregation)
+@model (IEnumerable<TagDto>? tags, int? id, bool taskAggregation)
 @{
     string url = @ViewContext.HttpContext.Request.PathAndQuery();
 }
@@ -22,7 +22,7 @@
                 </div>
             </form>
         }
-         @foreach (var tag in Model.tags ?? Enumerable.Empty<TagDTO>())
+         @foreach (var tag in Model.tags ?? Enumerable.Empty<TagDto>())
          {  
             <span class="bg-light rounded-1">#@tag.Name
                 @if (Model.taskAggregation)

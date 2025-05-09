@@ -4,6 +4,7 @@ using TodoListApp.DataAccess.Filters;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApi.Models.Logging;
 
 namespace TodoListApp.WebApi.Controllers
 {
@@ -35,9 +36,9 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="filter">The filter parameters for retrieving to-do lists.</param>
         /// <returns>A list of to-do lists matching the filter criteria.</returns>
         [HttpGet]
-        public async Task<ActionResult<TodoListDTO>> GetAllLists([FromQuery] TodoListFilter filter)
+        public async Task<ActionResult<TodoListDto>> GetAllLists([FromQuery] TodoListFilter filter)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllLists));
+            this.logger.LogTrace(nameof(this.GetAllLists));
 
             var list = await this.repository.GetAllAsync(filter);
             if (list.Any())
@@ -45,7 +46,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(list);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "No lists found");
+            this.logger.LogWarning("No lists found");
             return this.NotFound("No lists found");
         }
 
@@ -55,9 +56,9 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="id">The ID of the to-do list.</param>
         /// <returns>The to-do list with the specified ID.</returns>
         [HttpGet("{id:int}")]
-        public async Task<ActionResult<TaskDTO>> GetTodoList(int id)
+        public async Task<ActionResult<TaskDto>> GetTodoList(int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetTodoList));
+            this.logger.LogTrace(nameof(this.GetTodoList));
 
             var list = await this.repository.GetByIdAsync(id);
             if (list != null)
@@ -65,7 +66,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(list);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+            this.logger.LogWarning("Request body cannot be empty.");
             return this.NotFound($"To-do list with {id} not found");
         }
 
@@ -76,13 +77,13 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="id">The ID of the to-do list to update.</param>
         /// <returns>A response indicating the result of the update operation.</returns>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateList([FromBody] TodoListUpdateDTO model, int id)
+        public async Task<IActionResult> UpdateList([FromBody] TodoListUpdateDto model, int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateList));
+            this.logger.LogTrace(nameof(this.UpdateList));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+                this.logger.LogWarning("Request body cannot be empty.");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
@@ -92,7 +93,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok();
             }
 
-            LoggerExtensions.LogWarning(this.logger, "TodoList with ID {model.Id} not found.");
+            this.logger.LogWarning($"TodoList with ID {id} not found.");
             return this.NotFound($"TodoList with ID {id} not found.");
         }
 
@@ -102,20 +103,19 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="model">The to-do list data to add.</param>
         /// <returns>A response indicating the result of the add operation.</returns>
         [HttpPost]
-        public async Task<IActionResult> AddList([FromBody] TodoListDTO model)
+        public async Task<IActionResult> AddList([FromBody] TodoListDto model)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.AddList));
+            this.logger.LogTrace(nameof(this.AddList));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+                this.logger.LogWarning("Request body cannot be empty.");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
-            // TODO : role-based verification
             if (string.IsNullOrEmpty(model.OwnerId))
             {
-                LoggerExtensions.LogWarning(this.logger, "User id cannot be empty");
+                this.logger.LogWarning("User id cannot be empty");
                 return this.BadRequest("User id cannot be empty");
             }
 
@@ -132,7 +132,7 @@ namespace TodoListApp.WebApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteList([FromRoute] int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.DeleteList));
+            this.logger.LogTrace(nameof(this.DeleteList));
 
             bool result = await this.repository.DeleteByIdAsync(id);
             if (result)
@@ -140,7 +140,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.NoContent();
             }
 
-            LoggerExtensions.LogWarning(this.logger, "TodoList with ID {id} not found.");
+            this.logger.LogWarning($"TodoList with ID {id} not found.");
             return this.NotFound($"TodoList with ID {id} not found.");
         }
     }

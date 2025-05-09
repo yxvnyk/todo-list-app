@@ -4,7 +4,7 @@ using TodoListApp.WebApi.Entities;
 namespace TodoListApp.DataAccess.Context;
 
 /// <summary>
-/// Represents the Entity Framework database context for the Todo List application.
+/// Represents the Entity Framework database context for the To-do List application.
 /// </summary>
 public class TodoListDbContext : DbContext
 {
@@ -18,7 +18,7 @@ public class TodoListDbContext : DbContext
     }
 
     /// <summary>
-    /// Gets or sets the <see cref="DbSet{TodoListEntity}"/> representing the Todo Lists table.
+    /// Gets or sets the <see cref="DbSet{TodoListEntity}"/> representing the To-do Lists table.
     /// </summary>
     public DbSet<TodoListEntity> TodoLists { get; set; } = default!;
 

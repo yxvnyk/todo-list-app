@@ -1,6 +1,6 @@
 @model TodoListEditorViewModel
 @{
-    TodoListDTO? todoList = Model.List;
+    TodoListDto todoList = Model.List;
 }
 <style>
     .centered-block {
@@ -16,21 +16,21 @@
 <div class="mt-5">
     <h2 class="text-black text-center p-1">@Model.Title a To-do list</h2>
     <div class="m-auto g-3" style="max-width: 450px;">
-       
-        <form asp-action="@Model.CallbackMethodName" asp-controller="TodoList" asp-route-id="@todoList?.Id != 0 ? todoList?.Id : null)" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+        <form asp-action="@Model.CallbackMethodName" asp-controller="TodoList" asp-route-id="@todoList?.Id != 0 ? todoList?.Id : null" asp-route-returnUrl="@Model.ReturnUrl" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @if (todoList?.Id != 0)
-            {
-                <div class="form-group">
-                    <label asp-for="List.Id" class="control-label"></label>
-                    <input asp-for="List.Id" class="form-control" readonly />
-                </div>
 
-            }
-            @if (todoList?.Id == 0)
-            {
-                <input type="hidden" asp-for="List.OwnerId" value="@todoList?.OwnerId" />
-            }
+                @if (todoList.Id != 0)
+                {
+                    <div class="form-group">
+                        <label asp-for="List.Id" class="control-label"></label>
+                        <input asp-for="List.Id" class="form-control" readonly />
+                    </div>
+                }
+                @if (todoList.Id == 0)
+                {
+                    <input type="hidden" asp-for="List.OwnerId" value="@todoList.OwnerId" />
+                }
+
             <div class="form-group">
                 <label asp-for="List.Title" class="control-label"></label>
                 <input asp-for="List.Title" class="form-control" />
@@ -41,18 +41,14 @@
                 <input asp-for="List.Description" class="form-control" />
                 <span asp-validation-for="List.Description" class="text-danger"></span>
             </div>
-          
-            
+
             <div class="form-group mt-3 text-center">
                 <button type="submit" class="btn btn-success">
                     Create
                 </button>
-                <a class="btn btn-primary" type="submit" href="@Model.ReturnUrl">Back</a>
+                <a class="btn btn-primary" href="@Model.ReturnUrl">Back</a>
             </div>
-            <div class="form-group mt-3 text-center">
-               
-            </div>
-            
+            <div class="form-group mt-3 text-center"></div>
         </form>
     </div>
 </div>

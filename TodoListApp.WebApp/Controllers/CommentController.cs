@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApi.Models.Logging;
 using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Controllers
@@ -25,22 +26,20 @@ namespace TodoListApp.WebApp.Controllers
         }
 
         /// <summary>
-        /// Creates a new comment using the provided <see cref="CommentDTO"/> and returns the user to the specified return URL.
+        /// Creates a new comment using the provided <see cref="CommentDto"/> and returns the user to the specified return URL.
         /// </summary>
         /// <param name="commentDto">The comment data transfer object containing the comment details.</param>
         /// <param name="returnUrl">The URL to which the user should be redirected after the operation.</param>
         /// <returns>Redirects to the provided return URL after the comment is created.</returns>
         [HttpPost]
         [Route("create")]
-        public async Task<IActionResult> Create(CommentDTO commentDto, string returnUrl)
+        public async Task<IActionResult> Create(CommentDto commentDto, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
-
-            ArgumentNullException.ThrowIfNull(commentDto);
+            this.logger.LogTrace(nameof(this.Create));
 
             if (this.ModelState.IsValid)
             {
-                LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
+                this.logger.LogWarning("Invalid ModelState");
                 _ = await this.apiService.AddAsync(commentDto);
             }
 
@@ -49,11 +48,11 @@ namespace TodoListApp.WebApp.Controllers
                 Console.WriteLine(error.ErrorMessage);
             }
 
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
-        /// Updates an existing comment using the provided <see cref="CommentUpdateDTO"/> and comment ID, and redirects to the specified return URL.
+        /// Updates an existing comment using the provided <see cref="CommentUpdateDto"/> and comment ID, and redirects to the specified return URL.
         /// </summary>
         /// <param name="comment">The comment update data transfer object containing the new comment details.</param>
         /// <param name="id">The ID of the comment to be updated.</param>
@@ -61,17 +60,17 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>Redirects to the provided return URL after the comment is updated.</returns>
         [HttpPost]
         [Route("edit/{id:int}")]
-        public async Task<IActionResult> Update(CommentUpdateDTO comment, int id, string returnUrl)
+        public async Task<IActionResult> Update(CommentUpdateDto commentDto, int id, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
+            this.logger.LogTrace(nameof(this.Update));
 
             if (this.ModelState.IsValid)
             {
-                LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
-                _ = await this.apiService.UpdateAsync(comment, id);
+                this.logger.LogWarning("Invalid ModelState");
+                _ = await this.apiService.UpdateAsync(commentDto, id);
             }
 
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -82,12 +81,12 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>Redirects to the provided return URL after the comment is deleted.</returns>
         [HttpGet]
         [Route("delete")]
-        public async Task<IActionResult> Delete(int id, string returnUrl)
+        public async Task<IActionResult> Delete(int id, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Delete));
+            this.logger.LogTrace(nameof(this.Delete));
 
             _ = await this.apiService.DeleteAsync(id);
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
     }
 }

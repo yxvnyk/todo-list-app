@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TodoListApp.WebApi.Models.Logging;
 
 namespace WebApplication1.Controllers
 {
@@ -31,7 +32,7 @@ namespace WebApplication1.Controllers
         [Authorize]
         public IActionResult Index()
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Index));
+            this.logger.LogTrace(nameof(this.Index));
 
             return this.View();
         }
@@ -44,19 +45,12 @@ namespace WebApplication1.Controllers
         [Authorize]
         public IActionResult Profile()
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Profile));
+            this.logger.LogTrace(nameof(this.Profile));
 
             var email = this.User.FindFirst(ClaimTypes.Email)?.Value!;
             var name = this.User.FindFirst(ClaimTypes.Name)?.Value!;
             var id = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             return this.View((name, email, id));
         }
-
-        // The following code is commented out:
-        // [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        // public IActionResult Error()
-        // {
-        //     return this.View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? this.HttpContext.TraceIdentifier });
-        // }
     }
 }

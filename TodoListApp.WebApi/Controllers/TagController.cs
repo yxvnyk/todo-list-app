@@ -4,6 +4,7 @@ using TodoListApp.DataAccess.Filters;
 using TodoListApp.WebApi.Data.Repository.Interfaces;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
+using TodoListApp.WebApi.Models.Logging;
 
 namespace TodoListApp.WebApi.Controllers
 {
@@ -38,7 +39,7 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="filter">The filter parameters for retrieving tags.</param>
         /// <returns>A list of tags matching the filter criteria.</returns>
         [HttpGet]
-        public async Task<ActionResult<TagDTO>> GetAllTags([FromQuery] TagFilter filter)
+        public async Task<ActionResult<TagDto>> GetAllTags([FromQuery] TagFilter filter)
         {
             var list = await this.tagRepository.GetAllAsync(filter);
             if (list.Any())
@@ -47,7 +48,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok(list);
             }
 
-            LoggerExtensions.LogWarning(this.logger, "No tags found");
+            this.logger.LogWarning("No tags found");
             return this.NotFound("No tags found");
         }
 
@@ -58,13 +59,13 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="id">The ID of the tag to update.</param>
         /// <returns>A response indicating the result of the update operation.</returns>
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> UpdateTag([FromBody] TagUpdateDTO model, int id)
+        public async Task<IActionResult> UpdateTag([FromBody] TagUpdateDto model, int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.UpdateTag));
+            this.logger.LogTrace(nameof(this.UpdateTag));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+                this.logger.LogWarning("Request body cannot be empty.");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
@@ -74,7 +75,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.Ok();
             }
 
-            LoggerExtensions.LogWarning(this.logger, $"Tag with ID {id} not found.");
+            this.logger.LogWarning($"Tag with ID {id} not found.");
             return this.NotFound($"Tag with ID {id} not found.");
         }
 
@@ -84,20 +85,20 @@ namespace TodoListApp.WebApi.Controllers
         /// <param name="model">The tag data to add.</param>
         /// <returns>A response indicating the result of the add operation.</returns>
         [HttpPost]
-        public async Task<IActionResult> AddTag([FromBody] TagDTO model)
+        public async Task<IActionResult> AddTag([FromBody] TagDto model)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.AddTag));
+            this.logger.LogTrace(nameof(this.AddTag));
 
             if (model == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Request body cannot be empty.");
+                this.logger.LogWarning("Request body cannot be empty.");
                 return this.BadRequest("Request body cannot be empty.");
             }
 
             var taskExist = await this.taskRepository.TaskExist(model.TaskId);
             if (!taskExist)
             {
-                LoggerExtensions.LogWarning(this.logger, "Task with the given ID does not exist.");
+                this.logger.LogWarning("Task with the given ID does not exist.");
                 return this.BadRequest("Task with the given ID does not exist.");
             }
 
@@ -114,7 +115,7 @@ namespace TodoListApp.WebApi.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteTag([FromRoute] int id)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.DeleteTag));
+            this.logger.LogTrace(nameof(this.DeleteTag));
 
             bool result = await this.tagRepository.DeleteByIdAsync(id);
             if (result)
@@ -122,7 +123,7 @@ namespace TodoListApp.WebApi.Controllers
                 return this.NoContent();
             }
 
-            LoggerExtensions.LogWarning(this.logger, $"Tag with ID {id} not found.");
+            this.logger.LogWarning($"Tag with ID {id} not found.");
             return this.NotFound($"Tag with ID {id} not found.");
         }
     }

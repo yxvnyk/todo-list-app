@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TodoListApp.DataAccess.Context;
 using TodoListApp.DataAccess.Filters;
@@ -37,6 +36,7 @@ public class TaskRepository : ITaskRepository
 
     public async Task<(IQueryable<TaskEntity>, int)> GetAllAsync(TaskFilter filter)
     {
+        ArgumentNullException.ThrowIfNull(filter);
         var tasks = this.context.Tasks.AsQueryable();
 
         if (!string.IsNullOrEmpty(filter?.AssigneeId) || !string.IsNullOrEmpty(filter?.OwnerId))
@@ -51,37 +51,37 @@ public class TaskRepository : ITaskRepository
                         (!string.IsNullOrEmpty(filter.OwnerId) && t.TodoList.OwnerId != null && t.TodoList.OwnerId == filter.OwnerId)));
         }
 
-        if (filter.TodoListId > 0)
+        if (filter?.TodoListId > 0)
         {
             tasks = tasks.Where(t => t.TodoListId == filter.TodoListId);
         }
 
-        if (filter.Status != null)
+        if (filter?.Status != null)
         {
             tasks = tasks.Where(t => t.Status == filter.Status);
         }
 
-        if (filter.TagName != null)
+        if (filter?.TagName != null)
         {
             tasks = tasks.Include(t => t.Tags).Where(t => t.Tags != null && t.Tags.Any(tag => tag.Name == filter.TagName));
         }
 
-        if (filter.Overdue == Filters.Enums.Overdue.Active)
+        if (filter?.Overdue == Filters.Enums.Overdue.Active)
         {
             tasks = tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value > DateTime.Now);
         }
-        else if (filter.Overdue == Filters.Enums.Overdue.Overdue)
+        else if (filter?.Overdue == Filters.Enums.Overdue.Overdue)
         {
             tasks = tasks.Where(t => t.DueDate.HasValue && t.DueDate.Value < DateTime.Now);
         }
 
-        if (!string.IsNullOrEmpty(filter.TextInTitle))
+        if (!string.IsNullOrEmpty(filter?.TextInTitle))
         {
             var pattern = $"%{filter.TextInTitle}%";
             tasks = tasks.Where(t => EF.Functions.Like(t.Title, pattern));
         }
 
-        if (filter.DueDate != null)
+        if (filter?.DueDate != null)
         {
             var from = filter.DueDate.Value.Date;
             var to = from.AddDays(1);
@@ -89,7 +89,7 @@ public class TaskRepository : ITaskRepository
             tasks = tasks.Where(t => t.DueDate >= from && t.DueDate < to);
         }
 
-        if (filter.CreationDate != null)
+        if (filter?.CreationDate != null)
         {
             var from = filter.CreationDate.Value.Date;
             var to = from.AddDays(1);
@@ -97,7 +97,7 @@ public class TaskRepository : ITaskRepository
             tasks = tasks.Where(t => t.DateCreated >= from && t.DateCreated < to);
         }
 
-        if (!string.IsNullOrEmpty(filter.SortBy))
+        if (!string.IsNullOrEmpty(filter?.SortBy))
         {
             if (filter.SortBy.Equals("DueDate", StringComparison.OrdinalIgnoreCase))
             {
@@ -109,7 +109,7 @@ public class TaskRepository : ITaskRepository
             }
         }
 
-        var pageNumber = (filter.PageNumber - 1) * filter.PageSize;
+        var pageNumber = (filter!.PageNumber - 1) * filter.PageSize;
         var count = await tasks.CountAsync();
         return (tasks.Skip(pageNumber).Take(filter.PageSize), count);
     }

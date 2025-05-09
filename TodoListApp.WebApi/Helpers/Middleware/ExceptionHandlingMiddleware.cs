@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using TodoListApp.WebApi.Models.Logging;
 
 namespace TodoListApp.WebApi.Helpers.Middleware;
 
@@ -29,49 +30,76 @@ public class ExceptionHandlingMiddleware : IMiddleware
     /// <returns>A task representing the asynchronous operation.</returns>
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
-        ArgumentNullException.ThrowIfNull(context);
-        ArgumentNullException.ThrowIfNull(next);
+        ValidateParameters(context, next);  // Validate parameters first
 
         try
         {
-            await next(context);
+            await next(context);  // Execute the main logic
         }
         catch (SqlException)
         {
-            LoggerExtensions.LogError(this.logger, "SqlException");
-
-            var details = new ProblemDetails()
-            {
-                Detail = "Database error has been occured",
-                Title = "Database error",
-                Status = 500,
-                Type = "Database error",
-            };
-
-            context.Response.StatusCode = 500;
-            await context.Response.WriteAsJsonAsync(details);
+            this.HandleSqlException(context);
         }
         catch (TimeoutException)
         {
-            LoggerExtensions.LogError(this.logger, "TimeoutException");
-
-            var details = new ProblemDetails()
-            {
-                Detail = "The request time out.",
-                Title = "Timeout error",
-                Status = 504,
-                Type = "Timeout error",
-            };
-
-            context.Response.StatusCode = 504;
-            await context.Response.WriteAsJsonAsync(details);
+            this.HandleTimeoutException(context);
         }
         catch (Exception)
         {
-            LoggerExtensions.LogError(this.logger, "An error has occured");
-
+            this.logger.LogError("An error has occured");
             context.Response.StatusCode = 500;
             throw;
         }
+    }
+
+    /// <summary>
+    /// Validates input parameters.
+    /// </summary>
+    /// <param name="context">The current HTTP context.</param>
+    /// <param name="next">The next middleware in the request pipeline.</param>
+    private static void ValidateParameters(HttpContext context, RequestDelegate next)
+    {
+        ArgumentNullException.ThrowIfNull(context);
+        ArgumentNullException.ThrowIfNull(next);
+    }
+
+    /// <summary>
+    /// Handles SQL exceptions.
+    /// </summary>
+    /// <param name="context">The current HTTP context.</param>
+    private void HandleSqlException(HttpContext context)
+    {
+        this.logger.LogError("SqlException");
+
+        var details = new ProblemDetails()
+        {
+            Detail = "Database error has been occured",
+            Title = "Database error",
+            Status = 500,
+            Type = "Database error",
+        };
+
+        context.Response.StatusCode = 500;
+        _ = context.Response.WriteAsJsonAsync(details);
+    }
+
+    /// <summary>
+    /// Handles Timeout exceptions.
+    /// </summary>
+    /// <param name="context">The current HTTP context.</param>
+    private void HandleTimeoutException(HttpContext context)
+    {
+        this.logger.LogError("TimeoutException");
+
+        var details = new ProblemDetails()
+        {
+            Detail = "The request time out.",
+            Title = "Timeout error",
+            Status = 504,
+            Type = "Timeout error",
+        };
+
+        context.Response.StatusCode = 504;
+        _ = context.Response.WriteAsJsonAsync(details);
     }
 }

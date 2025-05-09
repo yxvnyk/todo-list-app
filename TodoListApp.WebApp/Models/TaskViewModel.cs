@@ -10,22 +10,22 @@ namespace TodoListApp.WebApp.Models
         /// <summary>
         /// Gets or sets the task details.
         /// </summary>
-        public TaskDTO? Task { get; set; } = new TaskDTO();
+        public TaskDto? Task { get; set; } = new TaskDto();
 
         /// <summary>
         /// Gets or sets the collection of comments associated with the task.
         /// </summary>
-        public IEnumerable<CommentDTO>? Comments { get; set; }
+        public IEnumerable<CommentDto>? Comments { get; set; }
 
         /// <summary>
         /// Gets or sets the collection of tags associated with the task.
         /// </summary>
-        public IEnumerable<TagDTO>? Tags { get; set; }
+        public IEnumerable<TagDto>? Tags { get; set; }
 
         /// <summary>
         /// Gets or sets the return URL to navigate back after completing the action. Default is "/" (root URL).
         /// </summary>
-        public string ReturnUrl { get; set; } = "/";
+        public Uri ReturnUrl { get; set; } = default!;
 
         /// <summary>
         /// Gets or sets the ID of the owner of the task.

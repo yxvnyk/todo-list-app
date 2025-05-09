@@ -15,14 +15,19 @@ namespace TodoListApp.WebApp.Services
     /// </summary>
     public class TaskWebApiService : BaseApiService, ITaskWebApiService
     {
+        private readonly HttpClient httpClient;
+        private readonly IHttpService httpService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskWebApiService"/> class.
         /// </summary>
-        /// <param name="httpClient">The <see cref="HttpClient"/> used to send HTTP requests.</param>
-        /// <param name="httpService">The <see cref="IHttpService"/> used to handle HTTP requests.</param>
+        /// <param name="httpClient">The <see cref="HttpClient"/> used for making HTTP requests.</param>
+        /// <param name="httpService">The service used to handle HTTP requests and responses.</param>
         public TaskWebApiService(HttpClient httpClient, IHttpService httpService)
-            : base(httpClient, httpService)
+            : base()
         {
+            this.httpClient = httpClient;
+            this.httpService = httpService;
         }
 
         /// <summary>
@@ -38,9 +43,9 @@ namespace TodoListApp.WebApp.Services
         }
 
         /// <summary>
-        /// Retrieves tasks that belong to a specific todo list.
+        /// Retrieves tasks that belong to a specific to-do list.
         /// </summary>
-        /// <param name="id">The ID of the todo list.</param>
+        /// <param name="id">The ID of the to-do list.</param>
         /// <returns>A task that represents the asynchronous operation, with a <see cref="TaskPaging"/> object as the result.</returns>
         public async Task<TaskPaging?> GetAllByListAsync(int id)
         {
@@ -49,7 +54,6 @@ namespace TodoListApp.WebApp.Services
                 TodoListId = id,
             };
 
-            ArgumentNullException.ThrowIfNull(filter);
             using var filterJson = new StringContent(
                 JsonSerializer.Serialize(filter),
                 Encoding.UTF8,
@@ -66,7 +70,6 @@ namespace TodoListApp.WebApp.Services
         /// <returns>A task that represents the asynchronous operation, with a <see cref="TaskPaging"/> object as the result.</returns>
         public async Task<TaskPaging?> GetAllByFilterAsync(TaskFilter filter)
         {
-            ArgumentNullException.ThrowIfNull(filter);
             using var filterJson = new StringContent(
                 JsonSerializer.Serialize(filter),
                 Encoding.UTF8,
@@ -88,7 +91,6 @@ namespace TodoListApp.WebApp.Services
                 TagName = tag,
             };
 
-            ArgumentNullException.ThrowIfNull(filter);
             using var filterJson = new StringContent(
                 JsonSerializer.Serialize(filter),
                 Encoding.UTF8,
@@ -110,7 +112,6 @@ namespace TodoListApp.WebApp.Services
                 AssigneeId = id,
             };
 
-            ArgumentNullException.ThrowIfNull(filter);
             using var filterJson = new StringContent(
                 JsonSerializer.Serialize(filter),
                 Encoding.UTF8,
@@ -124,23 +125,23 @@ namespace TodoListApp.WebApp.Services
         /// Retrieves a task by its ID.
         /// </summary>
         /// <param name="id">The ID of the task.</param>
-        /// <returns>A task that represents the asynchronous operation, with a <see cref="TaskDTO"/> object as the result.</returns>
-        public async Task<TaskDTO?> GetByIdAsync(int id)
+        /// <returns>A task that represents the asynchronous operation, with a <see cref="TaskDto"/> object as the result.</returns>
+        public async Task<TaskDto?> GetByIdAsync(int id)
         {
             var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task/{id}"));
-            return await this.HandleResponseAsync<TaskDTO>(response);
+            return await this.HandleResponseAsync<TaskDto>(response);
         }
 
         /// <summary>
         /// Retrieves tasks assigned to a specific user.
         /// </summary>
         /// <param name="id">The ID of the assignee.</param>
-        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TaskDTO"/> objects as the result.</returns>
-        public async Task<IEnumerable<TaskDTO>?> GetAllAsync(string id)
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="TaskDto"/> objects as the result.</returns>
+        public async Task<IEnumerable<TaskDto>?> GetAllAsync(string id)
         {
             Console.WriteLine($"BaseAddress: {this.httpClient.BaseAddress}");
             var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Task?AssigneeId={id}"));
-            return await this.HandleResponseAsync<IEnumerable<TaskDTO>>(response);
+            return await this.HandleResponseAsync<IEnumerable<TaskDto>>(response);
         }
 
         /// <summary>
@@ -148,9 +149,8 @@ namespace TodoListApp.WebApp.Services
         /// </summary>
         /// <param name="model">The task to be added.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
-        public async Task<HttpStatusCode?> AddAsync(TaskDTO model)
+        public async Task<HttpStatusCode?> AddAsync(TaskDto model)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,
@@ -166,9 +166,8 @@ namespace TodoListApp.WebApp.Services
         /// <param name="model">The task update data.</param>
         /// <param name="id">The ID of the task to update.</param>
         /// <returns>A task that represents the asynchronous operation, with the <see cref="HttpStatusCode"/> as the result.</returns>
-        public async Task<HttpStatusCode?> UpdateAsync(TaskUpdateDTO model, int id)
+        public async Task<HttpStatusCode?> UpdateAsync(TaskUpdateDto model, int id)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,

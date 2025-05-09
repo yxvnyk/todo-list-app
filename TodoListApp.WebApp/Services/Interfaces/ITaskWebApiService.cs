@@ -9,7 +9,7 @@ namespace TodoListApp.WebApp.Services.Interfaces
     /// Defines the operations for working with tasks in the Web API.
     /// Inherits basic CRUD operations and extends with methods for managing tasks by various criteria.
     /// </summary>
-    public interface ITaskWebApiService : ICrud<TaskDTO, TaskUpdateDTO, TaskPaging>
+    public interface ITaskWebApiService : ICrud<TaskDto, TaskUpdateDto>
     {
         /// <summary>
         /// Retrieves all tasks associated with a specific task list.

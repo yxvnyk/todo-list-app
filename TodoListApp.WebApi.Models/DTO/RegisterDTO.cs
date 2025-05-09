@@ -5,7 +5,7 @@ namespace TodoListApp.WebApi.Models.DTO
     /// <summary>
     /// Represents a data transfer object (DTO) for user registration.
     /// </summary>
-    public class RegisterDTO
+    public class RegisterDto
     {
         /// <summary>
         /// Gets or sets the username for the user registering.

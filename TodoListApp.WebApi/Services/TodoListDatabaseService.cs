@@ -33,10 +33,10 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="id">The ID of the TodoList to retrieve.</param>
         /// <returns>A task representing the asynchronous operation, with the TodoList DTO or null if not found.</returns>
-        public async Task<TodoListDTO?> GetByIdAsync(int id)
+        public async Task<TodoListDto?> GetByIdAsync(int id)
         {
             var entity = await this.repository.GetByIdAsync(id);
-            return entity is null ? null : this.mapper.Map<TodoListDTO>(entity);
+            return entity is null ? null : this.mapper.Map<TodoListDto>(entity);
         }
 
         /// <summary>
@@ -44,10 +44,10 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="filter">The filter used to query the TodoLists.</param>
         /// <returns>A task representing the asynchronous operation, with a collection of TodoList DTOs.</returns>
-        public async Task<IEnumerable<TodoListDTO>> GetAllAsync(TodoListFilter filter)
+        public async Task<IEnumerable<TodoListDto>> GetAllAsync(TodoListFilter filter)
         {
             var lists = this.repository.GetAllAsync(filter);
-            return await lists.Select(x => this.mapper.Map<TodoListDTO>(x)).ToListAsync();
+            return await lists.Select(x => this.mapper.Map<TodoListDto>(x)).ToListAsync();
         }
 
         /// <summary>
@@ -55,9 +55,8 @@ namespace TodoListApp.WebApi.Data.Repository
         /// </summary>
         /// <param name="model">The TodoList DTO containing the information to be saved.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task CreateAsync(TodoListDTO model)
+        public async Task CreateAsync(TodoListDto model)
         {
-            ArgumentNullException.ThrowIfNull(model);
             var entity = this.mapper.Map<TodoListEntity>(model);
             await this.repository.CreateAsync(entity);
         }
@@ -68,7 +67,7 @@ namespace TodoListApp.WebApi.Data.Repository
         /// <param name="model">The TodoList update DTO containing the new data.</param>
         /// <param name="id">The ID of the TodoList to update.</param>
         /// <returns>A task representing the asynchronous operation, with a boolean indicating success or failure.</returns>
-        public async Task<bool> UpdateAsync(TodoListUpdateDTO model, int id)
+        public async Task<bool> UpdateAsync(TodoListUpdateDto model, int id)
         {
             var entity = await this.repository.GetByIdAsync(id);
             if (entity != null)

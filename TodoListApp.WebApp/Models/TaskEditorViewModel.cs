@@ -10,7 +10,7 @@ namespace TodoListApp.WebApp.Models
         /// <summary>
         /// Gets or sets the task data for editing.
         /// </summary>
-        public TaskDTO? Task { get; set; }
+        public TaskDto Task { get; set; } = new TaskDto();
 
         /// <summary>
         /// Gets or sets the error message(s) associated with the task editing.

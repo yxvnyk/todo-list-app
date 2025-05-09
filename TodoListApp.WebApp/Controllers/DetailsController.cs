@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
+using TodoListApp.WebApi.Models.Logging;
 using TodoListApp.WebApp.Infrastructure;
 
 namespace TodoListApp.WebApp.Controllers
@@ -31,15 +32,15 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="returnUrl">The URL to which the user should be redirected if the task is not found.</param>
         /// <returns>The view displaying task details if found, otherwise redirects to the returnUrl.</returns>
         [Route("task")]
-        public async Task<IActionResult> TaskDetails(int id, string returnUrl)
+        public async Task<IActionResult> TaskDetails(int id, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.TaskDetails));
+            this.logger.LogTrace(nameof(this.TaskDetails));
 
             var model = await this.service.AggregateTask(id);
 
             if (model == null)
             {
-                return this.Redirect(returnUrl);
+                return this.Redirect(returnUrl?.ToString()!);
             }
 
             model.ReturnUrl = returnUrl;

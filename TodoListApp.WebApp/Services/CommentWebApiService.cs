@@ -13,24 +13,28 @@ namespace TodoListApp.WebApp.Services
     /// </summary>
     public class CommentWebApiService : BaseApiService, ICommentWebApiService
     {
+        private readonly HttpClient httpClient;
+        private readonly IHttpService httpService;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommentWebApiService"/> class.
         /// </summary>
         /// <param name="httpClient">The <see cref="HttpClient"/> used for making HTTP requests.</param>
         /// <param name="httpService">The service used to handle HTTP requests and responses.</param>
         public CommentWebApiService(HttpClient httpClient, IHttpService httpService)
-            : base(httpClient, httpService)
+            : base()
         {
+            this.httpClient = httpClient;
+            this.httpService = httpService;
         }
 
         /// <summary>
         /// Adds a new comment to the API.
         /// </summary>
-        /// <param name="model">The <see cref="CommentDTO"/> object to be added.</param>
+        /// <param name="model">The <see cref="CommentDto"/> object to be added.</param>
         /// <returns>A task that represents the asynchronous operation, with the HTTP status code as the result.</returns>
-        public async Task<HttpStatusCode?> AddAsync(CommentDTO model)
+        public async Task<HttpStatusCode?> AddAsync(CommentDto model)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,
@@ -55,22 +59,21 @@ namespace TodoListApp.WebApp.Services
         /// Retrieves all comments associated with a specific task.
         /// </summary>
         /// <param name="id">The identifier of the task to retrieve comments for.</param>
-        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="CommentDTO"/> objects as the result.</returns>
-        public async Task<IEnumerable<CommentDTO>?> GetAllByTaskAsync(int id)
+        /// <returns>A task that represents the asynchronous operation, with a collection of <see cref="CommentDto"/> objects as the result.</returns>
+        public async Task<IEnumerable<CommentDto>?> GetAllByTaskAsync(int id)
         {
             var response = await this.httpService.GetAsync(new Uri(this.httpClient.BaseAddress!, $"/api/Comment?TaskId={id}"));
-            return await this.HandleResponseAsync<IEnumerable<CommentDTO>>(response);
+            return await this.HandleResponseAsync<IEnumerable<CommentDto>>(response);
         }
 
         /// <summary>
         /// Updates an existing comment.
         /// </summary>
-        /// <param name="model">The <see cref="CommentUpdateDTO"/> object containing the updated comment data.</param>
+        /// <param name="model">The <see cref="CommentUpdateDto"/> object containing the updated comment data.</param>
         /// <param name="id">The identifier of the comment to update.</param>
         /// <returns>A task that represents the asynchronous operation, with the HTTP status code as the result.</returns>
-        public async Task<HttpStatusCode?> UpdateAsync(CommentUpdateDTO model, int id)
+        public async Task<HttpStatusCode?> UpdateAsync(CommentUpdateDto model, int id)
         {
-            ArgumentNullException.ThrowIfNull(model);
             using var todoItemJson = new StringContent(
                 JsonSerializer.Serialize(model),
                 Encoding.UTF8,
@@ -82,12 +85,12 @@ namespace TodoListApp.WebApp.Services
         }
 
         // Not implemented methods:
-        public Task<IEnumerable<CommentDTO>?> GetAllAsync(string id)
+        public Task<IEnumerable<CommentDto>?> GetAllAsync(string id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<CommentDTO?> GetByIdAsync(int id)
+        public Task<CommentDto?> GetByIdAsync(int id)
         {
             throw new NotImplementedException();
         }

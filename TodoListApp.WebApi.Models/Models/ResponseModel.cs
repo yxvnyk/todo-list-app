@@ -13,6 +13,7 @@ namespace TodoListApp.WebApi.Models.Models
         public ResponseModel()
         {
             this.Success = true;
+            this.Message = string.Empty;
         }
 
         /// <summary>

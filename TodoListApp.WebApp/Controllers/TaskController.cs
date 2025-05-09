@@ -8,6 +8,7 @@ using TodoListApp.DataAccess.Filters.Enums;
 using TodoListApp.WebApi.Models;
 using TodoListApp.WebApi.Models.DTO.UpdateDTO;
 using TodoListApp.WebApi.Models.Enums;
+using TodoListApp.WebApi.Models.Logging;
 using TodoListApp.WebApp.Models;
 using TodoListApp.WebApp.Services.Interfaces;
 
@@ -41,7 +42,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("Search")]
         public IActionResult Search()
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Search));
+            this.logger.LogTrace(nameof(this.Search));
             return this.View();
         }
 
@@ -55,7 +56,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchBy(string query, string searchBy, int page = 1)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.SearchBy));
+            this.logger.LogTrace(nameof(this.SearchBy));
 
             var assigneeId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             TaskFilter filter = new TaskFilter()
@@ -74,12 +75,14 @@ namespace TodoListApp.WebApp.Controllers
                     {
                         filter.DueDate = date;
                     }
+
                     break;
                 case "CreationDate":
                     if (DateTime.TryParseExact(query, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out date))
                     {
                         filter.CreationDate = date;
                     }
+
                     break;
                 default:
                     break;
@@ -103,7 +106,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("Get")]
         public async Task<IActionResult> GetAllTasksByListId(int listId, int page = 1)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasksByListId));
+            this.logger.LogTrace(nameof(this.GetAllTasksByListId));
 
             TaskFilter filter = new TaskFilter()
             {
@@ -123,7 +126,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("GetByTag")]
         public async Task<IActionResult> GetAllTasksByTag(string tag, int page = 1)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasksByTag));
+            this.logger.LogTrace(nameof(this.GetAllTasksByTag));
 
             TaskFilter filter = new TaskFilter()
             {
@@ -141,7 +144,7 @@ namespace TodoListApp.WebApp.Controllers
         [HttpGet("GetByAssignee")]
         public async Task<IActionResult> GetAllTasksByAssigneeId()
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasksByAssigneeId));
+            this.logger.LogTrace(nameof(this.GetAllTasksByAssigneeId));
 
             var assigneeId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             TaskFilter filter = new TaskFilter()
@@ -160,9 +163,9 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="returnUrl">URL to return to after applying filter.</param>
         /// <returns>Redirection to filtered results view.</returns>
         [HttpPost("GetByFilter")]
-        public IActionResult GetAllTasksByFilter(TaskFilter filter, string returnUrl = "/")
+        public IActionResult GetAllTasksByFilter(TaskFilter filter, Uri returnUrl = default!)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.GetAllTasksByFilter));
+            this.logger.LogTrace(nameof(this.GetAllTasksByFilter));
 
             this.HttpContext.Session.SetString("filter", JsonSerializer.Serialize(filter));
             return this.RedirectToAction("FilteredResults", new { returnUrl = returnUrl });
@@ -174,9 +177,9 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="returnUrl">URL to return to if filter is missing.</param>
         /// <returns>The filtered results view.</returns>
         [HttpGet("FilteredResults")]
-        public async Task<IActionResult> FilteredResults(string returnUrl)
+        public async Task<IActionResult> FilteredResults(Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.FilteredResults));
+            this.logger.LogTrace(nameof(this.FilteredResults));
 
             var filterJson = this.HttpContext.Session.GetString("filter");
             if (!string.IsNullOrEmpty(filterJson))
@@ -186,8 +189,8 @@ namespace TodoListApp.WebApp.Controllers
                 return this.View("FilteredResults", (list, filter));
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Json is null or empty");
-            return this.Redirect(returnUrl);
+            this.logger.LogWarning("Json is null or empty");
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -198,16 +201,16 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="returnUrl">URL to return to after update.</param>
         /// <returns>Redirection to returnUrl.</returns>
         [HttpPost("complete")]
-        public IActionResult TaskComplete(int id, Status status, string returnUrl)
+        public IActionResult TaskComplete(int id, Status status, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.TaskComplete));
+            this.logger.LogTrace(nameof(this.TaskComplete));
 
-            TaskUpdateDTO model = new TaskUpdateDTO()
+            TaskUpdateDto model = new TaskUpdateDto()
             {
                 Status = status,
             };
             _ = this.apiService.UpdateAsync(model, id);
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -218,15 +221,15 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>The edit view.</returns>
         [HttpGet]
         [Route("edit/{taskId:int}")]
-        public async Task<IActionResult> Edit(int taskId, string returnUrl)
+        public async Task<IActionResult> Edit(int taskId, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Edit));
+            this.logger.LogTrace(nameof(this.Edit));
 
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             var ownerId = await this.apiService.GetTaskOwnerId(taskId);
             if (userId != ownerId)
             {
-                LoggerExtensions.LogWarning(this.logger, "User id don't equal owner id");
+                this.logger.LogWarning("User id don't equal owner id");
                 return this.View("NoPermission", "edit this task");
             }
 
@@ -237,25 +240,25 @@ namespace TodoListApp.WebApp.Controllers
         /// <summary>
         /// Updates the task with new values.
         /// </summary>
-        /// <param name="Task">Updated task model.</param>
+        /// <param name="task">Updated task model.</param>
         /// <param name="id">Task ID.</param>
         /// <param name="returnUrl">URL to return to.</param>
         /// <returns>The result view or the edit form with validation errors.</returns>
         [HttpPost]
         [Route("edit/{id:int}")]
-        public async Task<IActionResult> Update(TaskUpdateDTO Task, int id, string returnUrl)
+        public async Task<IActionResult> Update(TaskUpdateDto task, int id, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Update));
+            this.logger.LogTrace(nameof(this.Update));
 
-            if (Task == null)
+            if (task == null)
             {
-                LoggerExtensions.LogWarning(this.logger, "Task is empty");
-                return this.Redirect(returnUrl);
+                this.logger.LogWarning("Task is empty");
+                return this.Redirect(returnUrl?.ToString()!);
             }
 
             if (this.ModelState.IsValid)
             {
-                _ = await this.apiService.UpdateAsync(Task, id);
+                _ = await this.apiService.UpdateAsync(task, id);
                 return this.View("CompleteEditor", new CompleteEditorViewModel()
                 {
                     Title = "Task",
@@ -263,22 +266,22 @@ namespace TodoListApp.WebApp.Controllers
                 });
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
+            this.logger.LogWarning("Invalid ModelState");
 
             foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))
             {
                 Console.WriteLine(error.ErrorMessage);
             }
 
-            var dto = new TaskDTO
+            var dto = new TaskDto
             {
                 Id = id,
-                Title = Task.Title ?? string.Empty,
-                Description = Task.Description,
-                DateCreated = Task.DateCreated ?? DateTime.UtcNow,
-                DueDate = Task.DueDate,
-                Status = Task.Status ?? Status.NotStarted,
-                AssigneeId = Task.AssigneeId ?? string.Empty,
+                Title = task.Title ?? string.Empty,
+                Description = task.Description,
+                DateCreated = task.DateCreated ?? DateTime.UtcNow,
+                DueDate = task.DueDate,
+                Status = task.Status ?? Status.NotStarted,
+                AssigneeId = task.AssigneeId ?? string.Empty,
             };
             return this.View("Edit", (dto, returnUrl));
         }
@@ -291,21 +294,21 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>Redirection to returnUrl or permission error view.</returns>
         [HttpGet]
         [Route("delete")]
-        public async Task<IActionResult> Delete(int taskId, string returnUrl)
+        public async Task<IActionResult> Delete(int taskId, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Delete));
+            this.logger.LogTrace(nameof(this.Delete));
 
             var userId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!;
             var ownerId = await this.apiService.GetTaskOwnerId(taskId);
             if (userId != ownerId)
             {
-                LoggerExtensions.LogWarning(this.logger, "User id don't equal owner id");
+                this.logger.LogWarning("User id don't equal owner id");
 
                 return this.View("NoPermission", "to delete this task");
             }
 
             _ = await this.apiService.DeleteAsync(taskId);
-            return this.Redirect(returnUrl);
+            return this.Redirect(returnUrl?.ToString()!);
         }
 
         /// <summary>
@@ -316,11 +319,11 @@ namespace TodoListApp.WebApp.Controllers
         /// <returns>The create task view.</returns>
         [HttpGet]
         [Route("create/{listId:int}")]
-        public IActionResult Create(int listId, string returnUrl)
+        public IActionResult Create(int listId, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
+            this.logger.LogTrace(nameof(this.Create));
 
-            TaskDTO task = new TaskDTO()
+            TaskDto task = new TaskDto()
             {
                 TodoListId = listId,
                 AssigneeId = this.User.FindFirst(ClaimTypes.NameIdentifier)?.Value!,
@@ -335,9 +338,9 @@ namespace TodoListApp.WebApp.Controllers
         /// <param name="returnUrl">URL to return to after creation.</param>
         /// <returns>The result view or the create form with validation errors.</returns>
         [HttpPost("create/{returnUrl}")]
-        public async Task<IActionResult> Create(TaskDTO task, string returnUrl)
+        public async Task<IActionResult> Create(TaskDto task, Uri returnUrl)
         {
-            LoggerExtensions.LogTrace(this.logger, nameof(this.Create));
+            this.logger.LogTrace(nameof(this.Create));
 
             if (this.ModelState.IsValid)
             {
@@ -349,7 +352,7 @@ namespace TodoListApp.WebApp.Controllers
                 });
             }
 
-            LoggerExtensions.LogWarning(this.logger, "Invalid ModelState");
+            this.logger.LogWarning("Invalid ModelState");
 
             foreach (var error in this.ModelState.Values.SelectMany(v => v.Errors))
             {

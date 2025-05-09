@@ -1,5 +1,4 @@
 using System.Net;
-using TodoListApp.WebApp.Services.Interfaces;
 
 namespace TodoListApp.WebApp.Services
 {
@@ -8,20 +7,6 @@ namespace TodoListApp.WebApp.Services
     /// </summary>
     public abstract class BaseApiService
     {
-        protected readonly HttpClient httpClient;
-        protected readonly IHttpService httpService;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseApiService"/> class.
-        /// </summary>
-        /// <param name="httpClient">The <see cref="HttpClient"/> used for making HTTP requests.</param>
-        /// <param name="httpService">The service used to handle HTTP requests and responses.</param>
-        public BaseApiService(HttpClient httpClient, IHttpService httpService)
-        {
-            this.httpClient = httpClient;
-            this.httpService = httpService;
-        }
-
         /// <summary>
         /// Handles the response from an HTTP request and deserializes the content into a specified type.
         /// </summary>
