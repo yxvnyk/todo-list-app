@@ -50,7 +50,7 @@ Here are some hints for you:
 | EP07 | US26       | Sign up                                                                         | 7        |       +       |
 | EP07 | US27       | Sign in                                                                         | 7        |       +       |
 | EP07 | US28       | Sign out                                                                        | 7        |       +       |
-| EP07 | US29       | Restore password                                                                | 8        |               |
+| EP07 | US29       | Restore password                                                                | 8        |       +       |
 | EP08 | US30       | Application menu                                                                | 4        |       +       |
 
 
